@@ -206,3 +206,9 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Owner requested status. At20:30–20:31Taipei, live cloud state advanced to18complete,1running,1failed,270pending of290; parent remains in corpus stage and continuation waits. Latest measured completed-source snapshot was2.7436/26.0964hours, with2397accepted weak pairs totaling6969.74seconds. These remain unverified labels, not usable-model evidence.
 - Failed source5GGKG_4w6uE exhausted two metadata attempts with YouTube country restriction. A bounded read-only Taiwan-local yt-dlp check also failed with Video unavailable; no retry counters or source identity were changed. Other videos continue normally.
 - Local backup, private publisher, Taiwan proxy and external budget timer are active. Latest mirror succeeded without error; final backup is not yet complete. HF repo is still private and contains only README/.gitattributes, no model weights. Full-data training has not started.
+
+## [RUN-014] Event — 2026-10-25 22:48:43 +0800 (A-002)
+
+- Live status at2026-10-25 22:48Taipei:76complete,1running,1failed,212pending of290. Completed source duration11.0794/26.0964hours (42.46%);9410accepted weak pairs total7.8627hours. Active sourceBijjRjaosiM is enhancing; GPU99%,5951MiB. The unchanged failed source is5GGKG_4w6uE; no new source failures.
+- Original producerPID21133 remains active in corpus stage; full-data training has not started. ContinuationPID26787 waits for parent completion. Backup watcher, private publisher, Taiwan proxy and external stop timer are active. Latest backup mirror has no error; final verification remains pending.
+- HF readback confirms weiren119/pocket-tts-taigi remains private with README/.gitattributes only, no weights. Based on the recent source-duration rate, remaining data processing is approximately4–5hours (roughly03:00–04:00Taipei), followed by training/evaluation; this is an estimate, not proof of model usability.
