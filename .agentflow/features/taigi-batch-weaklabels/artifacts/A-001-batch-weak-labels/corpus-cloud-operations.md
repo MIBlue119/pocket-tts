@@ -84,3 +84,46 @@ ssh pilot@204.12.171.245 'sudo journalctl -u taigi-setup.service --no-pager'
 - No corpus or production training job was launched by this acceptance run. Original budget and shutdown deadlines remain unchanged; no OCR changes or online credentials were introduced.
 
 Self-check: Actual enhancement and Breeze compatibility are verified; full-corpus completion is not claimed. All resource changes concern the one authorized dedicated VM and its disk.
+
+
+## Production handoff after Taiwan-source recovery
+
+The full 290-video queue resumed at 2026-10-25 19:50 Taipei. The cloud unit is
+`taigi-full-pipeline.service`, persistent and enabled, with `Restart=no`,
+`KillMode=control-group`, `TimeoutStopSec=60` and `RuntimeMaxSec=64860`.
+The current orchestration record is original-root
+`data/taigi-full-corpus/production/job-200-tw/job.json`; the frozen corpus remains
+`production/corpus/`. At 19:52, five videos were complete, one running and 284
+pending. The original `job-200/` failure record is retained.
+
+Two US-region retrieval failures were confirmed as Taiwan-only availability.
+A local `taigi-full-proxy.service` owns reverse dynamic SSH forwarding through
+the user's Taiwan machine: `ssh -N -T -R 127.0.0.1:18080 pilot@204.12.171.245`,
+with batch mode, forward-failure detection and keepalives. The remote listener
+was verified bound only to loopback. The producer has `http_proxy` and
+`https_proxy` set to `socks5h://127.0.0.1:18080`; localhost is excluded. No SSH
+private keys or service credentials were copied to the VM.
+
+The backup watcher was stopped before the producer was interrupted, preventing
+an accidental early VM stop during repair. With the corpus lock held, the
+existing acquisition function fetched both full source files through Taiwan,
+verified and promoted their source reports. The two original failed attempts
+per source remain unchanged. Both sources subsequently completed enhancement
+and ASR. Receipts are in `production/taiwan-egress-recovery.json` and
+`production/transport.json`.
+
+Local `taigi-full-backup.service` is active again against the new job path. It
+mirrors the entire production directory every five minutes, preserves partial
+copies, and verifies every remote regular file after the persistent service has
+ended with no writers. Its latest receipt is
+`data/taigi-full-corpus/production.watch.json`. A completion or interrupted-job
+backup can trigger the exact-ID stop helper; the helper also stops the proxy.
+The proxy independently ends at the original absolute deadline. None of these
+repairs reset the budget clock.
+
+The external `taigi-full-stop.timer` and remote `taigi-budget-deadline.timer`
+remain independent. The original stop is still 2026-10-26 15:06:12 Taipei.
+The watcher stops compute but does not delete disks. After verified final
+preservation, inspect receipts and clean up this dedicated instance/disk;
+compatibility smoke checkpoints outside the production mirror need an explicit
+retention decision before disk removal. The OCR instance is excluded.

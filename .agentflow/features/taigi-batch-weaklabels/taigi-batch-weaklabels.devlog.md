@@ -155,3 +155,9 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - **Still to do:** All source outcomes, full-data200-update candidate and diagnostics, verified final backup, local W&B synchronization and dedicated resource cleanup. Text correctness is not established.
 - **Next work action:** Verify the resumed producer and backup receipts remain healthy, finish evidence-record push, then inspect the durable job's next state without changing its frozen code or budget.
 - **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-009] Event — 2026-10-25 19:56:00 +0800 (A-002)
+
+- Delivery commit8887aac73b60990df94d3e64d49fd769b9b77d23 was pushed and independently matched origin/taigi-batch-weaklabels; the worktree was clean. Documentation and operating receipts preserve the remaining asynchronous work rather than claiming completion.
+- At19:54Taipei the resumed backup watcher, Taiwan egress proxy and original stop timer were all active. Backup receipt reported a running remote service/job, successful incremental mirror and no error. Full verification remains pending while the producer writes files.
+- Tracker now validates7/10complete. T5(full corpus), T6(full-data candidate) and T7(final cloud preservation/cleanup) remain active. The owner status answer is: full290queue running; last verified snapshot5complete/1running/284pending; provisional6–10hours data processing plus initial training/checks, with actual quality still unproven. Phone previews were delivered earlier; corrected local trial is synced to W&B.

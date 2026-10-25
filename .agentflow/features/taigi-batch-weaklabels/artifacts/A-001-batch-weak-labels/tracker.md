@@ -20,9 +20,9 @@
 
 - **Total:** 10.
 
-- **Completed:** 6.
+- **Completed:** 7.
 
-- **Remaining:** 4.
+- **Remaining:** 3.
 
 ## Accepted task checklist
 
@@ -32,7 +32,7 @@
 
 - [x] **T-3:** Run actual batch and bounded training/validation, add training/taigi/evaluate.py, tests/test_taigi_evaluate.py and deterministic validation in training/train.py / training/tests/test_validation_rng.py; save ignored artifacts and results in docs/plans/2026-10-25-batch-weak-label-results.md; failed jobs stay recorded, no false quality claim. Source: A-002, recovered A-001 and prior training authorization. Proof: actual54/56batch, filtered193-row release, fresh100-step corrected-EOS run and six generated/ASR diagnostics; docs/plans/2026-10-25-batch-weak-label-results.md. Termination improved; text-control quality remains insufficient. Additional necessary paths: training/modules/model.py, training/tests/test_terminal_eos.py, training/taigi/pipeline.py and focused tests.
 
-- [ ] **T-4:** Review final commit, document CLI in docs/taigi-batch-weak-labels.md, deliver Git branch and notebook; resolve relevant review findings before delivery. Source: A-002, recovered A-001 and prior personal-repo request.
+- [x] **T-4:** Review final commit, document CLI in docs/taigi-batch-weak-labels.md, deliver Git branch and notebook; resolve relevant review findings before delivery. Source: A-002, recovered A-001 and prior personal-repo request. Proof: code and evidence push8887aac73b60990df94d3e64d49fd769b9b77d23 verified identical to origin/taigi-batch-weaklabels; source reviews and operating report included.
 
 - [ ] **T-5:** Process every video from all six playlists with full-video acquisition, resident enhancement/ASR and verified resume; no silent sampling limit. Source: A-002, owner correction about all videos. Paths: training/taigi/corpus.py, corpus_worker.py, training/configs/taigi_youtube_full_inventory.json and their tests.
 
@@ -44,7 +44,7 @@
 
 - [x] **T-9:** Send processed audio previews to phone. Source: A-002 latest exact user request. Proof: Telegram send_document confirmed three MP4s delivered; ffprobe verified audio streams and20/20/10-second durations. Paths: /home/weiren/tts-deliverables/2026-10-25-audio-preview/.
 
-- [x] **T-10:** Measure rented GPU utilization and matched throughput, adopt acceleration only when measured useful within the existing budget and source/label invariants. Source: A-002, owner asks to maximize allocated compute. Paths: full-corpus-throughput-plan.md, ignored cloud benchmark receipts, and any justified focused implementation/tests. Proof:39variable clips exacttext parity; fair cached batch4 throughput1.339x; no-work resume; duplicate GPU workers did not help; production opts into batch4 at43735eb.
+- [x] **T-10:** Measure rented GPU utilization and matched throughput, adopt acceleration only when measured useful within the existing budget and source/label invariants. Source: A-002, owner asks to maximize allocated compute. Paths: full-corpus-throughput-plan.md, ignored cloud benchmark receipts, and training/taigi/{corpus.py,corpus_worker.py,transcriber.py} with focused tests. Proof:39variable clips exacttext parity; fair cached batch4 throughput1.339x; no-work resume; duplicate GPU workers did not help; production opts into batch4 at43735eb.
 
 ## Accepted scope changes
 
