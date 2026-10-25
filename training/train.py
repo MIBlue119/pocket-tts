@@ -216,6 +216,10 @@ def main(config_path: str):
 
     signal.signal(signal.SIGTERM, _request_stop)
     signal.signal(signal.SIGUSR1, _request_stop)
+    if start_step == 0 and args.data.valid_jsonl:
+        valid_metrics = validate(model, mimi, args, device, rank, run.world_size, 0)
+        progress.log("valid", 0, valid_metrics)
+        model.train()
     if rank == 0:
         logger.info("starting training loop, first step can take a few minutes (compilation etc.)")
     last_log = time.time()
@@ -342,6 +346,27 @@ def main(config_path: str):
 
 @torch.no_grad()
 def validate(
+    model: TrainableTTS,
+    mimi: MimiModel,
+    args: TrainArgs,
+    device: torch.device,
+    rank: int,
+    world_size: int,
+    step: int,
+) -> dict[str, float]:
+    # Seed only the generators we save: torch.manual_seed would also alter RNG
+    # states on other GPUs, even though this rank validates on just one device.
+    cuda_devices = []
+    if device.type == "cuda":
+        cuda_devices = [device.index if device.index is not None else torch.cuda.current_device()]
+    with torch.random.fork_rng(devices=cuda_devices):
+        torch.random.default_generator.manual_seed(args.seed + rank)
+        if cuda_devices:
+            torch.cuda.default_generators[cuda_devices[0]].manual_seed(args.seed + rank)
+        return _validate(model, mimi, args, device, rank, world_size, step)
+
+
+def _validate(
     model: TrainableTTS,
     mimi: MimiModel,
     args: TrainArgs,

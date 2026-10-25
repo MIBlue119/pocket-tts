@@ -236,7 +236,9 @@ def parser() -> argparse.ArgumentParser:
     return p
 
 
-def run_batch(args: argparse.Namespace, *, execute_fn: Callable = execute) -> dict[str, Any]:
+def run_batch(
+    args: argparse.Namespace, *, execute_fn: Callable[[list[str], Path, float], None] = execute
+) -> dict[str, Any]:
     jobs = plan_jobs(args.jobs)
     for key, upper in [
         ("max_seconds", math.inf),
@@ -268,7 +270,7 @@ def run_batch(args: argparse.Namespace, *, execute_fn: Callable = execute) -> di
             if state_path.exists() or (out / "attempts").exists():
                 raise ValueError("missing persisted batch plan")
             atomic_json(plan_path, plan)
-        state = (
+        state: dict[str, Any] = (
             json.loads(state_path.read_text())
             if state_path.exists()
             else {

@@ -27,7 +27,7 @@ def setup(tmp_path: Path) -> argparse.Namespace:
     return args
 
 
-def worker(calls: list[list[str]]) -> Callable:
+def worker(calls: list[list[str]]) -> Callable[[list[str], Path, float], None]:
     def execute(command: list[str], log: Path, deadline: float) -> None:
         calls.append(command)
         out = Path(command[4])
