@@ -306,7 +306,7 @@ class CachedTranscriber:
                 self._store(cache_path, identity, text.strip())
             pending.clear()
 
-        for row in rows:
+        for row in sorted(rows, key=lambda row: float(row["duration"])):
             interval = (
                 Path(row["audio_path"]).resolve(),
                 float(row["start"]),

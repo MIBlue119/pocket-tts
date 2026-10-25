@@ -399,3 +399,38 @@ def test_worker_prefills_opt_in_batch_then_release_reads_cache(
     data["asr_batch_size"] = 1
     with pytest.raises(ValueError, match="identity integrity"):
         worker.transcribe(data)
+
+
+def test_batch_prefill_groups_stable_durations_without_changing_lookup_order(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows = batch_rows(tmp_path)
+    # Equal durations keep their supplied order; output lookup keeps the manifest order.
+    for row, duration in zip(rows, [0.09, 0.03, 0.06, 0.03, 0.08, 0.04, 0.07], strict=True):
+        row["duration"] = duration
+    original = [dict(row) for row in rows]
+    batches = []
+
+    class ASR:
+        target_sample_rate = 16000
+
+        def transcribe_batch(self, intervals: list[tuple[Path, float, float]]) -> list[str]:
+            batches.append([path.name for path, _, _ in intervals])
+            return [path.stem for path, _, _ in intervals]
+
+        def __call__(self, path: Path, start: float, duration: float) -> str:
+            raise AssertionError("every original-order lookup must use its cache")
+
+    monkeypatch.setattr(worker, "breeze_transcriber", lambda _: ASR())
+    cached = worker.CachedTranscriber(tmp_path, "cpu", 4)
+    cached.prefill(rows)
+    assert batches == [
+        ["batch-1.wav", "batch-3.wav", "batch-5.wav", "batch-2.wav"],
+        ["batch-6.wav", "batch-4.wav", "batch-0.wav"],
+    ]
+    assert rows == original
+    assert [cached(Path(row["audio_path"]), 0.0, row["duration"]) for row in rows] == [
+        f"batch-{i}" for i in range(7)
+    ]
+    cached.prefill(rows)
+    assert len(batches) == 2
