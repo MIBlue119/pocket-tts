@@ -93,6 +93,10 @@ class TrainableTTS(nn.Module):
         | None = None,  # [B] valid voice frames (rest is padding)
     ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
         fl = self.flow_lm
+        # The longest row also needs a prediction after its final audio frame.
+        # This terminal position trains EOS but is excluded from the flow targets.
+        latents = F.pad(latents, (0, 0, 0, 1))
+        mask = F.pad(mask, (0, 1), value=False)
         C = latents.shape[-1]
         if update_stats and self.training:
             self._update_latent_stats(latents, mask)
