@@ -108,7 +108,9 @@ def test_tokenizer_only_receives_train_and_recipe_is_frozen(
     tokenizer_argv = next(argv for argv, _ in calls if "training.scripts.train_tokenizer" in argv)
     assert str(release / "train.jsonl") in tokenizer_argv
     assert str(release / "valid.jsonl") not in tokenizer_argv
-    assert tokenizer_argv[-1] == "4096"
+    assert tokenizer_argv[tokenizer_argv.index("--vocab-size") + 1] == "4096"
+    assert tokenizer_argv[tokenizer_argv.index("--model-type") + 1] == "bpe"
+    assert report["tokenizer"]["model_type"] == "bpe"
     assert report["tokenizer"]["actual_vocab"] == 2
     assert report["state"] == "complete"
     assert report["video_outcomes"]["failed"] == 1

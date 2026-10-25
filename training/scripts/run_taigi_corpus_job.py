@@ -196,6 +196,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             str(train),
             "--vocab-size",
             str(args.vocab_size),
+            "--model-type",
+            "bpe",
         ]
         if stage("tokenizer", argv, remaining(deadline, args.backup_seconds)) != 0:
             raise RuntimeError("tokenizer training failed; requested vocabulary was not adjusted")
@@ -226,6 +228,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "training_input": str(train),
             "training_sha256": digest(train),
             "requested_vocab": args.vocab_size,
+            "model_type": "bpe",
             "actual_vocab": actual_vocab,
             "sha256": digest(tokenizer),
         }

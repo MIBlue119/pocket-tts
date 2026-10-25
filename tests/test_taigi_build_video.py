@@ -14,7 +14,11 @@ import soundfile as sf
 
 from training.taigi import build_video
 from training.taigi.enhance import enhance_file
-from training.taigi.pipeline import prepare_candidates, transcribe_release
+from training.taigi.pipeline import (
+    prepare_candidates,
+    transcribe_release,
+    transcript_quality_reason,
+)
 
 
 def options(tmp_path: Path) -> argparse.Namespace:
@@ -261,3 +265,76 @@ def test_cli_signal_cleans_process_group_and_reports_failure(tmp_path: Path, sig
                     os.kill(pid, signal.SIGKILL)
                 except ProcessLookupError:
                     pass
+
+
+# Exact original weak labels from data/taigi-batch-v1/merged/1fc8a9a3807e4c32.
+# Keep the converter failure text: quarantine must not conceal tokenizer parity bugs.
+KNOWN_CHANTING_TRANSCRIPT = (
+    "唵嘛呢叭咪吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟"
+    "吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吟吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿"
+    "吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿吿"
+)
+KNOWN_LAUGHTER_TRANSCRIPT = (
+    "笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 "
+    "笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 "
+    "笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 "
+    "笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 笑 "
+    "笑"
+)
+
+
+@pytest.mark.parametrize(
+    "text,reason",
+    [
+        ("", "empty_transcript"),
+        (" \t\n", "empty_transcript"),
+        (KNOWN_CHANTING_TRANSCRIPT, "repetitive_transcript"),
+        (KNOWN_LAUGHTER_TRANSCRIPT, "repetitive_transcript"),
+        ("a" * 12, "repetitive_transcript"),
+        ("笑" * 11, None),
+        ("笑" * 6 + "，" + "笑" * 6, None),
+        ("……" * 20, None),
+        ("好……我知道了。", None),
+    ],
+)
+def test_transcript_repetition_detects_characters_without_rejecting_punctuation(
+    text: str, reason: str | None
+) -> None:
+    assert transcript_quality_reason(text) == reason
+
+
+@pytest.mark.parametrize(
+    "text,duration", [(KNOWN_CHANTING_TRANSCRIPT, 2.04), (KNOWN_LAUGHTER_TRANSCRIPT, 3.22)]
+)
+def test_repetitive_labels_preserve_full_text_audio_and_quarantine_reason(
+    tmp_path: Path, text: str, duration: float
+) -> None:
+    from training.taigi.audio import sha256_file
+    from training.taigi.schema import read_jsonl
+
+    audio = tmp_path / "speech.wav"
+    sf.write(audio, np.zeros(round(duration * 24000), dtype=np.float32), 24000)
+    digest = sha256_file(audio)
+    candidate = {
+        "audio_path": str(audio),
+        "audio_sha256": digest,
+        "start": 0,
+        "duration": duration,
+        "split": "train",
+        "utterance_id": "known-failure",
+    }
+    candidates = tmp_path / "candidates.jsonl"
+    candidates.write_text(json.dumps(candidate) + "\n")
+    release = transcribe_release(candidates, tmp_path / "releases", transcriber=lambda *_: text)
+    quarantined = read_jsonl(release / "quarantine.jsonl")
+    assert len(quarantined) == 1
+    assert quarantined[0]["input_text_zh"] == text
+    assert quarantined[0]["duration"] == duration
+    assert quarantined[0]["audio_path"] == str(audio)
+    assert quarantined[0]["quarantine_reason"] == "repetitive_transcript"
+    assert sha256_file(audio) == digest
+    assert read_jsonl(release / "train.jsonl") == []
+    report = json.loads((release / "report.json").read_text())
+    assert report["accepted_weak_label_count"] == 0
+    assert report["quarantine_count"] == 1
+    assert report["quarantine_reasons"] == {"repetitive_transcript": 1}

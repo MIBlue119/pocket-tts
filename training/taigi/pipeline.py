@@ -207,6 +207,22 @@ def prepare_candidates(
     return output_dir / "candidates.jsonl"
 
 
+def transcript_quality_reason(text: str) -> str | None:
+    if not text.strip():
+        return "empty_transcript"
+    previous = ""
+    consecutive = 0
+    for character in "".join(text.split()):
+        if character.isalpha():
+            consecutive = consecutive + 1 if character == previous else 1
+            if consecutive >= 12:
+                return "repetitive_transcript"
+        else:
+            consecutive = 0
+        previous = character
+    return None
+
+
 def transcribe_release(
     candidates_path: Path,
     releases_dir: Path,
@@ -234,7 +250,8 @@ def transcribe_release(
     for row in rows:
         text = transcribe(
             Path(row["audio_path"]).resolve(), float(row["start"]), float(row["duration"])
-        ).strip()
+        )
+        reason = transcript_quality_reason(text)
         enriched = {
             **row,
             "input_text_zh": text,
@@ -247,9 +264,9 @@ def transcribe_release(
             "label_target_sample_rate": label_target_sample_rate,
             "verification": "unverified_weak_label",
         }
-        if not text:
+        if reason:
             enriched["status"] = "quarantined"
-            enriched["quarantine_reason"] = "empty_transcript"
+            enriched["quarantine_reason"] = reason
             quarantine.append(enriched)
         else:
             enriched["status"] = "auto_accepted_candidate"
@@ -304,6 +321,7 @@ def transcribe_release(
             "release_id": release_id,
             "accepted_weak_label_count": len(accepted),
             "quarantine_count": len(quarantine),
+            "quarantine_reasons": Counter(row["quarantine_reason"] for row in quarantine),
             "model": BREEZE_MODEL,
             "revision": BREEZE_REVISION,
             "label_adapter_version": label_adapter_version,
