@@ -5,6 +5,7 @@ import signal
 import subprocess
 import sys
 import time
+import venv
 from pathlib import Path
 
 import numpy as np
@@ -36,10 +37,14 @@ def options(tmp_path: Path) -> argparse.Namespace:
 
 
 @pytest.mark.parametrize("failure", [None, "metadata", "decoded", "lineage", "empty_asr"])
-def test_complete_release_uses_exact_frames(
+def test_complete_release_uses_exact_frames_and_selected_environment(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str | None
 ) -> None:
     args = options(tmp_path)
+    selected_env = tmp_path / "enhancer-env"
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(selected_env)
+    args.enhancer_python = selected_env / "bin" / "python"
+    assert args.enhancer_python.is_symlink()
     commands = []
     deadlines = []
     monkeypatch.setattr(build_video.shutil, "which", lambda name: "/usr/bin/node")
@@ -63,6 +68,10 @@ def test_complete_release_uses_exact_frames(
             sf.write(args.output_dir / "source.wav", samples, rate, subtype="FLOAT")
             (args.output_dir / "source.webm").write_bytes(b"downloaded media")
         elif log.name == "enhance.log":
+            prefix = subprocess.check_output(
+                [command[0], "-c", "import sys; print(sys.prefix)"], text=True
+            ).strip()
+            assert Path(prefix) == selected_env
             enhance_file(
                 Path(command[3]),
                 Path(command[4]),

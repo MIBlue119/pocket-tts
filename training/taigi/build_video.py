@@ -156,7 +156,7 @@ def build(args: argparse.Namespace) -> Path:
         report["stage"] = "enhance"
         enhanced = out / "enhanced.wav"
         command = [
-            str(args.enhancer_python.resolve()),
+            str(args.enhancer_python.expanduser().absolute()),
             "-m",
             "training.taigi.enhance",
             str(raw),
