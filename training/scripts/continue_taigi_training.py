@@ -219,10 +219,49 @@ def summarize(
         if row["type"] == "train":
             numbers.append(row.get("grad_norm"))
         finite &= all(isinstance(v, (int, float)) and math.isfinite(v) for v in numbers)
-    similarities = [r.get("character_sequence_similarity") for r in actual]
-    comparable = len(actual) == 12 and all(
-        isinstance(v, (int, float)) and math.isfinite(v) and 0 <= v <= 1 for v in similarities
-    )
+    similarities: list[float] = []
+    score_sources = []
+    for row in actual:
+        measured = row.get("character_sequence_similarity")
+        frames, seconds = row.get("generated_frames"), row.get("seconds")
+        if (
+            row.get("status") == "audio"
+            and isinstance(row.get("asr_text"), str)
+            and type(measured) in (int, float)
+            and math.isfinite(measured)
+            and 0 <= measured <= 1
+        ):
+            score = float(measured)
+            source, reason = "measured_asr", "finite_asr_character_sequence_similarity"
+        elif (
+            row.get("status") == "too_few_frames_for_decoder"
+            and type(frames) is int
+            and 0 <= frames < 8
+            and type(seconds) in (int, float)
+            and math.isfinite(seconds)
+            and seconds >= 0
+            and (seconds == 0) == (frames == 0)
+            and not any(
+                key in row
+                for key in (
+                    "audio_path",
+                    "audio_sha256",
+                    "asr_text",
+                    "character_sequence_similarity",
+                )
+            )
+        ):
+            # This evaluator branch never decodes audio or calls ASR. Zero is a
+            # derived task-failure score, not a fabricated ASR measurement.
+            score = 0.0
+            source, reason = "decoder_unavailable", "too_few_frames_for_decoder"
+        else:
+            score = None
+            source, reason = "missing_or_invalid_diagnostic", "no_verified_task_consistency_score"
+        score_sources.append({"id": row["id"], "source": source, "reason": reason, "score": score})
+        if score is not None:
+            similarities.append(score)
+    comparable = len(actual) == len(similarities) == 12
     return {
         "step": step,
         "loss": loss_at(records, step),
@@ -232,10 +271,13 @@ def summarize(
         ),
         "capped": sum(bool(r.get("hit_frame_limit")) for r in actual),
         "repetitive": sum(
-            transcript_quality_reason(r.get("asr_text", "")) == "repetitive_transcript"
+            isinstance(r.get("asr_text"), str)
+            and transcript_quality_reason(r["asr_text"]) == "repetitive_transcript"
             for r in actual
         ),
         "similarities": similarities if comparable else [],
+        "failure_adjusted_task_consistency_scores": similarities if comparable else [],
+        "score_sources": score_sources,
         "prompts": len(actual),
         "evaluation": str(evaluation),
         "config": str(config),

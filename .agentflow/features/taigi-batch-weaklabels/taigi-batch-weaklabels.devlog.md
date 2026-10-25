@@ -224,3 +224,31 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Morning inspection at07:12Taipei found288successful/2failed source outcomes,22754weak pairs/17.9897hours; full-data training never started. Parent failed exact tokenizer conversion around03:57; continuation failed closed, and private publisher correctly refused missing candidate. HF remains private with no weights.
 - Final backup is verified, but provider stop failed and the GPU VM remained idle. Astra traced the stop failure to expired Nebius federation authentication; cloud persistent22:00poweroff timer remains armed. No running VM was falsely reported stopped and the original cost clock remains unchanged.
 - Astra independently reproduced4/22763whitespace parity failures; disabling Metaspace splitting in memory yields0/22763 without changing model/text. Sol implements the focused regression/fix. Root prepares a fresh recovery subtree and service handoff using the complete frozen corpus; all old failure receipts remain intact.
+
+## [RUN-017] Event — 2026-10-26 07:22:09 +0800 (A-002)
+
+- Recovery code1485064was committed/pushed; host regression and Ruff passed, and the actual converter CLI matched22763/22763texts both locally and on cloud before service start. Only convert_tokenizer.py differs among tracked cloud source; frozen corpus files remain unchanged.
+- ParentPID137912and continuationPID137915 started07:18under persistent contained units. Local backup/private publisher were retargeted to production/recovery-20261026 and are active. Old backup/failure/service records were preserved under cloud/recovery-20261026. Ledger deadline and cost clock were not changed.
+- Verified exact source reuse:871attempts before and after, zero new download/enhancement/ASR attempts, same288complete/2failed outcomes. The new job is still validating/merging existing corpus; actual training progress has not yet been observed.
+- Provider API login is still expired. Exact-instance/OCR/deadline/nonmutating-check self-tests passed for the guarded SSH fallback, and its live readiness check issued no poweroff. Backup will not mislabel SSH acknowledgement as provider-confirmed stopped. Root retains the VM for recovery training.
+
+## [WIP-006] Checkpoint — 2026-10-26 07:22:09 +0800 (A-002)
+
+- **Finished:** All source outcomes; verified old backup; exact whitespace tokenizer fix and full parity proof; frozen source-reuse verification; stop fallback readiness; recovery service handoff.
+- **Running now:** Recovery parent validates/merges existing data; continuation waits; local mirror and private publisher are active.
+- **Still to do:** Observe actual full-data training, evaluate and gate continuation, verify recovered backup/private upload, and complete provider-confirmed cleanup after authentication is restored.
+- **Next work action:** Follow the recovered job through conversion/baseline into actual training progress; diagnose any new failure before claiming recovery complete.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-018] Event — 2026-10-26 07:27:19 +0800 (A-002)
+
+- Observing recovery exposed eager repeated audio hashing in both merge validators. Independent Astra reproduction and Sol regressions proved the issue; minimal per-call resolved-path caches preserve every row's digest check. Host16merge tests pass; actual22754rows/421paths imply54times fewer audio-hash calls per phase, not a claimed wall-time multiplier.
+- Paused local backup/publication before controlled umbrella stop; verified both remote units MainPID/ControlPIDzero. No training checkpoint existed. Preserved the interrupted first recovery and deployed979ab7a into fresh production/recovery-20261026-r2. Only converter and merge differ among tracked cloud files; eight frozen corpus identity files are unchanged.
+- New parentPID140435and umbrellaPID140438are active; local backup/private publisher are retargeted and active. Budget clock and22:00cutoff remain fixed. Actual training steps still pending while existing data validation completes.
+
+## [RUN-019] Event — 2026-10-26 07:36:17 +0800 (A-002)
+
+- Full-data r2 completed200updates07:35Taipei;22606train/148valid rows and unchanged source attempts. Validation.5278603→.5000720,5.27%improvement;12final audio diagnostics completed.
+- Generation failed quality criteria:7/12caps versus2baseline, unrelated repeated ASR outputs. No v2 continuation was launched and no usable-model claim is justified. Original controller exports200raw as diagnostic; backup/private publisher rearmed unchanged, both active and publication waiting for verified backup.
+- Corrected narrow known decoder-too-short baseline scoring without fabricating ASR or weakening health thresholds. Added contained alternate selection path for recovery. Root42focused tests, Ruff and implementation ty passed; independent Astra source review passed. Keep original live controller frozen.
+- Astra diagnosis finds no proven new training-code bug; only0.0708nominal data passes with reset text embeddings. A bounded checkpoint/stopping-behavior diagnostic is the next evidence step, not blind500-step extension. Budget clock and22:00cutoff unchanged; provider-confirmed shutdown remains unavailable with expired API login.

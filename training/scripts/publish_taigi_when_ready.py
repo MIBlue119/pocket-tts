@@ -34,8 +34,16 @@ def ready_selection(args: argparse.Namespace) -> dict[str, Any] | None:
     root = args.production.resolve(strict=True)
     if Path(receipt.get("local_output", "")).resolve() != root:
         raise ValueError("backup receipt refers to another production directory")
-    path = root / "continuation/selected.json"
-    if not path.exists():
+    relative = Path(getattr(args, "selection_relative_path", "continuation/selected.json"))
+    path = root / relative
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or path.is_symlink()
+        or not path.resolve().is_relative_to(root)
+    ):
+        raise ValueError("selection path must resolve inside verified production and not be a symlink")
+    if not path.is_file():
         raise ValueError("completed backup contains no selected candidate")
     selection = json.loads(path.read_text())
     if selection.get("state") != "complete":
@@ -146,6 +154,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--production", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument(
+        "--selection-relative-path", type=Path, default=Path("continuation/selected.json")
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--repo-id", required=True)
     parser.add_argument("--deadline-epoch", type=float, required=True)

@@ -81,3 +81,35 @@ def test_publisher_timeout_stops_child_group(tmp_path: Path):
         time.sleep(0.05)
     else:
         pytest.fail("publisher descendant survived timeout")
+
+
+def test_alternate_selection_uses_verified_production_root(tmp_path: Path):
+    import hashlib
+
+    production = tmp_path / "production"
+    (production / "continuation-v2").mkdir(parents=True)
+    receipt = tmp_path / "receipt.json"
+    receipt.write_text(
+        json.dumps({"state": "complete", "backup": "verified", "local_output": str(production)})
+    )
+    files = {}
+    for name in ("weights", "config", "tokenizer", "evaluation", "provenance"):
+        path = production / name
+        path.write_text(name)
+        files[name] = {"path": str(path), "sha256": hashlib.sha256(name.encode()).hexdigest()}
+    selected = {"state": "complete", "candidate_id": "step-500-raw", "files": files}
+    (production / "continuation-v2/selected.json").write_text(json.dumps(selected))
+    args = Namespace(
+        production=production,
+        receipt=receipt,
+        selection_relative_path=Path("continuation-v2/selected.json"),
+    )
+    assert ready_selection(args) == selected
+    args.selection_relative_path = Path("../outside.json")
+    with pytest.raises(ValueError, match="selection path"):
+        ready_selection(args)
+    alias = production / "alias.json"
+    alias.symlink_to(production / "continuation-v2/selected.json")
+    args.selection_relative_path = Path("alias.json")
+    with pytest.raises(ValueError, match="selection path"):
+        ready_selection(args)

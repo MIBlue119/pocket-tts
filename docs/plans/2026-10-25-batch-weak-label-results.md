@@ -169,3 +169,54 @@ The future selected candidate receives its own runtime check before publication.
 Remaining: finish all source outcomes, train/evaluate the full-data candidate,
 apply continuation gates, verify final backup, privately publish the selected
 model, sync offline W&B records and clean up the dedicated cloud resources.
+
+## October26 morning recovery
+
+At07:12Taipei all290sources had terminal outcomes:288completed and2explicit
+regional-access failures. The resulting22754weak pairs contain17.9897audio hours.
+The full-data parent stopped before training at03:57because four of22763tokenizer
+checks differed on consecutive spaces. The guard correctly prevented inconsistent
+IDs from entering training. Metaspace's default splitting prevented learned
+whitespace-only BPE pieces from merging; commit1485064disables that splitting.
+The original learned tokenizer and all text stayed unchanged during verification:
+22763/22763production checks and3304additional whitespace cases passed independently.
+The focused regression and offline tokenizer tests pass; cached shipped-model tests
+were unavailable, and installed SentencePiece stubs prevent a clean scoped type check.
+
+The final old backup was verified at04:38, but API stop failed because the Nebius
+federation login expired. The VM remained idle until morning recovery. A guarded
+SSH shutdown fallback now verifies the exact dedicated instance and can request
+poweroff when due; it never claims provider-confirmed STOPPED or billing cessation.
+The independent cloud22:00timer and original budget clock are unchanged. API
+confirmation/cleanup still requires renewed login.
+
+Fresh recovery output lives under `production/recovery-20261026`. Old failures and
+verified-backup receipts remain intact. The original frozen corpus is reused; only
+the converter source changed on cloud, and its complete parity check passed there
+before restart. Parent/continuation services restarted at07:18; backup and private
+publisher now follow the new subtree. Full-data training and useful speech are not
+yet claimed by this recovery record.
+
+While observing recovery, a second defect was reproduced in merge validation:
+`setdefault(path, sha256_file(path))` eagerly rehashed shared full audio for every
+segment; existing merged releases also hashed per row. Commit979ab7auses a cache
+local to each validation pass and still checks every row's expected digest. All16
+merge tests pass, including conflicts and changed-file detection. Actual metadata
+implies22754audio hash calls become421per phase (about54times fewer calls), without
+claiming a measured end-to-end speedup. Input/copy/manifest integrity remains checked.
+
+Before training began, backup/publication were paused and the old umbrella/parent
+were stopped with bothMainPID/ControlPIDzero. No checkpoint existed to discard.
+The preserved first recovery attempt records this interruption. The corrected run
+uses `production/recovery-20261026-r2`, with fresh parent/continuation and retargeted
+local backup/private publication. Its deployment receipt binds both converter and
+merge source hashes; none of the eight frozen corpus identity files changed.
+
+
+### Full-data result on 2026-10-26 morning
+
+The fresh r2 run completed200updates at07:35Taipei using22606training and148validation rows. Exact semantic row checks and unchanged871source attempts establish zero repeated downloading/enhancement/ASR during recovery. Validation loss fell from0.5278602999 to0.5000719985 (5.27%); step100 was0.4990983266. These are optimization diagnostics, not speech-quality evidence.
+
+All12final prompts produced finite audio, but7hit the125-frame/10-second limit (baseline2). ASR repeatedly returned unrelated phrases, including「你給我回來」across different inputs. The candidate is unsuitable as a usable Chinese-to-Taiwanese model. Conditional continuation must not proceed on loss alone. The original200-step raw candidate is retained for experimental private delivery after verified backup.
+
+A separate source fix records explicit decoder-too-short baseline failures as labelled zero task-consistency scores while retaining absent raw ASR measurements. All other missing/invalid cases and existing quality thresholds remain fail-closed. Root42focused continuation/readiness tests, Ruff and implementation typing pass; Astra independently reviewed the change. No replacement cloud controller was launched because the actual generation regression already prevents admission. Local backup/private-publisher services are rearmed against the original r2 selection. Provider API authentication remains expired; SSH shutdown acknowledgement must not be described as provider-confirmed STOPPED.

@@ -8,7 +8,7 @@
 
 - **Goal:** Expand resumable weak labels and prove fixed-release training.
 
-- **Last update:** 2026-10-25 20:15:00 +0800.
+- **Last update:** 2026-10-26 07:19:00 +0800.
 
 - **Evidence commit:** 43735eb.
 
@@ -20,9 +20,9 @@
 
 - **Total:** 11.
 
-- **Completed:** 7.
+- **Completed:** 9.
 
-- **Remaining:** 4.
+- **Remaining:** 2.
 
 ## Accepted task checklist
 
@@ -34,9 +34,9 @@
 
 - [x] **T-4:** Review final commit, document CLI in docs/taigi-batch-weak-labels.md, deliver Git branch and notebook; resolve relevant review findings before delivery. Source: A-002, recovered A-001 and prior personal-repo request. Proof: code and evidence push8887aac73b60990df94d3e64d49fd769b9b77d23 verified identical to origin/taigi-batch-weaklabels; source reviews and operating report included.
 
-- [ ] **T-5:** Process every video from all six playlists with full-video acquisition, resident enhancement/ASR and verified resume; no silent sampling limit. Source: A-002, owner correction about all videos. Paths: training/taigi/corpus.py, corpus_worker.py, training/configs/taigi_youtube_full_inventory.json and their tests.
+- [x] **T-5:** Process every video from all six playlists with full-video acquisition, resident enhancement/ASR and verified resume; no silent sampling limit. Source: A-002, owner correction about all videos. Paths: training/taigi/corpus.py, corpus_worker.py, training/configs/taigi_youtube_full_inventory.json and their tests. Proof: all290terminal outcomes verified on2026-10-26;288complete,2explicit regional-access failures;22754weak pairs/17.9897hours. Failed sources remain recorded.
 
-- [ ] **T-6:** Execute a durable corpus-to-training job with grouped validation, train-only tokenizer, offline W&B and fixed generated diagnostics. Source: A-002 continuation of original training authorization. Paths: training/scripts/run_taigi_corpus_job.py and tests/test_taigi_corpus_job.py.
+- [x] **T-6:** Execute a durable corpus-to-training job with grouped validation, train-only tokenizer, offline W&B and fixed generated diagnostics. Source: A-002 continuation of original training authorization. Paths: training/scripts/run_taigi_corpus_job.py and tests/test_taigi_corpus_job.py. Proof: r2 completed200updates with22606train/148valid rows, offline logs and12fixed generated/ASR diagnostics; validation.5278603→.5000720. Generation remains unsuitable,7/12caps and unrelated transcripts.
 
 - [ ] **T-7:** Use dedicated Nebius compute within the owner-updated USD100 total, preserve OCR, establish fixed stop deadline, verify model compatibility and backup outputs. Source: A-002 continuation and prior explicit cloud/budget authorization. Paths: corpus-cloud-operations.md, corpus-compute-plan.md, training/scripts/watch_taigi_cloud_job.py, tests/test_taigi_cloud_watch.py and ignored data/taigi-full-corpus/cloud/.
 
@@ -58,13 +58,13 @@
 
 ## Current recovery
 
-- **Current item:** T-5, T-6, T-7 and T-11.
+- **Current item:** T-6, T-7 and T-11.
 
 - **Last proven result:** Corpus22, orchestration7, watcher14, repeat-filter/orchestration35 focused tests passed; actual short video17pairs; exact BPE parity; actual SSH/rsync checksum fixture passed.
 
-- **Active blocker or running process:** Full290-video producer remains active;11complete/1running/278pending at20:14. Continuation umbrella waits for it; retargeted backup watcher and local private publisher are active. All deadline controls use22:00TaipeiOct26. No usable full-data model or uploaded weights yet.
+- **Active blocker or running process:** Full-data r2 training completed200updates. Loss improved5.27%, but7/12generated prompts hit the10-second cap and ASR outputs repeat unrelated phrases. This does not pass continuation quality criteria. Original controller exports a diagnostic candidate; local backup and private publisher were rearmed unchanged. No v2 controller was launched. Provider API authentication remains expired; guarded SSH stop and fixed22:00deadline remain armed.
 
-- **Next safe action:** Observe full corpus and200-update candidate, gated continuation, verified backup and local private publication. Latest cutoff is2026-10-26 22:00Taipei; original cost clock is preserved. Sync cloud W&B locally and clean up dedicated resources after preservation.
+- **Next safe action:** Verify complete backup and private experimental publication, then inspect checkpoint100/200 generation and stopping behavior from local artifacts. Do not extend training merely on improved loss; do not claim usability or provider-confirmed shutdown.
 
 - **Expected changed files:** training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
 
@@ -76,7 +76,7 @@
 
 - **Operation running:** yes.
 
-- **Next action remaining:** T-3 through T-8 and T-10.
+- **Next action remaining:** T-7 and T-11; generation-quality recovery remains necessary for the owner’s usable-model objective.
 
 - **Evidence status:** current.
 

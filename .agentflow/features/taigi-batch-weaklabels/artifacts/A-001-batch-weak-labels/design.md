@@ -194,3 +194,10 @@ redundant hash calls, not integrity checks. Pause backup/publication before stop
 the pretraining parent, preserve that attempt, and restart in fresh
 `production/recovery-20261026-r2`. No trained checkpoint is discarded, no corpus
 identity file changes, and original budget/deadline remain in force.
+
+
+## Morning continuation diagnostic correction — 2026-10-26
+
+The actual baseline contains six explicitly recorded decoder-too-short failures, which intentionally have no audio or ASR measurement. Preserve the original reports; derive a labelled zero task-failure score only for this exact validated branch. Missing or contradictory diagnostics remain fail-closed. All finite-state, health, cap, repetition, deadline and improvement thresholds remain unchanged. Optional relative selection paths support fresh recovery subtrees while retaining verified-root containment and artifact hashes.
+
+Minimality check: changing raw ASR reports or weakening the gate would misrepresent evidence. The smallest correction is a derived score with source labels and focused tests; the selection option avoids moving historical candidates. Actual step200 subsequently showed7/12caps versus2baseline, so no v2 continuation is launched and the original selection remains the publication target. Source correction does not authorize ignoring this generation regression.

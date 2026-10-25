@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -294,6 +295,7 @@ def test_evaluation_identity_and_hashes_are_required(tmp_path: Path):
                 "audio_path": str(audio),
                 "audio_sha256": continuation.digest(audio),
                 "character_sequence_similarity": 0.1,
+                "asr_text": "中文測量",
             }
             for r in rows
         ],
@@ -365,3 +367,152 @@ def test_gate_halt_finishes_operation_and_exports_prior_candidate(
     assert result["gates"][0]["admit"] is False
     assert exported == [200]
     assert continuation.read(args.output / "job.json")["selected_step"] == 200
+
+
+def summary_fixture(
+    tmp_path: Path,
+) -> tuple[Path, Path, Path, Path, list[dict[str, Any]], dict[str, Any]]:
+    config_path = parent_fixture(tmp_path)
+    config, _ = continuation.verify_parent(config_path)
+    checkpoint = Path(config["run_dir"], "checkpoint_00000200.pt")
+    prompts = tmp_path / "fixed-prompts.jsonl"
+    prompt_rows = [{"id": str(i), "text": f"句子{i}"} for i in range(12)]
+    prompts.write_text("".join(json.dumps(row) + "\n" for row in prompt_rows))
+    audio = tmp_path / "measured.wav"
+    audio.write_bytes(b"hash-verified measured output")
+    report = {
+        "state": "complete",
+        "step": 200,
+        "weights": "raw_checkpoint",
+        "config_sha256": continuation.digest(config_path),
+        "checkpoint_sha256": continuation.digest(checkpoint),
+        "tokenizer_sha256": continuation.digest(
+            config["model_overrides"]["flow_lm.lookup_table.tokenizer_path"]
+        ),
+        "asr": {
+            "model": continuation.BREEZE_MODEL,
+            "revision": continuation.BREEZE_REVISION,
+            "adapter": continuation.BREEZE_ADAPTER_VERSION,
+        },
+        "prompts": [
+            {
+                **row,
+                "status": "audio",
+                "generated_frames": 20,
+                "audio_path": str(audio),
+                "audio_sha256": continuation.digest(audio),
+                "asr_text": "可辨識中文",
+                "character_sequence_similarity": 0.2,
+            }
+            for row in prompt_rows
+        ],
+    }
+    records = [
+        {"type": "train", "step": 200, "grad_norm": 1.0, "metrics": {"loss": 1.02}},
+        {"type": "valid", "step": 200, "metrics": {"loss": 1.02}},
+        {"type": "valid", "step": 0, "metrics": {"loss": 1.0}},
+    ]
+    evaluation = tmp_path / "summary-report.json"
+    return config_path, checkpoint, prompts, evaluation, records, report
+
+
+def test_twelve_prompt_baseline_known_decoder_failures_remain_comparable(tmp_path: Path):
+    config, checkpoint, prompts, evaluation, records, candidate_report = summary_fixture(tmp_path)
+    candidate_report["prompts"][0]["character_sequence_similarity"] = 0.0
+    evaluation.write_text(json.dumps(candidate_report))
+    candidate = continuation.summarize(evaluation, records, 200, config, checkpoint, prompts)
+    assert candidate["similarities"] == [0.0] + [0.2] * 11
+    baseline_report = json.loads(json.dumps(candidate_report))
+    baseline_report.update(
+        step=0, weights="seeded_pretrained_with_reset_text_embeddings", checkpoint_sha256=None
+    )
+    for index, frames in enumerate([7, 5, 5, 5, 5, 5]):
+        row = baseline_report["prompts"][index]
+        for key in ("audio_path", "audio_sha256", "asr_text", "character_sequence_similarity"):
+            row.pop(key)
+        row.update(
+            status="too_few_frames_for_decoder", generated_frames=frames, seconds=frames / 12.5
+        )
+    measured_scores = [0.0, 0.0, 0.0, 1 / 9, 1 / 7, 0.0]
+    for row, score in zip(baseline_report["prompts"][6:], measured_scores, strict=True):
+        row["character_sequence_similarity"] = score
+    baseline_report["prompts"][6]["hit_frame_limit"] = True
+    baseline_report["prompts"][7]["hit_frame_limit"] = True
+    evaluation.write_text(json.dumps(baseline_report))
+    original = evaluation.read_bytes()
+    baseline = continuation.summarize(evaluation, records, 0, config, None, prompts)
+    assert evaluation.read_bytes() == original
+    assert baseline["healthy"] == 6
+    assert baseline["similarities"] == [0.0] * 6 + measured_scores
+    assert baseline["capped"] == 2
+    assert baseline["failure_adjusted_task_consistency_scores"] == baseline["similarities"]
+    assert [row["source"] for row in baseline["score_sources"]] == ["decoder_unavailable"] * 6 + [
+        "measured_asr"
+    ] * 6
+    assert all(
+        row["reason"] == "too_few_frames_for_decoder" for row in baseline["score_sources"][:6]
+    )
+    assert all("character_sequence_similarity" not in row for row in baseline_report["prompts"][:6])
+    assert continuation.gate(baseline, candidate, baseline, 22754, 8) == (
+        True,
+        "undercoverage_bridge",
+    )
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"status": "audio", "asr_text": None},
+        {"status": "audio", "character_sequence_similarity": float("nan")},
+        {"status": "audio", "character_sequence_similarity": float("inf")},
+        {"status": "audio", "character_sequence_similarity": -0.1},
+        {"status": "audio", "character_sequence_similarity": 1.1},
+        {"status": "audio", "character_sequence_similarity": True},
+        {"status": "nonfinite"},
+        {"status": "unknown"},
+        {"status": "silent"},
+        {"status": "empty"},
+    ],
+)
+def test_missing_measurement_and_other_nonoutput_statuses_cannot_bridge(
+    tmp_path: Path, change: dict[str, Any]
+):
+    config, checkpoint, prompts, evaluation, records, report = summary_fixture(tmp_path)
+    report["prompts"][0].update(change)
+    evaluation.write_text(json.dumps(report))
+    summary = continuation.summarize(evaluation, records, 200, config, checkpoint, prompts)
+    assert summary["similarities"] == []
+    assert not continuation.gate(metrics(0), summary, metrics(0), 22754, 8)[0]
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"generated_frames": 8},
+        {"generated_frames": -1},
+        {"generated_frames": True},
+        {"generated_frames": 1.5},
+        {"seconds": float("nan")},
+        {"seconds": -1.0},
+        {"seconds": True},
+        {"seconds": 0.0},
+        {"generated_frames": 0},
+        {"asr_text": "contradictory transcript"},
+        {"character_sequence_similarity": 0.1},
+        {"audio_path": ""},
+        {"audio_sha256": "contradiction"},
+    ],
+)
+def test_malformed_or_contradictory_decoder_failure_cannot_bridge(
+    tmp_path: Path, change: dict[str, Any]
+):
+    config, checkpoint, prompts, evaluation, records, report = summary_fixture(tmp_path)
+    row = report["prompts"][0]
+    for key in ("audio_path", "audio_sha256", "asr_text", "character_sequence_similarity"):
+        row.pop(key)
+    row.update(status="too_few_frames_for_decoder", generated_frames=5, seconds=0.4)
+    row.update(change)
+    evaluation.write_text(json.dumps(report))
+    summary = continuation.summarize(evaluation, records, 200, config, checkpoint, prompts)
+    assert summary["similarities"] == []
+    assert not continuation.gate(metrics(0), summary, metrics(0), 22754, 8)[0]

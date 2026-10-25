@@ -1,0 +1,31 @@
+# Bounded merge hash-cache diagnosis
+
+2026-10-26 Taipei — GPT-6 Astra. Source inspected in the active taigi-batch-weaklabels worktree; this is a pre-fix recommendation, not a final patch approval.
+
+The reported performance defect is confirmed in both validators. `_validate_release` uses `seen_audio.setdefault(audio_path, sha256_file(audio_path))`; Python evaluates the second argument on every call, even when the key exists. `_validate_published` also calls `sha256_file(audio)` for every metadata row. Whole-source audio shared by hundreds of segments is therefore read and hashed hundreds of times.
+
+An independent CPU probe used the existing test fixture helper, two distinct intervals sharing one actual input WAV, and a wrapper counting real SHA calls. The first merge hashed that input twice. Reusing the merged release hashed the same input twice and the single merged output WAV twice. The temporary fixture was removed. This proves the problem without assuming disk throughput or claiming a measured full-corpus speedup.
+
+The minimal fix is an explicit cache membership guard in each validator: hash on first resolved-path occurrence, then compare the cached actual digest against **every** row's expected digest. Keep caches local to each validator invocation. Key by resolved file path, not claimed digest, because two distinct files claiming the same digest must both be inspected. Retain existing path containment, file existence, interval/audio bounds, canonical metadata, manifest content/hash, and report/count validation. No data/schema/identity changes, dependencies, new persistent cache, or hashing bypass are necessary. This follows the existing immutable-release assumption; it does not add a concurrent-writer guarantee that the old repeated reads also did not provide.
+
+Required focused verification: count one audio hash per unique path per validator invocation; demonstrate conflicting expected hashes on repeated input paths still reject; retain actual audio corruption/reuse and compact-manifest tampering tests; ensure a later validation call rereads audio so corruption between calls cannot be hidden. A second distinct file with an identical claimed digest must not reuse the first path's result. Existing per-file copy verification remains unchanged.
+
+`training/taigi/corpus.py:code_identity()` contains exactly corpus.py, corpus_worker.py, batch.py, enhance.py, pipeline.py, transcriber.py, audio.py, and schema.py. **merge.py is outside those eight frozen files.** Record the recovery patch source revision separately; do not alter the frozen corpus identity or replay completed inference.
+
+Root reports roughly four minutes elapsed with the process still reading the second long source. Given the reproduced per-segment multiplier and the fact that `run_taigi_corpus_job.py` invokes `merge_releases` synchronously inside the already running Python process, editing source cannot repair that process in place. Recommend a controlled restart after the small fix and focused tests, provided a fresh status check still shows merge before training. Preserve the stopped job and all completed immutable corpus artifacts. The job runner deliberately refuses existing job directories, so use a new recovery job rather than delete or bypass identity state, and retarget umbrella/backup monitoring before starting it. Root owns systemd stop/empty-cgroup verification and the unchanged absolute budget/deadline. Do not kill blindly if training has meanwhile begun. Exact saved time remains unmeasured; the evidence supports avoiding further repeated reads, not a precise thirty-minute forecast.
+
+Self-check: no source edits, Git mutation, cloud changes, GPU, delegation, or Agentflow startup. Only this review artifact was written; CPU temporary fixture cleaned. Sol owns patch and regression implementation.
+
+## Final focused review — PASS
+
+2026-10-25T23:24:26Z — GPT-6 Astra. Reviewed the final uncommitted two-file diff independently. Exact reviewed contents: `training/taigi/merge.py` SHA-256 `260bf727bff9e978e559c3eeabe785e60be4b24257ad1c97b57830c95cd41200`; `tests/test_taigi_merge.py` SHA-256 `5604e7bc424d14a652efcd6ab1d43152f73ae0c0d898e2b41b599ebf2ca24eb2`.
+
+No actionable blocker found. Both validators now hash only on a resolved-path cache miss. The input validator retains its per-row digest comparison and bounds inspection; published validation retains per-row file existence, containment and digest comparison. Both caches are scoped to one call, and canonical metadata/compact manifests/report checks remain intact. This is the smallest correction to the reproduced cause.
+
+Reviewed the four added tests: repeated paths hash once in each separate validation pass; existing merged-release reuse hashes input and output once each; conflicting digest on a cached path rejects; distinct paths with identical claimed digest are independently hashed. Actual file mutation between calls rejects. These tests exercise the failure mechanism and integrity boundaries, rather than merely asserting a cache exists. Sol reports 16 tests passing plus Ruff/type checks; root is independently running the same focused module. No redundant full-suite rerun was performed in this review.
+
+Sol's production metadata count is 22,754 rows and 421 distinct audio paths across 288 releases, with 421 merged audio paths. For that measured path layout, a full input-plus-existing-output validation changes 45,508 audio hash calls to 842, approximately 54-fold fewer full-file hash calls. This is an operation-count reduction, not a measured wall-time speedup.
+
+Root reports backup/private delivery paused before stopping the umbrella, remote MainPID/ControlPID zero, and no training checkpoint yet. The proposed fresh `production/recovery-20261026-r2` job with new backup root and explicit source receipt respects the old failed-job evidence and frozen eight-file corpus identity. Lifecycle execution and final host test result remain root-owned.
+
+Self-check: final review changed only this previously authorized report; no source edits, tests rerun, Git mutation, GPU/cloud operation, delegation or Agentflow invocation. Verdict is anchored to the file hashes above until root freezes the commit.
