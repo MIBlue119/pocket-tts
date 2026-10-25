@@ -38,4 +38,120 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 # → Ask / A-002 (MIBlue119)
 
-+ 
++ 請繼續幫我完成任務 你可以用 agentflow 的godev來達成
+
++ help me use astra to have this good training
+
++ 進度？
+
++ 為什麼 我給你的 youtube 清單 不是有超多影片 你應該要都處理
+
++ 你目前處理得如何？
+
++ 假如你想省token 可以astra plan, implement with sol, if some problem happened fixed with astra
+
++ 處理進度？
+
++ 你可以傳處理過的片段到我手機嗎？ 或是告訴我哪裡可以聽到
+
++ 你有辦法榨乾你開啟的算力，然後加速處理嗎？
+
++ 進度如何？約莫多久可以處理好
+
+---
+
+## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
+
+- Recovered the unhandled A-001 request verbatim into the final A-002 Ask. Stream creation appended an empty A-002, so the writer correctly refused a progress write to non-final A-001. Continue the same authorized task; original owner text is preserved.
+- Requirements, discovery/codewalk and specification are committed at6fd16f5 in the already allocated artifacts/A-001-batch-weak-labels/design.md. No new owner decision is pending; continuation authorizes implementation. Route full_pipeline, allow-ag on; host owns requirements/specification and integration, separate native workers implement disjoint slices, followed by independent acceptance.
+- Astra owns batch lifecycle/recovery and Sol owns immutable release merging. Both have explicit file lists, shared filesystem permissions, and no permission to invoke Agentflow or delegate. Root retains actual GPU operations and final delivery.
+- The documented feature workspace resolved the root-notebook commit refusal. Only inherited Claude identity markers were omitted from that command to select the actual Codex host. Existing product branch remains preserved.
+- Prepared56 nonoverlapping intervals from25 supplied short videos, totaling905 requested seconds. Five long interviews remain explicitly deferred by existing source limits. Data files are ignored; no new cloud resource is allocated.
+- Explore/spike reuse prior actual model/video evidence. Security boundaries (process cancellation, file integrity and split leakage) are part of final independent acceptance; no separate learning stage is needed.
+
+## [RUN-002] Event — 2026-10-25 18:50:09 +0800 (A-002)
+
+- Batch unit326162f is committed. Host reran the focused suite:9 tests passed in4.50s, including actual cancellation and interpreter behavior.
+- Real batch started in PTY /dev/pts/154, tool session34149:56 jobs,2700-second overall admission/run budget,180-second per-attempt timeout,2 total attempts per job and10GiB disk reserve. It runs locally on RTX3090, with no new cloud allocation.
+- Owner requested Astra for good training. A separate gpt-6-astra native advisor is inspecting the real training/validation path and will provide a concrete quality plan; its only write is astra-training-plan.md.
+- Host review found a deduplication bridge that could lose group connectivity and duplicate utterance IDs across chunks. The merge worker is correcting those specific R3/INV3 integrity issues before integration; source and tests remain within its two allowed files.
+
+## [RUN-003] Event — 2026-10-25 18:55:00 +0800 (A-002)
+
+- Host accepted merge bridge/ID/integrity corrections after reading code and running11 tests. Batch9, evaluator2, validation/config19 tests pass; scoped ty and Ruff pass. Product and operating guide committed at4532e87.
+- Astra's training advice is accepted: batch1×accumulation8, lr1e-4, warmup10, up to100 updates with actual baseline/held-out validation and fixed generated prompts. New validation isolates RNG; finite generated-audio diagnostics inspect raw weights and keep same-ASR consistency distinct from quality.
+- Native Astra independent review started at exact4532e87 with frozen review-dispatch.md, review-facts.json and full-depth review-plan.json. It has a separate context and shared permissions; no enforced read-only or different-family claim. No GPU tests are authorized during production.
+- Owner asked “進度？”; at that observation8/56 jobs were complete,28 pairs and91.18 accepted seconds, no failed jobs. The batch continues; training has not started yet.
+- Scope comparison: changed code/tests, CLI guide, Astra advice and review records match tracker T1–T4 and the owner's added good-training request. Media/model artifacts remain outside Git. Tracker validated2/4 complete.
+
+## [WIP-001] Checkpoint — 2026-10-25 18:55:00 +0800 (A-002)
+
+- **Finished:** Resumable batch, immutable grouped merger, deterministic validation and bounded generation diagnostic code; relevant tests and scoped checks pass.
+- **Running now:** Local56-job producer in PTY34149 and independent Astra review of4532e87. No additional cloud resources.
+- **Still to do:** Finish or explicitly account for each batch job, freeze train/validation release, train tokenizer and bounded teacher, compare baseline/final audio, verify artifacts and deliver branch.
+- **Next work action:** Monitor batch state and inspect generated releases while review runs; keep GPU inference/training sequential.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-004] Event — 2026-10-25 18:55:11 +0800 (A-002)
+
+- Correction to the preceding record: the first tracker check rejected missing literal Proof/Effect fields; the command sequence continued and wrote an inaccurate validation claim. Added the already observed test evidence and scope-effect fields, then reran the checker successfully:2/4 complete. Product test results were unchanged; no implementation tests were repeated.
+
+## [RUN-005] Event — 2026-10-25 18:58:54 +0800 (A-002)
+
+- Astra review found two blocking edge cases: altered compact manifests with updated local hashes, and orphan GPU stages after abrupt wrapper death. Existing INV2/4 required fixes; design explicitly reopened. The original blocking report is preserved.
+- Corrections committed at2d25d35: compare canonical compact content on reuse; persist random attempt ownership before launch and use PID descriptors for safe cleanup even after parent death. Root batch13 tests pass5.65s; exact manifest-tamper regression passes. Linuxx86-64 requirement is documented.
+- Controlled real PTY interruption stopped job20 and saved19 completed jobs. GPU inspection showed only unrelated610MiB application remained. Restarted exact same plan/options under corrected runner in PTY session13496; independently verified all19 saved jobs/checksums and one attempt each, with zero repeat inference for completed work. Resume proof is in ignored data/taigi-batch-v1/resume-proof.json.
+- Astra second review now targets2d25d35 through review-dispatch-r2.md; final data and training evidence remains pending.
+
+## [RUN-006] Event — 2026-10-25 19:17:08 +0800 (A-002)
+
+- Owner clarified all six playlists, superseding the sampled producer. Full enumeration contains 290 unique videos and approximately26.1source hours. All IDs are frozen in training/configs/taigi_youtube_full_inventory.json; round-robin scheduling includes every playlist, including long interviews.
+- Full-corpus worker, supervisor and bounded corpus-to-training orchestration committed at6c3e6ec. Host verified22 corpus/worker tests and7 orchestration tests. Native Astra independently reviews this new scope; native Sol implements a separate bounded backup controller. Shared filesystem access is not OS-enforced isolation.
+- The original56-window producer finished54 successful windows and2 explicit failures; it did not process all290videos. Its outputs remain reusable evidence and are not presented as full coverage.
+- Dedicated Nebius RTX PRO6000Spot VM computeinstance-u00wakm49f57fd1zp8 passed actual RE-USE and Breeze inference, with24model hashes verified. Root accepted healthy VM ownership; original20-hour deadline2026-10-26 07:06:12UTC remains fixed. Both external provider-stop and persistent in-VM shutdown timers are active. Prior OCR instance remains STOPPED. Full corpus and training have not started yet.
+- Owner requested processed examples on phone. Three actual MP4 files were created with ffmpeg, audio streams and exact20/20/10-second durations verified, and Telegram confirmed all three delivered. Direct WAV delivery was rejected by extension allowlist; real AAC/MP4 conversion resolved it. Files live under /home/weiren/tts-deliverables/2026-10-25-audio-preview. These are source/enhanced training material, not model-generated TTS.
+
+## [WIP-002] Checkpoint — 2026-10-25 19:17:22 +0800 (A-002)
+
+- **Finished:** Full290-video inventory;54/56pilot windows;22corpus/worker and7orchestration tests; actual cloud model compatibility; three phone previews delivered.
+- **Running now:** Astra full-corpus review and cloud dependency readiness; Sol backup-controller implementation; root actual integration.
+- **Still to do:** Actual short/long full-video acceptance, all290durable launch, training/diagnostics, backup, cloud cleanup and Git delivery.
+- **Next work action:** Install frozen6c3e6ecarchive on the healthy cloud VM and run bounded full-video checks under systemd containment.
+- **Checks:** Tracker scope updated to T1–T9; RUN records current evidence. Full completion and tracker schema validation are not claimed.
+
+## [RUN-007] Event — 2026-10-25 19:27:28 +0800 (A-002)
+
+- Full-corpus source6c3e6ec passed independent review; actual short source produced17weak pairs after correcting the cloud service HF_HUB_CACHE environment. Failed preload attempts remain recorded. The long source has published six enhancement chunks; whole-source completion checks and ASR are pending.
+- Owner requested compute acceleration. Actual long-video GPU samples show97–99% utilization, approximately5.95GiB memory and554–563W. Low memory usage does not establish spare compute. Astra is preparing bounded Breeze batch1/4 and matched one/two-process throughput comparisons after the actual trial releases the GPU; no speculative extra hardware was provisioned.
+- Bounded backup controller committedd501685; review found stale running/missing job metadata after service death could delay early stop. Correctiond4c109a passed14host tests and independent follow-up. Persistent enabled units are required: a transient successful unit was actually garbage-collected. A real persistent tiny service retained execution history; SSH/rsync copied and SHA256 verified both fixture files, correctly marking the stale running job interrupted. No stop helper was supplied to the test.
+- Actual local tokenizer conversion exposed equal-score unigram token-order differences on a repetitive ASR label. Existing BPE mode passed all204original train/validation/builtin texts without bypassing parity. Two obvious repeated-character labels were found. Commit0647ed1 adds a narrow >=12identical alphabetic-character quarantine with preserved text/audio/reason, and explicit BPE training. Host35focused tests and Astra review pass; original failing artifacts remain preserved.
+- Replaying existing ASR labels through the new gate required no model inference. New immutable pilot releasec7977dd525b91eea contains193rows:165train,28valid;2quarantined. Local bounded100-step diagnostic now runs with exact BPE parity and completed fixed baseline generation; training completion and audio quality are not claimed.
+- Owner asked timing. At19:24Taipei measured stable enhancement was about7.4source seconds per wall second; communicated provisional6–10hours full data processing plus1–3hours initial training/evaluation, subject to whole-source and throughput evidence. All290videos are queued in the inventory, not yet running in production.
+- Tracker validated3/10complete after correcting missing canonical Source fields; its tasks cover full corpus, training, cloud/backup, review, phone delivery and measured acceleration. Current source changes and allocated reports match those boundaries; ignored media/model artifacts remain outside Git.
+
+## [WIP-003] Checkpoint — 2026-10-25 19:27:28 +0800 (A-002)
+
+- **Finished:** Whole290-video inventory; actual short-video pipeline; source and backup reviews; real backup fixture; BPE parity and repetition quarantine; phone previews delivered.
+- **Running now:** Cloud long-video acceptance, local100-step diagnostic, Astra bounded throughput work waiting for the cloud GPU.
+- **Still to do:** Verify whole long video, adopt only measured acceleration, launch full production with durable backup/stop controls, inspect training results and push delivery.
+- **Next work action:** Read long-video result and local training metrics; integrate benchmark findings before freezing cloud production code.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-008] Event — 2026-10-25 19:54:02 +0800 (A-002)
+
+- The whole-video acceptance finished2/2: long52.501minutes with exact frame coverage,760weak labels/2318.72accepted seconds; short17labels. A real PTY resume verified existing artifacts without repeating inference.
+- Measured optimization is deployed at43735eb: one enhancer, resident Breeze batch4 with stable duration grouping. Fair39-row cached workload improved15.360s to11.470s (1.339x throughput), all39texts exact, finalbatch3, resumed0loads/0calls. Root38focused tests plus14sort-worker tests pass; independent source review passes. Duplicate model processes gave no benefit.
+- Real generated diagnostics exposed a root EOS bug: batch-size1/longest rows had no positive terminal target. Fix78bc38d adds one false-mask terminal position excluded from flow/statistics;54related CPU tests and independent review pass. Fresh local100updates completed with finite losses and all6prompts ending1.20–2.16s instead of6/6frame caps. Text content remains unreliable and corrected held-out loss did not improve. No model promotion or quality claim; W&B sync of both comparison runs completed.
+- The corrected teacher ran5actual cloud updates; model, EMA, optimizer and export tensors were finite, EOS weights changed and GPU was released. Full-data first stage is200updates at3e-5 with50-step checks, four raw candidates and baseline/final same-ASR diagnostics. Longer training is contingent on evidence.
+- Full290-video production first started19:43Taipei. Two genuine Taiwan-only restrictions appeared on the US cloud host. Controlled repair paused the backup watcher before stopping the producer, preserved its frozen corpus and original attempts, and used a loopback127.0.0.1:18080 reverse SSH SOCKS tunnel through the user's Taiwan machine. Actual metadata and media retrieval succeeded; existing acquire() and the corpus lock produced verified source reports for both sources. No cookies, HF/W&B credentials or SSH private keys were copied.
+- Production resumed19:50in fresh orchestration directory job-200-tw, with the SAMEcorpus/state/plan and unchanged43735ebcode. At19:52:5complete,1running,284pending; both formerly restricted videos complete. Persistent enabled cloud service:Restart=no,KillMode=control-group,TimeoutStopSec60,RuntimeMaxSec64860. Local backup watcher now points at the new active job and is running; proxy and original external stop timer are active. Budget stop remains2026-10-26 15:06:12Taipei and is never reset. Stop helper also closes the proxy.
+- Actual deployment verification matched all230regular archived files. Production stores code archive/hashes and transport/recovery receipts. The real backup fixture verified every file and correctly recognized stale running metadata after service exit. Temporary proof unit was disabled and archived; source data and trial artifacts remain preserved.
+- Personal branch was pushed through43735eb. The current evidence report records limitations and artifact locations. Tracker validated6/10complete: full processing, later cloud training, final delivery records and cleanup remain active. This is an unattended ongoing run, not a completed dataset or usable Taiwanese voice model.
+
+## [WIP-004] Checkpoint — 2026-10-25 19:54:02 +0800 (A-002)
+
+- **Finished:** Phone audio delivery; all290inventory; whole-video and cloud-teacher acceptance; measured batch4 acceleration; EOS regression fix and real100-update comparison; source reviews and personal-branch code push.
+- **Running now:** Full corpus on dedicated Nebius VM through Taiwan egress, local incremental backup watcher, independent original absolute-deadline controls. Production at19:52has5complete/1running/284pending.
+- **Still to do:** All source outcomes, full-data200-update candidate and diagnostics, verified final backup, local W&B synchronization and dedicated resource cleanup. Text correctness is not established.
+- **Next work action:** Verify the resumed producer and backup receipts remain healthy, finish evidence-record push, then inspect the durable job's next state without changing its frozen code or budget.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker

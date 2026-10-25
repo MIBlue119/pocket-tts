@@ -25,14 +25,14 @@ pilot and must not be represented as fulfillment of this request.
 `training.taigi.corpus_worker` owns two commands: `enhance SPEC_JSON` and
 `transcribe SPEC_JSON`. Spec keys: raw_audio (absolute path), video_id, group_id,
 original_url, license, output_dir (absolute per-video stage directory), cache_dir,
-device. Enhance loads predictor once, divides actual decoded frames into contiguous
+device, asr_batch_size (1 by default, opt-in 2–4). Enhance loads predictor once, divides actual decoded frames into contiguous
 chunks at most600seconds using exact source sample offsets, reuses verified complete
 chunks and preserves partial diagnostics. It writes `sources.jsonl`, candidates and
 an enhancement report including total covered frames, model identity and hashes.
 Source IDs may include chunk offsets; original video/hash/group remain in metadata.
 Preparation remains train-only per video; final grouping occurs during merge.
 Transcribe reads those candidates and uses per-segment text caches keyed by audio
-hash/interval/model+adapter identity, then publishes via existing transcribe_release.
+hash/interval/model+adapter/code/batch-size identity, then publishes via existing transcribe_release.
 Load Breeze lazily once per video. A durable `result.json` reports state
 `complete` or `no_candidates`, release path if present, counts and provenance.
 Labels remain weak; long/silent/clipped segments are counted in quarantine rather
@@ -70,9 +70,29 @@ Partial model outputs remain outside completed artifacts until validation/promot
 Enumerate all290videos and compare queue IDs exactly. Test full coverage including
 fractional final chunks, resident model load count, stage resume, corruption refusal,
 empty speech, interrupted processing and explicit failures. Process one complete
-long episode locally before scaling, inspect coverage/hashes and actual weak labels.
+long episode on the execution host before scaling, inspect coverage/hashes and actual weak labels.
 Confirm durable execution/status and resource shutdown rules before cloud use.
 Reuse the established merger, deterministic validation and generated-audio checks.
+
+The authorized Nebius host is the execution host for the whole-episode acceptance.
+Its actual 52.5-minute trial covered every decoded frame and produced 760 weak
+labels. A corrected cache environment and CPU-only verified resume recovered the
+initial short-video ASR setup failure; original attempts remain recorded.
+
+The owner's acceleration request adds a measured batching acceptance: compare
+single and four-item Breeze inference on unequal durations and a partial final
+batch, preserve order, and prove cache resume uses no model load or call. The
+resident benchmark found 1.87× throughput for batch four; duplicate RE-USE
+processes were slower, so production keeps one GPU stage active.
+
+The first full-data training stage is a 200-update diagnostic, not automatic
+promotion: train-only BPE with exact conversion parity, learning rate 3e-5,
+100 warmup updates, validation/checkpoints every 50 and four retained raw
+candidates. Save fixed generated audio and same-ASR consistency before and after.
+Quarantine obvious repeated-character labels while retaining evidence. Every
+sentence must have a positive terminal EOS target, excluded from flow targets;
+the real small-data experiment exposed and regression-tested this missing target.
+Old validation losses are not comparable across that objective correction.
 
 ## Minimality check
 

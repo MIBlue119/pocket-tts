@@ -71,3 +71,89 @@
 - The integrating agent should record the chosen recipe and rejected alternatives in the notebook/route record, update STATUS with accepted data counts and current experiment state, and commit the final config/evaluation changes with this report. Necessary verification includes actual release split/hash checks, tokenizer parity, real loader coverage/no target prompt, a successful finite train/validation run, checkpoint restoration, and fixed free-generation artifacts. Add focused tests only for new evaluation behavior such as RNG preservation and unique-row accounting. Existing passed pipeline tests are not training-quality acceptance.
 
 Self-check: Recommendations distinguish the authorized bounded batch from proposed expansion, execution from quality, weak labels from verified semantics, and repeated batches from independent evidence. No claim of good Taiwanese synthesis is made. The immediate next step is a bounded local experiment with held-out source groups and comparable generated audio; broader data acquisition and cloud spending remain proposals subject to the captured owner scope.
+
+## Supplement — actual 100-update diagnostic and next training decision
+
+* _2026-10-25 19:29:10 +0800 (gpt-6-astra/inherited)_
+
+**Decision**
+
+- Do not extend the tiny local run merely because training loss is finite. Every measured post-update held-out loss is worse than its initialization baseline. Finish its fixed-prompt raw-weight generation and ASR consistency comparison, and preserve the failed-to-improve result.
+
+- For the new full-corpus release, use a first **200-update diagnostic ceiling**, not an automatic 2,000-update run. A conservative proposed learning rate is `3e-5`, retaining warmup 100, microbatch 1 and accumulation 8. This rate is an untuned risk-reduction choice, not a measured optimum. Keep the architecture and objective unchanged.
+
+- Validate and save raw checkpoints every 50 updates. Preserve these four candidate raw checkpoints and the seeded initialization reference. Decide whether to continue only after this new release's own held-out and generated-audio evidence exists; 2,000 updates remains a conditional upper bound inside the original time and money ceiling.
+
+### Observed evidence
+
+Read the actual `diagnostic-v4/training.yaml`, `training/progress.jsonl`, `preparation.json`, merged metadata and baseline generation report under `/mnt/HDD2/proj_tts/pocket-tts/data/taigi-batch-v1/`.
+
+- The immutable filtered release is `c7977dd525b91eea`: 165 training rows containing **381.14 seconds** across four playlist groups, and 28 validation rows containing **72.68 seconds** from one other playlist group. Two pathological ASR rows were quarantined. This is roughly six minutes of accepted training audio, not the full 26.1 source-hour inventory.
+
+- The run uses an 813-piece BPE tokenizer, freshly reset text embeddings, the pretrained 24-layer model, LSD, sentence mode, learning rate `1e-4`, warmup 10, microbatch 1 and accumulation 8. One hundred updates consume 800 example slots, approximately 4.85 passes over 165 rows if every row loads once per cycle. No target voice prompt or latent-statistics updates are enabled.
+
+| Update | Fixed held-out loss |
+| --- | ---: |
+| 0 | 0.544309 |
+| 25 | 0.563791 |
+| 50 | 0.559163 |
+| 75 | 0.582931 |
+| 100 | 0.580498 |
+
+- Final loss is 0.036188 higher than baseline, about **6.65% worse** on this fixed diagnostic. The flow component increases from 0.542623 to 0.580481, while EOS loss falls from 0.016859 to 0.000169. Better EOS fitting therefore does not mean the audio-prediction component improved.
+
+- The final logged training loss is 0.438620. Inspection of the training loop shows this log contains the **last microbatch's metrics**, not the mean of all eight accumulated microbatches or the training corpus. Do not present its difference from validation as a measured corpus-wide generalization gap.
+
+- At inspection, the baseline produced six finite, non-silent audio files without clipping; three of six reached the ten-second frame cap. Those waveform checks do not show intelligible or correctly conditioned speech. Final raw generation and Breeze comparison were still in progress; no improvement claim is available yet.
+
+### What this result does and does not imply
+
+- The held-out regression is consistent with overfitting or unhelpful adaptation on a very small, differently sourced weak-label set. One held-out playlist, one run and an initialization with random new text embeddings cannot distinguish those causes or establish the best learning rate. The curve also is not strictly monotonic: step 50 improves over step 25 while remaining worse than baseline.
+
+- The full-corpus experiment will have a different accepted duration, vocabulary and baseline. Do not compare its absolute loss directly with 0.544309 or resume this pilot using new token IDs. Record actual accepted rows, seconds, unique sources and groups after filtering; 26.1 source hours is only the input inventory total.
+
+- Keep the same model, LSD objective, zero dropout, frozen Mimi and current data contract for the first comparison. Freezing layers, switching objectives, enlarging the model or increasing batch size would introduce additional explanations without addressing the observed evidence.
+
+### Bounded continuation rule
+
+1. Freeze the full release and tokenizer. Verify its train/validation row loading, record the exact fixed validation subset if capped at 100 rows, and run its own seeded step-zero validation and fixed-prompt generation. A fixed cap is a subset diagnostic; do not call it evaluation of every held-out row or every source group unless it actually covers them.
+
+2. Run at most 200 updates with the proposed lower learning rate, warmup 100 and validation/checkpoints every 50. Retain enough raw checkpoints to compare the measured candidates rather than automatically preferring the latest. The existing checkpoint writer keeps an optimizer sidecar only for the newest checkpoint; preserving a raw model is sufficient for evaluation, but does not by itself support exact optimizer resume from an older selected checkpoint.
+
+3. If all post-update validation scores are worse than this release's baseline and generated samples remain blank, repetitive, frequently capped or insensitive to changed prompts, stop training and retain the artifacts. Do not spend the remaining allowance solely on more steps. Investigate labels, source-group mismatch and conditioning evidence next.
+
+4. If repeated checkpoints show held-out improvement and fixed generation avoids degeneration, a further bounded continuation may be justified. Compare raw weights on the same prompts and settings; use negation/number pairs and some training examples to distinguish basic fitting from unseen-prompt behavior. Breeze agreement remains same-model consistency, not independent Taiwanese quality. If loss and generation disagree, keep the outcome unresolved rather than selecting the model on one convenient number.
+
+5. Any continuation must preserve the frozen data/tokenizer, record the changed training ceiling through the launcher's supported identity procedure, and retain optimizer state where needed. Do not silently edit a frozen run identity or reset the cloud spending clock. The 200-update stage replaces the initial automatic 2,000-update commitment; it is not an additional unbudgeted search. Keep backup/diagnostic reserves and the existing absolute VM stop deadline.
+
+Self-check: This supplement distinguishes actual measurements from a proposed untuned recipe, last-microbatch logs from corpus statistics, and a six-minute pilot from the larger source inventory. It does not claim overfitting is proven, that a lower learning rate will fix the problem, or that longer training will produce useful Taiwanese speech. No code, model, GPU process, cloud resource or Git state was changed; only this advisory document was appended.
+
+### Accepted first-stage recipe and checkpoint selection
+
+- The coordinator accepted 200 updates, learning rate `3e-5`, warmup 100, validation/checkpoints every 50 and four retained raw checkpoints. No automatic continuation to 2,000 updates is planned; completion triggers the existing backup/stop flow without a quality claim.
+
+- Generating from the latest checkpoint is sufficient for this initial pilot. Call it the **final-update candidate**, not the best or promoted model. Do not add automatic minimum-validation checkpoint selection now. Summarize the baseline and every measured held-out score in the evidence; if baseline remains lowest, report no held-out loss improvement even when the pipeline completes successfully.
+
+- If an earlier retained checkpoint improves while the latest regresses, its raw weights can be evaluated in a bounded follow-up after verified backup. This keeps selection based on actual full-corpus evidence and preserves all candidates without inventing a new orchestration policy. Keep the latest optimizer sidecar; older raw candidates alone do not support exact optimizer resume.
+
+Self-check: This clarification records the accepted bounded recipe and recommends no additional checkpoint-selection machinery for the initial pilot. Pipeline completion remains distinct from model improvement.
+
+## Supplement — reproduced missing EOS supervision and minimal correction
+
+* _2026-10-25 19:34:54 +0800 (gpt-6-astra/inherited)_
+
+- **Blocking defect found and locally fixed:** The longest utterance in each training batch had no prediction position after its last real audio frame. With sentence mode and batch size one, every target mask entry was valid, so EOS received no positive target at all. Its decreasing loss could therefore reward learning never to stop. Do not interpret the earlier pilot as a clean test of learning rate or generalization; rerun from a fresh seeded initialization with the corrected objective.
+
+- **Actual CPU reproduction:** Built the real Mimi architecture from `english_2026-04_24l.yaml` on CPU, without downloading weights or using the GPU. For 2.00, 2.04 and 3.22 seconds of input, `encode_batch` returned 25, 26 and 41 latent frames respectively, all valid, zero positive EOS supervision positions and zero voice frames. Random codec weights suffice for this frame-count check; this is not a codec-quality measurement.
+
+- **Voice conditioning is matched:** Sentence manifests have no independent prompt; `_sample_sentence` returns empty prompt audio, `encode_batch` preserves zero voice frames, and the conditioner uses `[prefix BOS, text, latent BOS, previous audio]`. Setting `voice_dropout=0` keeps the supplied voice segment, whose length here is zero; it does not insert a hidden target prompt. The evaluator supplies the same empty segment. A CPU tiny-model comparison of full-sequence training conditioning against incremental cached conditioning matched within `4.77e-7` maximum absolute error.
+
+- **Generation contract:** The builder loads the pretrained backbone/flow head and codec while resetting only the new text embeddings. Training normalizes codec latents, generation reverses that normalization, and both use the same LSD decoder. The evaluator reuses the trainer's raw-weight generation and Mimi decode path. Public `TTSModel` normally adds a voice prompt and uses different EOS threshold/minimum/trailing-frame defaults; this diagnostic intentionally tests the no-prompt training condition and is not an exact public-API sampling-parity claim. Those defaults cannot repair absent positive EOS training targets, so no sampling workaround was added.
+
+- **Smallest correction:** `training/modules/model.py` now appends one padded latent position and one false mask entry inside `forward`. Consequently, the final real audio latent becomes the input for a terminal prediction. That prediction trains EOS; its false mask excludes it from the flow target and latent statistics. Existing shorter rows retain their original terminal position, and caller tensors/masks remain unchanged. No tokenizer, voice conditioning, codec, architecture or generation change was made.
+
+- **Fail-before/pass-after evidence:** New `training/tests/test_terminal_eos.py` failed both the single-row and longest-ragged-row cases before the change: logits had three positions where four were needed. Afterward the test checks positive continuation gradients on real frames, a negative gradient that increases terminal EOS, no gradient on later padding, exact real-audio input alignment, unchanged real flow targets and an unmodified caller mask. The new regression plus sentence sampling, smoke and validation-RNG suites passed **54 tests in 4.62 seconds**, CPU only. New-test Ruff checks pass; the installed old Ruff reports existing `ANN101` and formatting issues in the pre-existing model file, so the coordinator will apply the repository's current lint/type tooling.
+
+- **Current interpretation:** Actual generated-ASR evidence is poor: all six final prompts have zero character similarity, repetitive recovered text and frame-limit hits. Missing EOS supervision explains a demonstrated termination-training failure; it does not establish the cause of every text-control or speech-quality failure. Keep the fixed-prompt, held-out and ASR comparisons for the fresh corrected run, without promising useful Taiwanese synthesis.
+
+Self-check: The root cause was reproduced before editing, the fix is confined to terminal prediction/masking, and tests prove that EOS is not counted as an audio flow target. Previous speculative interpretations are qualified by the newly demonstrated defect. No GPU or cloud workload was launched, no model downloaded, no Git change made and no agent delegated. Source changes are limited to the model forward path and its focused new regression test.

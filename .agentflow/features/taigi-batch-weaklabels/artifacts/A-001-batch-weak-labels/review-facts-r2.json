@@ -1,0 +1,25 @@
+{
+  "changed_files": [
+    ".agentflow/features/taigi-batch-weaklabels/ag.json",
+    ".agentflow/features/taigi-batch-weaklabels/artifacts/A-001-batch-weak-labels/astra-training-plan.md",
+    ".agentflow/features/taigi-batch-weaklabels/artifacts/A-001-batch-weak-labels/design.md",
+    ".agentflow/features/taigi-batch-weaklabels/artifacts/A-001-batch-weak-labels/review-report.md",
+    ".agentflow/features/taigi-batch-weaklabels/artifacts/A-001-batch-weak-labels/tracker.md",
+    ".agentflow/features/taigi-batch-weaklabels/taigi-batch-weaklabels.devlog.md",
+    "docs/taigi-batch-weak-labels.md",
+    "tests/test_taigi_batch.py",
+    "tests/test_taigi_evaluate.py",
+    "tests/test_taigi_merge.py",
+    "training/taigi/batch.py",
+    "training/taigi/evaluate.py",
+    "training/taigi/merge.py",
+    "training/tests/test_validation_rng.py",
+    "training/train.py"
+  ],
+  "changed_lines": 2576,
+  "behavior_change": true,
+  "trust_boundary": true,
+  "broad_change": true,
+  "consequential_change": false,
+  "owner_control": "default"
+}
