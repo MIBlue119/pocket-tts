@@ -66,6 +66,8 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 然後模型可以幫我放在我的huggingface 先設private
 
++ 進度呢
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
@@ -198,3 +200,9 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Cloud preflight found no Git metadata in the earlier archive, which would also break the existing experiment launcher. Genuine metadata for43735eb/tree95ec36005e4545a27edb9460bbfac49b89bf0f54 was installed atomically; all231tracked file hashes/modes unchanged. Only the controller is untracked, accurately reported as dirty. No corpus code or process was restarted.
 - Local private publisher service is enabled/active and records waiting_for_verified_backup for weiren119/pocket-tts-taigi. It performs package inference before upload and cleans the entire subprocess group at deadline. Real descendant-timeout test and4readiness tests passed; final25publisher tests and scoped type/lint checks passed.
 - Final real CPU smoke helper completed on the earlier diagnostic package:24kHz,7.04seconds, finite samples; its maximum-generation warning is retained. This proves execution only. The known-poor diagnostic remains local; full-data weights and usability are still pending.
+
+## [RUN-013] Event — 2026-10-25 20:31:00 +0800 (A-002)
+
+- Owner requested status. At20:30–20:31Taipei, live cloud state advanced to18complete,1running,1failed,270pending of290; parent remains in corpus stage and continuation waits. Latest measured completed-source snapshot was2.7436/26.0964hours, with2397accepted weak pairs totaling6969.74seconds. These remain unverified labels, not usable-model evidence.
+- Failed source5GGKG_4w6uE exhausted two metadata attempts with YouTube country restriction. A bounded read-only Taiwan-local yt-dlp check also failed with Video unavailable; no retry counters or source identity were changed. Other videos continue normally.
+- Local backup, private publisher, Taiwan proxy and external budget timer are active. Latest mirror succeeded without error; final backup is not yet complete. HF repo is still private and contains only README/.gitattributes, no model weights. Full-data training has not started.
