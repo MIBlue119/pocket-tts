@@ -1,10 +1,4 @@
-"""Data loading: jsonl manifests of single utterances (moshi-finetune style).
-
-Each line is {"path": ..., "duration": ..., "transcript": ...}. One sample =
-one utterance (cropped to max_duration_sec) + its transcript tokens + a voice
-prompt (a random window elsewhere in the same file). Lines are sharded across
-ranks by line index.
-"""
+"""Encode target audio and optional independent voice prompts with Mimi."""
 
 import logging
 
@@ -38,7 +32,13 @@ def encode_batch(
     T = latents.shape[1]
     num_audio_frames = batch.num_audio_frames.to(device).clamp(max=T)
     mask = torch.arange(T, device=device)[None, :] < num_audio_frames[:, None]
-    voice_prompt_latents = mimi.encode_to_latent(batch.voice_audio.to(device))
+    present = batch.num_voice_prompt_frames.to(device) > 0
+    if present.any():
+        encoded = mimi.encode_to_latent(batch.voice_audio.to(device)[present])
+        voice_prompt_latents = encoded.new_zeros(latents.shape[0], *encoded.shape[1:])
+        voice_prompt_latents[present] = encoded
+    else:
+        voice_prompt_latents = latents.new_zeros(latents.shape[0], 0, latents.shape[-1])
     num_voice_prompt_frames = batch.num_voice_prompt_frames.to(device).clamp(
         max=voice_prompt_latents.shape[1]
     )

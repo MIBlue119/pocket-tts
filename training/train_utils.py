@@ -173,6 +173,11 @@ def ensure_train_latents(
     completion is signaled through the shared filesystem (an NCCL barrier
     would time out).
     """
+    if args.data.sampling_mode == "sentence":
+        if args.data.precompute or Path(args.data.train_jsonl).stem.endswith("_latents"):
+            raise ValueError("sentence sampling requires raw audio and data.precompute: false")
+        return
+
     from training.scripts.precompute_latents import mimi_encode_hash, precompute_manifest
 
     train_path = Path(args.data.train_jsonl)

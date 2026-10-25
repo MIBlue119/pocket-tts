@@ -43,6 +43,14 @@ class DataArgs:
     # them (rank 0 encodes once; other ranks wait). False keeps the
     # on-the-fly audio pipeline.
     precompute: bool = True
+    # Sentence mode keeps the complete text and audio, with an optional independent prompt.
+    sampling_mode: str = "aligned"
+
+    def __post_init__(self):
+        if self.sampling_mode not in ("aligned", "sentence"):
+            raise ValueError("data.sampling_mode must be aligned or sentence")
+        if self.sampling_mode == "sentence" and self.precompute:
+            raise ValueError("sentence sampling requires data.precompute: false")
 
 
 @dataclass

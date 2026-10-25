@@ -1,13 +1,8 @@
-"""Data loading: jsonl manifests of single utterances (moshi-finetune style).
-
-Each line is {"path": ..., "duration": ..., "transcript": ...}. One sample =
-one utterance (cropped to max_duration_sec) + its transcript tokens + a voice
-prompt (a random window elsewhere in the same file). Lines are sharded across
-ranks by line index.
-"""
+"""Aligned suffix sampling and complete sentence sampling from audio manifests."""
 
 import json
 import logging
+import math
 import queue
 import random
 import re
@@ -24,7 +19,7 @@ from safetensors import safe_open
 
 from . import audio
 from .manifest import load_entries
-from .types import Batch, Entry
+from .types import AudioPrompt, Batch, Entry
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +50,12 @@ class UnalignedEntry(ValueError):
     """A manifest entry without word alignments (see training/scripts/align_data.py)."""
 
 
+class InvalidSentenceEntry(ValueError):
+    """A sentence pair cannot be used without changing or leaking its target."""
+
+
 class DataLoader:
+    sampling_mode: str = "aligned"
     # Augmentation knobs; class defaults keep instances built without __init__ (tests) valid.
     prompt_trim_max_sec: float = 0.0
     final_punct_dropout: float = 0.0
@@ -77,7 +77,11 @@ class DataLoader:
         num_bucket_batches: int = 1,
         prompt_trim_max_sec: float = 0.0,
         final_punct_dropout: float = 0.0,
+        sampling_mode: str = "aligned",
     ):
+        if sampling_mode not in ("aligned", "sentence"):
+            raise ValueError("sampling_mode must be aligned or sentence")
+        self.sampling_mode = sampling_mode
         self.jsonl = jsonl
         self.num_bucket_batches = num_bucket_batches
         self.entries = load_entries(jsonl, rank, world_size)
@@ -97,6 +101,8 @@ class DataLoader:
         meta_path = Path(jsonl).with_suffix(".meta.json")
         self.stitch_frames = 0
         if meta_path.exists():
+            if sampling_mode == "sentence":
+                raise InvalidSentenceEntry("sentence sampling does not support latent manifests")
             meta = json.loads(meta_path.read_text())
             self.stitch_frames = int(meta["stitch_frames"])
             self.latents_root = Path(jsonl).parent
@@ -176,8 +182,45 @@ class DataLoader:
         cut, i = self.rng.choice(cuts)
         return cut, " ".join(w["word"] for w in entry.words[i:])
 
+    def _sample_sentence(self, entry: Entry) -> tuple[Any, ...]:
+        if entry.latents_file is not None:
+            raise InvalidSentenceEntry("sentence sampling does not support cached latents")
+        if not isinstance(entry.transcript, str) or not entry.transcript.strip():
+            raise InvalidSentenceEntry("sentence transcript must be nonempty")
+        windows = [entry] if entry.prompt is None else [entry, entry.prompt]
+        for window in windows:
+            if not math.isfinite(window.start) or window.start < 0:
+                raise InvalidSentenceEntry("audio start must be finite and nonnegative")
+            if not math.isfinite(window.duration) or window.duration <= 0:
+                raise InvalidSentenceEntry("audio duration must be finite and positive")
+        if entry.duration > self.max_duration_sec:
+            raise InvalidSentenceEntry("full sentence exceeds max_duration_sec; split upstream")
+        ref = entry.prompt
+        if ref is not None:
+            if Path(ref.path).samefile(entry.path) and (
+                ref.start < entry.start + entry.duration and entry.start < ref.start + ref.duration
+            ):
+                raise InvalidSentenceEntry("voice prompt overlaps the target interval")
+            if ref.transcript is not None and ref.transcript.strip() == entry.transcript.strip():
+                raise InvalidSentenceEntry("voice prompt repeats the target transcript")
+        wav = audio._load_window(entry.path, entry.start, entry.duration, self.sample_rate)
+        if len(wav) < round(entry.duration * self.sample_rate) - 1:
+            raise InvalidSentenceEntry("target audio is shorter than its declared sentence")
+        prompt = np.empty(0, dtype=np.float32)
+        if ref is not None:
+            prompt = audio._load_window(ref.path, ref.start, ref.duration, self.sample_rate)
+            if len(prompt) < round(ref.duration * self.sample_rate) - 1:
+                raise InvalidSentenceEntry("voice prompt is shorter than its declared interval")
+            if np.array_equal(wav, prompt):
+                raise InvalidSentenceEntry("voice prompt duplicates the target audio")
+            prompt, _ = self._cap_prompt(prompt)
+        tokens = torch.tensor(self.tokenize(entry.transcript), dtype=torch.long)
+        return wav, tokens, prompt, len(prompt)
+
     def _sample(self, entry: Entry) -> tuple[Any, ...]:
         """(wav, tokens, prompt wav, prompt samples), or _sample_latent's tuple."""
+        if self.sampling_mode == "sentence":
+            return self._sample_sentence(entry)
         if entry.latents_file is not None:
             return self._sample_latent(entry)
         chosen = self._choose_cut(entry)
@@ -318,12 +361,13 @@ class DataLoader:
             d.get("words"),
             float(d.get("start", 0.0)),
             d.get("latents_file"),
+            AudioPrompt(**d["prompt"]) if d.get("prompt") is not None else None,
         )
 
     def _sample_or_none(self, entry: Entry) -> tuple[Any, ...] | None:
         try:
             return self._sample(entry)
-        except UnalignedEntry:
+        except (UnalignedEntry, InvalidSentenceEntry):
             raise
         except Exception as exc:  # noqa: BLE001 — skip unreadable samples, whatever the cause
             self._failures += 1
@@ -402,13 +446,16 @@ class DataLoader:
         frames = torch.zeros(len(wavs), dtype=torch.long)
         for b, w in enumerate(wavs):
             audio[b, 0, : len(w)] = torch.from_numpy(w)
-            frames[b] = max(1, int(len(w) * self.frame_rate / self.sample_rate))
+            length = len(w) * self.frame_rate / self.sample_rate
+            frames[b] = max(
+                1, math.ceil(length) if self.sampling_mode == "sentence" else int(length)
+            )
         max_prompt = max(len(p) for p in prompts)
         voice = torch.zeros(len(prompts), 1, max_prompt)
         for b, pr in enumerate(prompts):
             voice[b, 0, : len(pr)] = torch.from_numpy(pr)
         num_voice_prompt_frames = torch.tensor(
-            [max(1, int(n * self.frame_rate / self.sample_rate)) for n in prompt_lens],
+            [max(int(n > 0), int(n * self.frame_rate / self.sample_rate)) for n in prompt_lens],
             dtype=torch.long,
         )
         return Batch(audio, frames, list(tokens), voice, num_voice_prompt_frames)

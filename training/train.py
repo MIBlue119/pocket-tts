@@ -197,6 +197,7 @@ def main(config_path: str):
         num_bucket_batches=args.data.num_bucket_batches,
         prompt_trim_max_sec=args.data.prompt_trim_max_sec,
         final_punct_dropout=args.data.final_punct_dropout,
+        sampling_mode=args.data.sampling_mode,
     )
     train_loader = iter(train_data)
 
@@ -364,6 +365,7 @@ def validate(
             world_size,
             seed=0,
             shuffle=False,
+            sampling_mode=args.data.sampling_mode,
         )
     )
     autocast = torch.autocast(
