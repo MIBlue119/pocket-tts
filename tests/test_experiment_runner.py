@@ -1,11 +1,12 @@
 import argparse
 import json
 import os
-from pathlib import Path
 import signal
 import subprocess
 import sys
 import time
+from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -46,7 +47,7 @@ def child(code: str) -> list[str]:
     return [sys.executable, "-c", code]
 
 
-def attempt(run_dir: Path) -> dict:
+def attempt(run_dir: Path) -> dict[str, Any]:
     return json.loads(next((run_dir / "attempts").glob("*.json")).read_text())
 
 
@@ -55,7 +56,7 @@ def test_success_metrics_and_provenance(tmp_path: Path) -> None:
     events = []
 
     class Events:
-        def put_nowait(self: "Events", event: dict) -> None:
+        def put_nowait(self: "Events", event: dict[str, float | int]) -> None:
             events.append(event)
 
     run_dir.mkdir()
@@ -219,7 +220,7 @@ def test_wandb_payload_is_numeric_and_hashed(
     events.put(None)
 
     class Run:
-        def log(self: "Run", value: dict) -> None:
+        def log(self: "Run", value: dict[str, Any]) -> None:
             captured["metrics"] = value
 
         def finish(self: "Run") -> None:

@@ -9,9 +9,7 @@ import hashlib
 import json
 import math
 import multiprocessing
-from multiprocessing.queues import Queue
 import os
-from pathlib import Path
 import queue
 import re
 import shutil
@@ -20,17 +18,22 @@ import subprocess
 import sys
 import time
 import uuid
-from collections.abc import Iterator
+from collections.abc import Generator
+from pathlib import Path
 from types import FrameType
-from typing import Protocol
+from typing import Any, Protocol
 
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class EventSource(Protocol):
+    def get(self) -> dict[str, float | int] | None: ...  # noqa: ANN101
+
+
 class EventSink(Protocol):
-    def put_nowait(self: EventSink, event: dict[str, float | int]) -> None: ...
+    def put_nowait(self, event: dict[str, float | int], /) -> None: ...  # noqa: ANN101
 
 
 METRICS = {"loss", "flow_loss", "eos_loss", "lr", "grad_norm", "it_s", "ce_loss"}
@@ -44,14 +47,14 @@ def digest(path: Path | str) -> str:
     return h.hexdigest()
 
 
-def write_json(path: Path, value: dict) -> None:
+def write_json(path: Path, value: dict[str, Any]) -> None:
     temporary = path.with_suffix(".tmp")
     temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
     temporary.replace(path)
 
 
 @contextlib.contextmanager
-def run_lock(run_dir: Path) -> Iterator[None]:
+def run_lock(run_dir: Path) -> Generator[None]:
     run_dir.mkdir(parents=True, exist_ok=True)
     with (run_dir / ".launcher.lock").open("a") as lock:
         try:
@@ -76,7 +79,7 @@ def checkpoint_pair(run_dir: Path) -> tuple[Path, Path] | None:
     return checkpoint, optimizer
 
 
-def identity(config_path: Path, config: dict, provenance: list[str]) -> dict:
+def identity(config_path: Path, config: dict[str, Any], provenance: list[str]) -> dict[str, Any]:
     inputs = {}
     for key in ("train_jsonl", "valid_jsonl"):
         value = config.get("data", {}).get(key)
@@ -95,7 +98,7 @@ def identity(config_path: Path, config: dict, provenance: list[str]) -> dict:
     return {"config_sha256": digest(config_path), "inputs": inputs}
 
 
-def numeric_metrics(record: dict) -> dict[str, float | int]:
+def numeric_metrics(record: dict[str, Any]) -> dict[str, float | int]:
     kind = record.get("type")
     if kind not in {"train", "valid", "checkpoint", "start"}:
         return {}
@@ -110,17 +113,20 @@ def numeric_metrics(record: dict) -> dict[str, float | int]:
     return result
 
 
-def wandb_worker(events: Queue, settings: dict[str, str], metadata: dict) -> None:
+def wandb_worker(events: EventSource, settings: dict[str, str], metadata: dict[str, Any]) -> None:
     # Isolate SDK/network stalls from the trainer's wall-clock budget.
     try:
         import wandb
 
         os.environ["WANDB_CONSOLE"] = "off"
         os.environ["WANDB_DISABLE_CODE"] = "true"
+        mode = settings["mode"]
+        if mode not in ("online", "offline", "disabled"):
+            raise ValueError("unsupported W&B mode")
         run = wandb.init(
             entity=settings["entity"],
             project=settings["project"],
-            mode=settings["mode"],
+            mode=mode,
             id=settings["attempt"],
             name=settings["attempt"],
             resume="never",
@@ -145,7 +151,7 @@ def wandb_worker(events: Queue, settings: dict[str, str], metadata: dict) -> Non
         print("W&B unavailable; progress.jsonl remains authoritative", file=sys.stderr)
 
 
-def signal_group(child: subprocess.Popen, signum: int) -> None:
+def signal_group(child: subprocess.Popen[bytes], signum: int) -> None:
     try:
         os.killpg(child.pid, signum)
     except ProcessLookupError:
@@ -309,7 +315,7 @@ def run(args: argparse.Namespace, command: list[str] | None = None) -> int:
         finally:
             record["ended_at"] = time.time()
             write_json(path, record)
-            if worker is not None and worker.pid is not None:
+            if worker is not None and worker.pid is not None and events is not None:
                 try:
                     events.put_nowait(None)
                 except queue.Full:
