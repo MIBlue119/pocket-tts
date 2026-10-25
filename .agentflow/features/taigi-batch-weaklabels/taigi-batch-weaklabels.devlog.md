@@ -176,3 +176,25 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Authenticated local Hugging Face account is weiren119. Created weiren119/pocket-tts-taigi and read back private=true; no model weights uploaded yet. Token stays local and was not printed/copied.
 - Native Astra owns bounded continuation planning/implementation and an independent Astra owns deadline-control updates; native Sol owns strict private publication packaging. Shared filesystem access is not OS-enforced isolation. Root integrates and verifies the lifecycle.
 - New local delivery watcher waits for verified backup and checks selected artifact hashes/paths before calling the publisher. Three focused tests pass after the expected missing-module failure. Changed paths match accepted T11; corpus producer code remains frozen.
+
+## [RUN-011] Event — 2026-10-25 20:11:56 +0800 (A-002)
+
+- Budget readback confirms original start1792926372 retained and latest cutoff1793023200 (Oct26 22:00Taipei). Conservative bound56.114USD includes prior0.70 and reserve7; this is not an invoice. Dedicated producer remains active with unchanged PID21133.
+- Independent review corrected finite-only candidate selection and a publication example that incorrectly required voice prompting. Root verified13continuation tests and17publisher/readiness tests; scoped Ruff/type checks pass after two type corrections. New paths remain within T11, and frozen corpus modules are unchanged.
+- Created the private HF repo and verified the root README upload at revision1a208143b5486493ee6dabef6f0402f0292800bc; model weights are not uploaded yet. Real local raw export packaged successfully and produced a finite2.4-second24kHz GPU WAV. CPU inference also ran in a real PTY but hit its generation cap on the known-poor tiny model; this proves runnable packaging, not speech quality. A selected-candidate CPU smoke gate is being added before future uploads.
+- A separate real cloud failure fixture proved synchronous ExecStopPost stops its dummy parent before ControlPID clears. Real corpus PID21133 stayed active. The umbrella will use this containment so its backup watcher cannot finalize while the original producer still writes.
+
+## [WIP-005] Checkpoint — 2026-10-25 20:11:56 +0800 (A-002)
+
+- **Finished:** Private HF repository; extended budget controls; bounded continuation source/tests; real package and CPU/GPU inference checks; independent source review.
+- **Running now:** All-video corpus on the same cloud VM; final publication smoke-gate implementation and review.
+- **Still to do:** Deploy umbrella, retarget backup ownership, arm local private publication, observe full-data training and actual model quality.
+- **Next work action:** Preflight the frozen continuation deployment, then transfer backup-watcher ownership without restarting the corpus producer.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-012] Event — 2026-10-25 20:16:01 +0800 (A-002)
+
+- Deployed continuation commit65490c420bbb9efdcf04436410b09ae32ac09660 with required source receipt; actual umbrellaPID26787 is active/waiting_parent and original producerPID21133 remains active. Backup watcher now follows umbrella/job with the new absolute deadline. Live receipt confirms a successful mirror and no error.
+- Cloud preflight found no Git metadata in the earlier archive, which would also break the existing experiment launcher. Genuine metadata for43735eb/tree95ec36005e4545a27edb9460bbfac49b89bf0f54 was installed atomically; all231tracked file hashes/modes unchanged. Only the controller is untracked, accurately reported as dirty. No corpus code or process was restarted.
+- Local private publisher service is enabled/active and records waiting_for_verified_backup for weiren119/pocket-tts-taigi. It performs package inference before upload and cleans the entire subprocess group at deadline. Real descendant-timeout test and4readiness tests passed; final25publisher tests and scoped type/lint checks passed.
+- Final real CPU smoke helper completed on the earlier diagnostic package:24kHz,7.04seconds, finite samples; its maximum-generation warning is retained. This proves execution only. The known-poor diagnostic remains local; full-data weights and usability are still pending.

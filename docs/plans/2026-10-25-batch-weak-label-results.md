@@ -112,3 +112,60 @@ Telegram confirmed delivery of three MP4s: 20-second source audio, the same 20 s
 after RE-USE, and a 10-second enhanced Snoopy clip. WAV originals and phone versions
 are under `/home/weiren/tts-deliverables/2026-10-25-audio-preview/`. These are processed
 source examples, not outputs from the trained TTS candidate.
+
+## Overnight continuation and private model delivery
+
+The owner raised the **total** cap to USD100 and requested a usable Taiwanese
+Pocket-TTS candidate by tomorrow evening. The operational interpretation is a hard
+cloud cutoff of **2026-10-26 22:00 Asia/Taipei**, with90minutes reserved before it
+for final artifact handling. The original compute start is unchanged. The recorded
+conservative bound is USD56.114 including prior estimated spend and reserve; this
+is an estimate, not an invoice or a commitment to spend the entire allowance.
+
+The original full-corpus producer remains frozen at43735eb and running. A separate
+persistent `taigi-training-continuation.service` waits for its200-update result,
+then conditionally admits cumulative500,1000and2000-update stages. A single
+undercoverage bridge is allowed under finite/non-regression guards; later stages
+require joint directional validation and same-ASR evidence. These are spending
+heuristics, not proof of correct Taiwanese. Each child preserves dataset/tokenizer
+identity and restores model/optimizer/EMA, retaining the old run manifest. The
+selected export is explicitly raw and matches its diagnostic checkpoint.
+
+Deployment preflight exposed missing Git metadata in the cloud source archive.
+Real metadata for43735eb was prepared separately and installed atomically without
+rewriting any working source: all231tracked file hashes and modes were unchanged.
+This also fixes the existing training launcher's otherwise-failing Git lookup.
+The extension commit65490c4 and exact controller hash are recorded separately in
+`production/continuation-deployment.json`; cloud Git accurately reports the frozen
+base plus an untracked extension.
+
+The backup watcher now follows the continuation service/job. Synchronous privileged
+`ExecStopPost` stops the original producer before the umbrella fully exits, so a
+failed controller cannot leave a writer running during final backup. A real dummy
+parent/failing-guard fixture proved this ordering; the real producer stayed active.
+At20:14Taipei the producer still had its originalPID21133 and11complete/1running/
+278pending sources. Both independent deadline controls, the Taiwan proxy, backup
+watcher and continuation service were active.
+
+The private repository is **https://huggingface.co/weiren119/pocket-tts-taigi**.
+Private visibility and README bytes were verified at revision
+`1a208143b5486493ee6dabef6f0402f0292800bc`. No model weights have been uploaded yet.
+Local `taigi-private-publish.service` waits for the final verified backup, rehashes
+selected files, packages only inference artifacts/metadata, runs actual CPU
+inference, and uploads to a versioned candidate directory. It refuses public repos,
+checks raw/EMA/tokenizer identity, rejects empty/nonfinite tensors before PCM
+conversion, and verifies remote files at the returned commit. HF credentials stay
+local. Deadline cleanup terminates the publisher's entire process group.
+
+Root checks:13continuation tests,25publisher tests and4readiness tests passed;
+three fork tests were rerun after a type-only config update; scoped Ruff and type
+checks passed. Independent review covers privacy, identity and process lifecycles.
+Real packaging of the earlier diagnostic weights produced a2.4-second24kHz GPU
+WAV. The final bounded CPU smoke helper produced a7.04-second24kHz WAV and retained
+a maximum-generation warning from that known-poor tiny-data model. This establishes
+runtime execution, not usable speech; that diagnostic package was not uploaded.
+The future selected candidate receives its own runtime check before publication.
+
+Remaining: finish all source outcomes, train/evaluate the full-data candidate,
+apply continuation gates, verify final backup, privately publish the selected
+model, sync offline W&B records and clean up the dedicated cloud resources.

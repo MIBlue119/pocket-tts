@@ -57,3 +57,11 @@ Reviewed follow-up commit: 43735eba6ab9fd190d99607c909f065fc51afb9f
 - **Runtime acceptance remains pending for this sorted commit.** The coordinator has prepared a fair 39-row comparison of `CachedTranscriber` batch sizes one and four, with cold-cache hashing and cache writes included on both sides, nine full batches and a final batch of three, original-order text comparison and zero-work resume. The earlier 11-of-11 result remains evidence for the preceding unsorted implementation, not a substitute for this new measurement. Do not claim a speedup before the fair result is available.
 
 Self-check: This appendix covers only the one-line sort and its focused test at the named commit. Source acceptance is separated from pending real-model parity/performance evidence. No source, GPU, cloud, Git or live-process action occurred; only this report was appended.
+
+## Actual sorted-path acceptance
+
+- The coordinator reports acceptance at `43735eba6ab9fd190d99607c909f065fc51afb9f`: **39 variable-length rows**, totaling **127.54 source seconds**, produced **39 of 39 exact text matches** between batch sizes one and four. The sorted groups were nine batches of four and one final batch of three. Resumed cache access performed zero model loads and zero inference calls.
+
+- Equivalent `CachedTranscriber` work, including input hashing and cache writes, took **15.3596 seconds** at batch size one and **11.4703 seconds** at batch size four: **1.339× measured throughput**, or approximately **25.3% less wall time**, on this workload. The same 3.778-second warm/load cost was excluded from both. Peak GPU memory increased from **8.357 to 15.540 GiB**. This establishes the proposed optimization on the measured sample, not a guaranteed whole-corpus speedup.
+
+Self-check: The previously pending sorted-path parity/cache acceptance is now supported by coordinator-reported actual measurements; no new source change or independent GPU run was made by this reviewer.
