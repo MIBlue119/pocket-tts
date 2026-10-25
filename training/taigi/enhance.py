@@ -9,6 +9,7 @@ import json
 import sys
 import types
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +19,15 @@ from training.taigi.audio import sha256_file
 MODEL = "nvidia/NVIDIA-NemotronLabs-RE-USE"
 REVISION = "31f82f2efad1095034492f236e8dac9239ba713b"
 ADAPTER_VERSION = "reuse-cpu-overlap/v1"
+
+
+@dataclass(frozen=True)
+class ReusePredictor:
+    forward: Callable[[np.ndarray, int], np.ndarray]
+    artifacts: dict[str, str]
+
+    def __call__(self: ReusePredictor, samples: np.ndarray, sample_rate: int) -> np.ndarray:
+        return self.forward(samples, sample_rate)
 
 
 def overlap_enhance(
@@ -54,9 +64,7 @@ def overlap_enhance(
     return output / weights
 
 
-def load_predictor(
-    cache_dir: Path | None, download: bool, device: str
-) -> Callable[[np.ndarray, int], np.ndarray]:
+def load_predictor(cache_dir: Path | None, download: bool, device: str) -> ReusePredictor:
     import torch
     from huggingface_hub import snapshot_download
     from safetensors.torch import load_file
@@ -114,10 +122,10 @@ def load_predictor(
             result = np.pad(result, (0, len(samples) - len(result)), constant_values=1e-8)
         return result[: len(samples)]
 
-    predict.reuse_artifacts = {  # type: ignore[attr-defined]
+    artifacts = {
         name: sha256_file(snapshot / name) for name in ("config.json", "model.safetensors")
     }
-    return predict
+    return ReusePredictor(predict, artifacts)
 
 
 def enhance_file(
@@ -160,7 +168,7 @@ def enhance_file(
         "num_samples": len(samples),
         "sample_rate": rate,
         "source_clip_pcm_f32le_sha256": hashlib.sha256(samples.astype("<f4").tobytes()).hexdigest(),
-        "model_artifact_sha256": getattr(predict, "reuse_artifacts", {}),
+        "model_artifact_sha256": predict.artifacts if isinstance(predict, ReusePredictor) else {},
         "audio_path": str(output.resolve()),
         "audio_sha256": sha256_file(output),
         "enhancement_model": MODEL,

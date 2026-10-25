@@ -6,7 +6,7 @@ import pytest
 import soundfile as sf
 
 from training.taigi.audio import sha256_file
-from training.taigi.enhance import enhance_file, overlap_enhance, REVISION
+from training.taigi.enhance import enhance_file, overlap_enhance, REVISION, ReusePredictor
 
 
 @pytest.mark.parametrize("length", [1, 1000, 4000, 4001, 9003, 40000])
@@ -36,7 +36,8 @@ def test_file_provenance_and_bounded_interval(tmp_path: Path) -> None:
     output = tmp_path / "enhanced.wav"
     sf.write(source, np.linspace(-0.2, 0.2, 24000), 8000, subtype="FLOAT")
     digest = sha256_file(source)
-    path = enhance_file(source, output, lambda clip, rate: clip, start=1, duration=0.5)
+    predict = ReusePredictor(lambda clip, rate: clip, {"model.safetensors": "test-hash"})
+    path = enhance_file(source, output, predict, start=1, duration=0.5)
     metadata = json.loads(path.read_text())
     samples, rate = sf.read(output)
     assert len(samples) == 4000
@@ -45,6 +46,7 @@ def test_file_provenance_and_bounded_interval(tmp_path: Path) -> None:
     assert metadata["source_audio_sha256"] == digest == sha256_file(source)
     assert metadata["audio_sha256"] == sha256_file(output)
     assert metadata["enhancement_revision"] == REVISION
+    assert metadata["model_artifact_sha256"] == {"model.safetensors": "test-hash"}
     assert metadata["verification"] == "unverified_enhancement"
     with pytest.raises(FileExistsError):
         enhance_file(source, output, lambda clip, rate: clip)
