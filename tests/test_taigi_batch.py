@@ -1,6 +1,7 @@
 import argparse
 import json
 from pathlib import Path
+from typing import BinaryIO
 from collections.abc import Callable
 
 import pytest
@@ -237,3 +238,122 @@ def test_stale_attempt_is_preserved_and_retried(tmp_path: Path) -> None:
     assert entry["attempts"][0]["state"] == "interrupted"
     assert entry["attempts"][1]["state"] == "complete"
     assert len(calls) == 1
+
+
+def test_abrupt_wrapper_exit_cleans_detached_stage(tmp_path: Path) -> None:
+    import os
+    import signal
+    import sys
+    import time
+
+    pid_file = tmp_path / "orphan.pid"
+    script = """import os,subprocess,sys,time
+from pathlib import Path
+child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'], start_new_session=True)
+Path(sys.argv[1]).write_text(str(child.pid))
+os._exit(1)
+"""
+    try:
+        with pytest.raises(RuntimeError, match="wrapper exited"):
+            batch.execute(
+                [sys.executable, "-c", script, str(pid_file)],
+                tmp_path / "wrapper.log",
+                time.monotonic() + 10,
+            )
+        assert batch.process_identity(int(pid_file.read_text())) is None
+    finally:
+        if pid_file.exists() and batch.process_identity(int(pid_file.read_text())) is not None:
+            os.kill(int(pid_file.read_text()), signal.SIGKILL)
+
+
+@pytest.mark.parametrize("with_parent_record", [False, True])
+def test_restart_cleans_orphan_before_retry(tmp_path: Path, with_parent_record: bool) -> None:
+    import os
+    import secrets
+    import signal
+    import subprocess
+    import sys
+
+    args = setup(tmp_path)
+
+    def interrupted(*unused: object) -> None:
+        raise batch.Cancelled("stopped")
+
+    batch.run_batch(args, execute_fn=interrupted)
+    state_path = args.output / "state.json"
+    state = json.loads(state_path.read_text())
+    entry = next(iter(state["jobs"].values()))
+    attempt = entry["attempts"][0]
+    entry["state"] = attempt["state"] = "running"
+    state_path.write_text(json.dumps(state))
+    attempt_path = Path(attempt["path"])
+    record_path = attempt_path.parent / f"{attempt_path.name}.pid.json"
+    record = {"token": secrets.token_hex(32)}
+    batch.atomic_json(record_path, record)
+    orphan_file = tmp_path / "orphan.pid"
+    script = """import os,subprocess,sys
+from pathlib import Path
+child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'], start_new_session=True)
+Path(sys.argv[1]).write_text(str(child.pid))
+os._exit(1)
+"""
+    unrelated = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    wrapper = subprocess.Popen(
+        [sys.executable, "-c", script, str(orphan_file)],
+        env={**os.environ, batch.ATTEMPT_TOKEN_ENV: record["token"]},
+    )
+    parent_identity = batch.process_identity(wrapper.pid)
+    wrapper.wait(timeout=10)
+    if with_parent_record:
+        batch.atomic_json(record_path, {**record, "pid": wrapper.pid, "identity": parent_identity})
+    orphan = int(orphan_file.read_text())
+    assert batch.process_identity(orphan) is not None
+    calls = []
+
+    def verify_then_work(command: list[str], log: Path, deadline: float) -> None:
+        assert batch.process_identity(orphan) is None
+        assert unrelated.poll() is None
+        worker(calls)(command, log, deadline)
+
+    try:
+        result = batch.run_batch(args, execute_fn=verify_then_work)
+        assert result["state"] == "complete"
+        assert len(calls) == 1
+        assert unrelated.poll() is None
+    finally:
+        unrelated.terminate()
+        unrelated.wait(timeout=5)
+        if batch.process_identity(orphan) is not None:
+            os.kill(orphan, signal.SIGKILL)
+
+
+def test_ownership_persisted_before_launch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import sys
+    import time
+
+    log = tmp_path / "attempt.log"
+    original = batch.subprocess.Popen
+
+    def spawn(
+        command: list[str],
+        *,
+        cwd: Path,
+        stdout: BinaryIO,
+        stderr: int,
+        start_new_session: bool,
+        env: dict[str, str],
+    ) -> batch.subprocess.Popen[bytes]:
+        persisted = json.loads(log.with_suffix(".pid.json").read_text())
+        assert set(persisted) == {"token"}
+        assert env[batch.ATTEMPT_TOKEN_ENV] == persisted["token"]
+        return original(
+            command,
+            cwd=cwd,
+            stdout=stdout,
+            stderr=stderr,
+            start_new_session=start_new_session,
+            env=env,
+        )
+
+    monkeypatch.setattr(batch.subprocess, "Popen", spawn)
+    batch.execute([sys.executable, "-c", "pass"], log, time.monotonic() + 5)

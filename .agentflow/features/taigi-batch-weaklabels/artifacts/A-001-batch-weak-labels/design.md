@@ -108,4 +108,15 @@ independent pass. Learn: no separate stage; retain actual failures in the notebo
 No new owner decision remains. This is reversible local implementation, not a
 production deployment or irreversible data migration.
 
+## Reopened integrity/lifecycle contract after review
+
+Astra reproduced compact-manifest tampering with refreshed local hashes and abrupt
+wrapper death with a surviving separate-session stage. Reuse must reconstruct both
+compact manifests from canonical expected metadata, rather than trust refreshed
+self-declared hashes. Durable per-attempt ownership tokens must be written before
+launch and cleanup must find owned descendants even after the wrapper disappears.
+PID descriptors prevent reused PIDs receiving signals. These refine existing
+INV-2/4; they do not add a new product outcome. A controlled real pause/resume will
+verify completed jobs survive while the corrected runner is adopted.
+
 Self-check: Scope follows the existing authorized weak-label/training task; limitations and observable acceptance are explicit.

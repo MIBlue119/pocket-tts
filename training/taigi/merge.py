@@ -327,6 +327,21 @@ def _validate_published(
         row.pop("_suffix")
     if metadata != expected_metadata:
         raise ValueError(f"existing merged release metadata is not the intended content: {release}")
+    for split in ("train", "valid"):
+        expected_manifest = [
+            {
+                "path": row["published_audio_path"],
+                "start": row["start"],
+                "duration": row["duration"],
+                "transcript": row["input_text_zh"],
+            }
+            for row in expected_metadata
+            if row["split"] == split
+        ]
+        if read_jsonl(release / f"{split}.jsonl") != expected_manifest:
+            raise ValueError(
+                f"existing merged release {split} manifest is not the intended content: {release}"
+            )
     for row in metadata:
         audio = Path(row["published_audio_path"]).resolve()
         try:

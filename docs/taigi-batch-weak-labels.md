@@ -40,7 +40,7 @@ A failed or incomplete batch exits nonzero and preserves `state.json`,
 `batch-report.json`, per-attempt logs and diagnostics. Some intervals can contain
 no usable speech; do not hide those failures by retrying indefinitely.
 
-Linux `/proc` and `flock` are required. A second writer is refused. Cancellation
+Linux x86-64 with PID-descriptor support, readable same-user `/proc` and `flock` are required. Attempt ownership tokens are persisted before launch, so cleanup can identify detached stages after wrapper death. Only the named token is compared; process environments are not logged. A second writer is refused. Cancellation
 signals the active wrapper and waits for its subprocess cleanup; escalation can
 add up to 20 seconds beyond the deadline. Keep original attempt directories:
 release paths and checksums refer to them. Disk admission checks preserve a free

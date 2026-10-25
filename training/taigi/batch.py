@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import fcntl
 import hashlib
 import json
 import math
 import os
+import platform
 import re
+import secrets
 import shutil
 import signal
 import subprocess
@@ -101,24 +105,114 @@ def stop_wrapper(pid: int, identity: str) -> None:
         raise CleanupError("wrapper descendants did not reach terminal state")
 
 
+ATTEMPT_TOKEN_ENV = "POCKET_TTS_BATCH_ATTEMPT_TOKEN"
+
+
+def has_attempt_token(pid: int, token: str) -> bool:
+    path = Path(f"/proc/{pid}")
+    try:
+        if path.stat().st_uid != os.getuid():
+            return False
+        marker = f"{ATTEMPT_TOKEN_ENV}={token}".encode()
+        return marker in (path / "environ").read_bytes().split(b"\0")
+    except (FileNotFoundError, ProcessLookupError, PermissionError):
+        return False
+
+
+def token_processes(token: str) -> dict[int, str]:
+    found = {}
+    for path in Path("/proc").glob("[0-9]*"):
+        pid = int(path.name)
+        identity = process_identity(pid)
+        if identity is not None and has_attempt_token(pid, token):
+            found[pid] = identity
+    return found
+
+
+def pidfd_call(number: int, pid_or_fd: int, signum: int = 0) -> int:
+    # This host's Conda Python lacks the stdlib pidfd bindings. Linux x86-64
+    # syscall numbers are fixed by its ABI; fail before launch elsewhere.
+    if platform.machine() != "x86_64":
+        raise CleanupError("attempt cleanup requires Linux x86-64 pidfd support")
+    libc = ctypes.CDLL(None, use_errno=True)
+    result = libc.syscall(number, pid_or_fd, signum, ctypes.c_void_p(), 0)
+    if result == -1:
+        code = ctypes.get_errno()
+        if code == errno.ESRCH:
+            raise ProcessLookupError(code, os.strerror(code))
+        raise CleanupError(f"pidfd operation failed: {os.strerror(code)}")
+    return result
+
+
+def signal_owned(pid: int, identity: str, token: str, signum: int) -> None:
+    # The descriptor pins the process, so PID reuse cannot redirect the signal.
+    try:
+        descriptor = pidfd_call(434, pid)
+    except ProcessLookupError:
+        return
+    try:
+        if process_identity(pid) == identity and has_attempt_token(pid, token):
+            try:
+                pidfd_call(424, descriptor, signum)
+            except ProcessLookupError:
+                pass
+    finally:
+        os.close(descriptor)
+
+
+def stop_attempt(record: dict[str, Any]) -> None:
+    token = record["token"]
+    if not isinstance(token, str) or not re.fullmatch(r"[0-9a-f]{64}", token):
+        raise CleanupError("invalid persisted attempt token")
+    pid, identity = record.get("pid"), record.get("identity")
+    if pid is not None and identity is not None:
+        signal_owned(pid, identity, token, signal.SIGTERM)
+    grace = time.monotonic() + 15
+    signalled = set()
+    while remaining := token_processes(token):
+        # Once the wrapper has gone, clean its orphaned stages ourselves.
+        if pid not in remaining or remaining.get(pid) != identity:
+            for child, child_identity in remaining.items():
+                if (child, child_identity) not in signalled:
+                    signal_owned(child, child_identity, token, signal.SIGTERM)
+                    signalled.add((child, child_identity))
+        if time.monotonic() >= grace:
+            break
+        time.sleep(0.05)
+    end = time.monotonic() + 5
+    while remaining := token_processes(token):
+        for child, child_identity in remaining.items():
+            signal_owned(child, child_identity, token, signal.SIGKILL)
+        if time.monotonic() >= end:
+            raise CleanupError("attempt processes did not reach terminal state")
+        time.sleep(0.05)
+
+
 def execute(command: list[str], log: Path, deadline: float) -> None:
-    """Give the wrapper time to clean up its independently grouped stage process."""
+    """Persist attempt ownership before launch, including detached stage descendants."""
     if time.monotonic() >= deadline:
         raise TimeoutError("batch deadline expired")
+    os.close(pidfd_call(434, os.getpid()))
+    record: dict[str, Any] = {"token": secrets.token_hex(32)}
+    record_path = log.with_suffix(".pid.json")
+    atomic_json(record_path, record)
     with log.open("wb") as output:
         process = subprocess.Popen(
-            command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, start_new_session=True
+            command,
+            cwd=ROOT,
+            stdout=output,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+            env={**os.environ, ATTEMPT_TOKEN_ENV: record["token"]},
         )
-        identity = process_identity(process.pid)
         try:
-            if identity is not None:
-                atomic_json(log.with_suffix(".pid.json"), dict(pid=process.pid, identity=identity))
+            record.update(pid=process.pid, identity=process_identity(process.pid))
+            atomic_json(record_path, record)
             code = process.wait(timeout=max(0.001, deadline - time.monotonic()))
             if code:
                 raise RuntimeError(f"wrapper exited {code}; see {log}")
         finally:
-            if process.poll() is None and identity is not None:
-                stop_wrapper(process.pid, identity)
+            stop_attempt(record)
             process.wait(timeout=5)
 
 
@@ -289,12 +383,23 @@ def run_batch(
                 except (OSError, KeyError, ValueError) as error:
                     raise ValueError(f"completed artifact integrity failed: {error}") from error
             for attempt in entry["attempts"]:
-                if attempt["state"] == "running":
-                    previous_path = Path(attempt["path"])
-                    pid_file = previous_path.parent / f"{previous_path.name}.pid.json"
-                    if pid_file.exists():
-                        process_record = json.loads(pid_file.read_text())
+                previous_path = Path(attempt["path"])
+                pid_file = previous_path.parent / f"{previous_path.name}.pid.json"
+                if pid_file.exists():
+                    process_record = json.loads(pid_file.read_text())
+                    if "token" in process_record:
+                        # Also recheck failed attempts whose cleanup may have failed earlier.
+                        stop_attempt(process_record)
+                    elif attempt["state"] == "running":
+                        # Old attempts lack durable descendant ownership. Never infer safety
+                        # from a missing parent when recovering such an unfinished attempt.
+                        if process_identity(process_record["pid"]) != process_record["identity"]:
+                            raise CleanupError(
+                                "legacy running attempt has no live wrapper; "
+                                "cannot verify descendant cleanup"
+                            )
                         stop_wrapper(process_record["pid"], process_record["identity"])
+                if attempt["state"] == "running":
                     attempt.update(state="interrupted", error="previous batch stopped")
                     entry["state"] = "interrupted"
         atomic_json(state_path, state)

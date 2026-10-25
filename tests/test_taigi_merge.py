@@ -262,3 +262,21 @@ def test_reuse_rejects_valid_json_report_tampering(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="report failed integrity"):
         merge_releases([source], tmp_path / "merged", train_only=True)
+
+
+def test_reuse_rejects_compact_manifest_tampering_even_when_report_hash_is_updated(
+    tmp_path: Path,
+) -> None:
+    source = _release(tmp_path, "input", [{"group_id": "only", "text": "正確文字"}])
+    merged = merge_releases([source], tmp_path / "merged", train_only=True)
+    train_path = merged / "train.jsonl"
+    train = read_jsonl(train_path)
+    train[0]["transcript"] = "竄改文字"
+    _jsonl(train_path, train)
+    report_path = merged / "report.json"
+    report = json.loads(report_path.read_text())
+    report["manifest_sha256"]["train.jsonl"] = sha256_file(train_path)
+    report_path.write_text(json.dumps(report))
+
+    with pytest.raises(ValueError, match="train manifest is not the intended content"):
+        merge_releases([source], tmp_path / "merged", train_only=True)
