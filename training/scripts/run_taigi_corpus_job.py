@@ -238,16 +238,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "flow_lm.lookup_table.n_bins": actual_vocab,
         }
         config["data"].update(train_jsonl=str(train), valid_jsonl=str(valid))
-        config["optim"].update(lr=1e-4, warmup_steps=args.warmup_steps)
+        config["optim"].update(lr=3e-5, warmup_steps=args.warmup_steps)
         config.update(
             run_dir=str(job / "training"),
             batch_size=1,
             grad_accum_steps=8,
             max_steps=args.max_steps,
-            valid_freq=100,
+            valid_freq=50,
             num_valid_batches=min(len(valid_rows), args.valid_cap),
-            ckpt_freq=100,
-            num_ckpt_keep=2,
+            ckpt_freq=50,
+            num_ckpt_keep=4,
             sample_sentences=[],
             freeze_head=False,
             sample_cfg_coef=1.0,
@@ -261,6 +261,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         config_path = job / "training.yaml"
         config_path.write_text(yaml.safe_dump(config, sort_keys=False))
         report["config_sha256"] = digest(config_path)
+        report["candidate_kind"] = "final_update_not_promoted"
+        report["planned_max_steps"] = args.max_steps
+        report["learning_rate"] = config["optim"]["lr"]
         prompts = job / "prompts.jsonl"
         prompts.write_text(
             "".join(
@@ -268,7 +271,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 for i, text in enumerate(PROMPTS)
             )
         )
-        evaluation = [python, "-m", "training.taigi.evaluate", str(config_path), str(prompts)]
+        evaluation = [
+            python,
+            "-m",
+            "training.taigi.evaluate",
+            str(config_path),
+            str(prompts),
+            "--asr",
+        ]
         if (
             stage(
                 "baseline",
@@ -347,7 +357,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--backup-seconds", type=float, default=600)
     result.add_argument("--diagnostic-seconds", type=float, default=600)
     result.add_argument("--vocab-size", type=int, default=4096)
-    result.add_argument("--max-steps", type=int, default=2000)
+    result.add_argument("--max-steps", type=int, default=200)
     result.add_argument("--warmup-steps", type=int, default=100)
     result.add_argument("--valid-cap", type=int, default=100)
     return result

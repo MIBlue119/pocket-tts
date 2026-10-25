@@ -180,12 +180,22 @@ The orchestrator requires systemd's invocation marker, but the operator must
 verify the real service containment properties. It resumes corpus processing
 and refuses training while any source remains pending or interrupted. Explicit
 terminal source failures are counted and can coexist with usable releases.
-Training uses a fresh train-only tokenizer, the pretrained 24-layer teacher with
-reset text embeddings, batch 1 with eight accumulation steps, and at most 2,000
-updates. Validation covers at most 100 held-out rows per check. Twelve fixed
-generated prompts are saved before and after training; W&B runs offline so cloud
+Training uses a fresh train-only BPE tokenizer with exact conversion parity,
+the pretrained 24-layer teacher with reset text embeddings, batch 1 with eight
+accumulation steps, and an initial 200 updates at learning rate `3e-5` with
+100 warmup updates. Checkpoints and validation run every 50 updates; four raw
+candidates are retained. Validation covers at most 100 held-out rows per check.
+Twelve fixed generated prompts are saved before and after training; W&B runs offline so cloud
 credentials are unnecessary. Training job directories cannot be resumed; use a
 new job directory while retaining the resumable corpus directory.
+
+The final-update checkpoint is an experiment candidate, not an automatically
+promoted model. The small 100-update pilot worsened held-out loss relative to its
+fixed baseline, so a 2,000-update run is not the default. Longer training needs
+evidence from the full-corpus pilot's held-out and generated-speech diagnostics.
+Empty labels and runs of at least 12 identical alphabetic/CJK characters are
+quarantined; original text, audio references and reasons remain recorded. This
+narrow rule does not detect every ASR error or establish Taiwanese correctness.
 
 Keep a separate persistent backup controller and provider-level stop timer.
 Stopping a VM does not delete its billable disk. Verify copied artifacts before

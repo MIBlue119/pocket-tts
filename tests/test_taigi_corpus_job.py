@@ -116,11 +116,22 @@ def test_tokenizer_only_receives_train_and_recipe_is_frozen(
     assert report["video_outcomes"]["failed"] == 1
     config = job.yaml.safe_load((args.job / "training.yaml").read_text())
     assert config["reset_text_embedding"] is True
-    assert config["max_steps"] == 2000
+    assert config["max_steps"] == 200
+    assert config["optim"] == {"lr": 3e-5, "warmup_steps": 100}
+    assert config["valid_freq"] == 50
+    assert config["ckpt_freq"] == 50
+    assert config["num_ckpt_keep"] == 4
+    assert report["candidate_kind"] == "final_update_not_promoted"
+    assert report["planned_max_steps"] == 200
+    assert report["learning_rate"] == 3e-5
     assert config["num_valid_batches"] == 1
     assert config["sample_sentences"] == []
     assert config["grad_accum_steps"] == 8
     assert len(job.rows(args.job / "prompts.jsonl")) == 12
+    evaluations = [(argv, seconds) for argv, seconds in calls if "training.taigi.evaluate" in argv]
+    assert len(evaluations) == 2
+    assert all("--asr" in argv for argv, _ in evaluations)
+    assert all(seconds <= 600 for _, seconds in evaluations)
     training_argv, limit = next(
         call for call in calls if "training.scripts.run_experiment" in call[0]
     )
@@ -128,3 +139,8 @@ def test_tokenizer_only_receives_train_and_recipe_is_frozen(
     assert limit <= args.training_seconds + 60
     with pytest.raises(FileExistsError):
         job.run(args)
+
+
+def test_max_steps_override_is_retained() -> None:
+    args = job.parser().parse_args(["inventory", "corpus", "new-job", "--max-steps", "75"])
+    assert args.max_steps == 75
