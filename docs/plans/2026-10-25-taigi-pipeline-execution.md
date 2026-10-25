@@ -6,11 +6,16 @@ Prepare versioned Chinese semantic text and real Taiwanese audio pairs, run a bo
 
 ## pstack workflow
 
+Used [pstack](https://github.com/backnotprop/pstack) revision
+`18b6c36e6e201b110acc62472de987416ac4e23b`: poteto-mode principles,
+figure-it-out, swarm, isolated worktrees, verifiable units and an evidence log.
+Astra and Sol handled implementation, diagnosis, cloud operations and independent review.
+
 - [x] Read the Principles section of poteto-mode.
 - [x] Phase A: Frame. Inspect repository, credentials, hardware, and existing research.
 - [x] Phase B: Design the workflow. Reuse the researched sentence-level design. A second architecture bakeoff is skipped because the direct-task design was already compared with the cascade by the preceding explorer team.
-- [ ] Phase C: Run the loop. Implement and verify each owned unit.
-- [ ] Phase D: Keep the audit trail. Append actual decisions and evidence.
+- [x] Phase C: Run the loop. Implement and verify each owned unit.
+- [x] Phase D: Keep the audit trail. Append actual decisions and evidence.
 - [ ] Phase E: Verify and hand back. Inspect real data, training events, checkpoint restoration, tracker, and published branch.
 
 ## Work partition
@@ -47,8 +52,21 @@ Prepare versioned Chinese semantic text and real Taiwanese audio pairs, run a bo
 - Local device: RTX 3090, 24 GiB, used sequentially for ASR and training.
 - Initial acquisition is bounded to small samples, not entire channels/playlists.
 - No production deployment or public model/dataset release is part of this execution.
-- Existing Nebius CLI profile is named `newtaipei-ocr`; its project must be inspected before creating dedicated TTS resources. Do not alter existing OCR instances or disks.
+- Existing Nebius CLI profile is named `newtaipei-ocr`; use dedicated TTS resources first. The user later explicitly authorized borrowing the stopped OCR VM if another new-VM attempt fails. Such a fallback must preserve existing data/configuration, use an isolated workspace, retrieve results, remove only pilot files, and restore STOPPED. No borrowed VM may be deleted.
 
 `throughput checkpoint: three isolated implementation workers; primary integrates and verifies actual training, no duplicate GPU jobs.`
 
 Decision trail: [execution-decisions.tsv](2026-10-25-taigi-execution-decisions.tsv).
+
+## Execution evidence
+
+The local checkpoint/restore smoke and Nebius 50-step pilot completed. Dedicated
+cloud resources were removed after backup verification; estimated cost is below
+US$0.70 before tax. Subsequent actual ASR testing identified and fixed a resampling
+defect, so the first local/cloud labels are superseded. Corrected ADI plus enhanced
+YouTube data completed a new 20-step local smoke. The one-command video pipeline
+produced four weak labels from a supplied video, and 170 targeted tests passed.
+
+- [Pilot results, correction and cleanup](2026-10-25-taigi-pilot-results.md)
+- [YouTube weak-label evidence and expansion boundaries](2026-10-25-youtube-weak-label-feasibility.md)
+- [One-command usage](../taigi-video-weak-labels.md)

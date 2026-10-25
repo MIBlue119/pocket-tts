@@ -23,3 +23,18 @@ Freeze release A for the trainer. Run one bounded CPU acquisition/decoding produ
 Begin with a single inference lease shared by RE-USE and Breeze, batch 1, alongside training. Separate worker processes permit real memory release. Measure actual teacher production batch peaks through warmup, validation, checkpointing, and latent precompute; a small pilot's memory usage cannot establish this envelope. Proposed concurrency gates: no OOM, median warmed training-step slowdown at most 10%, and free memory at least the greater of 12 GiB or 20% of device capacity. Compare teacher alone, teacher plus RE-USE, and teacher plus Breeze for 50–100 representative steps. Pause sidecar admission when a gate fails and unload after the bounded in-flight job. Pause GPU preprocessing during precompute or other unmeasured peaks; CPU acquisition can continue within quota. Model file size does not predict inference peak memory.
 
 After candidate checks, freeze release B. Continue from a verified checkpoint in a new run directory with a new run identity, parent checkpoint hash, release hash, and explicit optimizer/scheduler policy. Keep heldout groups fixed; never hot-edit the active training manifest. Existing trainer restoration loads the latest checkpoint inside its run directory, including its step, optimizer and EMA: set the new cumulative step target accordingly. All work shares the next authorized instance and budget cutoff; this plan does not provision another GPU.
+
+## Tested environment
+
+Local execution used Python 3.11, torch 2.9.1+cu128 and mamba-ssm 2.3.2.post1
+(CUDA 12, torch 2.9, CXX11 ABI enabled). The exact wheel URL and verified SHA256 are
+in [the pinned requirement](../training/requirements-reuse-cu12-torch29-py311.txt).
+Install that wheel with `pip install --no-deps --require-hashes -r` in the separate,
+already compatible enhancement environment. It is specific to this Python/Torch
+ABI and is not a general dependency for other environments. The optional
+causal-conv1d package was absent; the upstream fallback completed actual inference.
+
+A 20-second 48 kHz interval took 6.97 seconds for enhancement after 2.44 seconds
+model loading, with peak allocated memory 3.063 GiB on RTX 3090. Breeze raw/enhanced
+comparison peaked at 8.395 GiB. These are measured feasibility samples, not concurrent
+training profiles. [Results and the one-command entrypoint](plans/2026-10-25-youtube-weak-label-feasibility.md).

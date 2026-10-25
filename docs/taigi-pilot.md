@@ -79,6 +79,12 @@ to cost money. The first pilot has an authorized US$50 total ceiling; its planne
 four-hour RTX PRO 6000 plus 150 GiB disk cost is about US$7.26 before tax at the
 [rates checked on 2026-10-25](https://nebius.com/prices).
 
+On an already provisioned CUDA VM, `bash training/scripts/setup_nebius_pilot.sh`
+installs the tested GPU environment, checks the actual training entrypoint imports,
+and verifies a CUDA operation against CPU output. It records the resolved packages
+and GPU result under the ignored `data/taigi-pilot/cloud-logs/` directory. Provisioning
+and the provider stop watchdog must be configured separately before starting a job.
+
 Use the 24-layer model to establish a stronger teacher before distilling a smaller
 Pocket TTS student. Expand data only after split integrity, restartability and
 automated evaluation are working. ASR agreement from the same model that generated

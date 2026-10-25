@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-25T17:56:25+08:00",
+  "generator": "yt-dlp 2026.08.19 --flat-playlist --playlist-end 5 --skip-download",
+  "source_count": 6,
+  "entry_count": 30,
+  "sources": [
+    {
+      "original_url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvWZZxPOPepMdUYfGEhyouzf",
+      "playlist_id": "PL9X_7mTn8zvWZZxPOPepMdUYfGEhyouzf",
+      "seed_video_id": null,
+      "playlist_title": "《櫻桃丸仔》 (台語版)",
+      "channel": "公視台語台",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [],
+      "entries": [
+        {
+          "video_id": "IxomT4nzSZc",
+          "title": "丸仔的畫著獎囉｜《櫻桃丸仔》 (台語版)｜第五季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=IxomT4nzSZc",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "bq0DPbhplPc",
+          "title": "美環的翁婿愛選啥人｜《櫻桃丸仔》 (台語版)｜第五季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=bq0DPbhplPc",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "-DqeACvcYcU",
+          "title": "無愛洗身軀的丸仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=-DqeACvcYcU",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "lgg1IxCUll8",
+          "title": "囡仔人毋通耍火｜《櫻桃丸仔》 (台語版)｜第五季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=lgg1IxCUll8",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "e86IbGX79Cc",
+          "title": "寵物店的阿叔成啥物｜《櫻桃丸仔》 (台語版)｜第五季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=e86IbGX79Cc",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        }
+      ]
+    },
+    {
+      "original_url": "https://www.youtube.com/watch?v=u2XnFe1jJK0&list=PL9X_7mTn8zvUHn5P_-ngeHVUgqi4-zMha",
+      "playlist_id": "PL9X_7mTn8zvUHn5P_-ngeHVUgqi4-zMha",
+      "seed_video_id": "u2XnFe1jJK0",
+      "playlist_title": "《史努比》(台語配音版) 預告",
+      "channel": "公視台語台",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [],
+      "entries": [
+        {
+          "video_id": "u2XnFe1jJK0",
+          "title": "《史努比》51+52 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=u2XnFe1jJK0",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "dn8jYnY0vVI",
+          "title": "《史努比》49+50 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=dn8jYnY0vVI",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "HCVRn4jxYUo",
+          "title": "《史努比》47+48 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=HCVRn4jxYUo",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "-VnZh-iq3E4",
+          "title": "《史努比》45+46 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=-VnZh-iq3E4",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "DwtTD7KFTLQ",
+          "title": "《史努比》43+44 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=DwtTD7KFTLQ",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        }
+      ]
+    },
+    {
+      "original_url": "https://www.youtube.com/watch?v=fivb_rdG5ts&list=PL9X_7mTn8zvWZjg0sAwhGR8zmUf9DiTiJ",
+      "playlist_id": "PL9X_7mTn8zvWZjg0sAwhGR8zmUf9DiTiJ",
+      "seed_video_id": "fivb_rdG5ts",
+      "playlist_title": "《月薪嬌妻(台語配音)》",
+      "channel": "公視台語台",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [
+        "YouTube reported 2 unavailable videos hidden"
+      ],
+      "entries": [
+        {
+          "video_id": "fivb_rdG5ts",
+          "title": "《月薪嬌妻(台語配音)》EP7 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=fivb_rdG5ts",
+          "license": "unknown",
+          "estimated_duration_seconds": 21
+        },
+        {
+          "video_id": "aVveGUtU-7Q",
+          "title": "《月薪嬌妻(台語配音)》EP7 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=aVveGUtU-7Q",
+          "license": "unknown",
+          "estimated_duration_seconds": 26
+        },
+        {
+          "video_id": "5GGKG_4w6uE",
+          "title": "《月薪嬌妻(台語配音)》EP6 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=5GGKG_4w6uE",
+          "license": "unknown",
+          "estimated_duration_seconds": 21
+        },
+        {
+          "video_id": "Huy2hnwSNSA",
+          "title": "《月薪嬌妻(台語配音)》EP6 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=Huy2hnwSNSA",
+          "license": "unknown",
+          "estimated_duration_seconds": 26
+        },
+        {
+          "video_id": "FjZDP4h_Stw",
+          "title": "《月薪嬌妻(台語配音)》EP5 預告",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=FjZDP4h_Stw",
+          "license": "unknown",
+          "estimated_duration_seconds": 21
+        }
+      ]
+    },
+    {
+      "original_url": "https://www.youtube.com/watch?v=X9ziAXaIfyY&list=PL9X_7mTn8zvW0St3t74IXQt9hR6C77Nni",
+      "playlist_id": "PL9X_7mTn8zvW0St3t74IXQt9hR6C77Nni",
+      "seed_video_id": "X9ziAXaIfyY",
+      "playlist_title": "✧˚. ﹏🧝 葬送的芙莉蓮 🪄﹏ ₊⊹",
+      "channel": "公視台語台",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [],
+      "entries": [
+        {
+          "video_id": "X9ziAXaIfyY",
+          "title": "費倫生日，毋過費倫受氣😠｜台語版《葬送的芙莉蓮》EP14預告【年輕人的特權】",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=X9ziAXaIfyY",
+          "license": "unknown",
+          "estimated_duration_seconds": 51
+        },
+        {
+          "video_id": "XTt6Y01n-78",
+          "title": "世界上的大人，攏是足垃圾的｜台語版《葬送的芙莉蓮》EP13預告【同類厭惡】",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=XTt6Y01n-78",
+          "license": "unknown",
+          "estimated_duration_seconds": 61
+        },
+        {
+          "video_id": "sa8mmv5LTN4",
+          "title": "必看！芙莉蓮展威！！！｜台語版《葬送的芙莉蓮》EP10精華",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=sa8mmv5LTN4",
+          "license": "unknown",
+          "estimated_duration_seconds": 43
+        },
+        {
+          "video_id": "iM08qdhW-oc",
+          "title": "這箍的予人誠火大＜(´⌯ ̫⌯`)＞｜台語版《葬送的芙莉蓮》EP10精華",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=iM08qdhW-oc",
+          "license": "unknown",
+          "estimated_duration_seconds": 47
+        },
+        {
+          "video_id": "0HPEAiFAVhU",
+          "title": "弗蘭梅上佮意的魔法😍｜台語版《葬送的芙莉蓮》EP10精華",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=0HPEAiFAVhU",
+          "license": "unknown",
+          "estimated_duration_seconds": 45
+        }
+      ]
+    },
+    {
+      "original_url": "https://www.youtube.com/watch?v=T_X7HGDuMYc&list=PL9X_7mTn8zvVmd2vyiWdneNZhtkGzogI-",
+      "playlist_id": "PL9X_7mTn8zvVmd2vyiWdneNZhtkGzogI-",
+      "seed_video_id": "T_X7HGDuMYc",
+      "playlist_title": "《間諜家家酒》台語配音版 精華",
+      "channel": "公視台語台",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [],
+      "entries": [
+        {
+          "video_id": "T_X7HGDuMYc",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜情緒勒索的 #安妮亞 be like｜台語版 第二季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=T_X7HGDuMYc",
+          "license": "unknown",
+          "estimated_duration_seconds": 71
+        },
+        {
+          "video_id": "y_BHlnTKPlI",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜配音用4秒就改變 #安妮亞 情緒！｜台語版 第二季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=y_BHlnTKPlI",
+          "license": "unknown",
+          "estimated_duration_seconds": 46
+        },
+        {
+          "video_id": "REvF37V6bGA",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜共我當做塑膠？｜台語版 第二季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=REvF37V6bGA",
+          "license": "unknown",
+          "estimated_duration_seconds": 61
+        },
+        {
+          "video_id": "538mryZJzIY",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜安妮亞到底講幾遍 𝘄𝗮𝗸𝘂-𝘄𝗮𝗸𝘂？｜台語版 第二季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=538mryZJzIY",
+          "license": "unknown",
+          "estimated_duration_seconds": 31
+        },
+        {
+          "video_id": "E6VcJciKUcs",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜安妮亞會傷心(ಥ﹏ಥ)｜台語版 第二季",
+          "channel": "公視台語台",
+          "video_url": "https://www.youtube.com/watch?v=E6VcJciKUcs",
+          "license": "unknown",
+          "estimated_duration_seconds": 51
+        }
+      ]
+    },
+    {
+      "original_url": "https://www.youtube.com/playlist?list=PLNAzP8UNX2-p0eXJ_LpWc380m8muAz2j5",
+      "playlist_id": "PLNAzP8UNX2-p0eXJ_LpWc380m8muAz2j5",
+      "seed_video_id": null,
+      "playlist_title": "2025文化新台灣",
+      "channel": "公視台語台-台灣新眼界",
+      "source_declared_language": "nan-tw",
+      "language_verified": false,
+      "license": "unknown",
+      "inventory_scope": {
+        "flat_playlist": true,
+        "playlist_entry_limit": 5,
+        "media_downloaded": false
+      },
+      "warnings": [],
+      "entries": [
+        {
+          "video_id": "e9PV-etOXEI",
+          "title": "Team Develops Self-Healing Materials | Interview with Chen Chun-tai, Dean of the College of Scien...",
+          "channel": "公視台語台-台灣新眼界",
+          "video_url": "https://www.youtube.com/watch?v=e9PV-etOXEI",
+          "license": "unknown",
+          "estimated_duration_seconds": 3151
+        },
+        {
+          "video_id": "NoAfmwG5oUE",
+          "title": "Taiwanese Prisoners of War in Post-War Siberia | Interview with Documentary Director Hsu Ming-Chu...",
+          "channel": "公視台語台-台灣新眼界",
+          "video_url": "https://www.youtube.com/watch?v=NoAfmwG5oUE",
+          "license": "unknown",
+          "estimated_duration_seconds": 3190
+        },
+        {
+          "video_id": "UInK1UnZiAg",
+          "title": "Technology-Driven Clownfish Farming for Global Export | Interview with Changhua Fishery Youth Hsi...",
+          "channel": "公視台語台-台灣新眼界",
+          "video_url": "https://www.youtube.com/watch?v=UInK1UnZiAg",
+          "license": "unknown",
+          "estimated_duration_seconds": 2970
+        },
+        {
+          "video_id": "R9af-3k0zbg",
+          "title": "Weathering With You: 33 Winters of Weathering Journey | Interview with Former Central Weather Bur...",
+          "channel": "公視台語台-台灣新眼界",
+          "video_url": "https://www.youtube.com/watch?v=R9af-3k0zbg",
+          "license": "unknown",
+          "estimated_duration_seconds": 3081
+        },
+        {
+          "video_id": "xC7KWHBw8zY",
+          "title": "北斗青年回鄉創生捒運動 ｜專訪北斗回鄉豆農 陳光鏡｜台灣新眼界．文化新台灣 20251103｜完整版",
+          "channel": "公視台語台-台灣新眼界",
+          "video_url": "https://www.youtube.com/watch?v=xC7KWHBw8zY",
+          "license": "unknown",
+          "estimated_duration_seconds": 3061
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "purpose": "user_provided_sources_for_private_weak_label_experiments",
+  "acquisition_policy": {
+    "enumeration_entry_limit_per_playlist": 5,
+    "download_mode": "explicit_video_ids_only",
+    "automatic_full_playlist_download": false,
+    "preserve_original_audio": true
+  }
+}

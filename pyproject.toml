@@ -30,6 +30,7 @@ quantize = ["torchao>=0.16.0"]
 
 [dependency-groups]
 taigi = [
+    "jiwer>=3",
     "soundfile>=0.12",
     "sphn>=0.1.4",
     "transformers==4.57.1",

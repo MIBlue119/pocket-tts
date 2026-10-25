@@ -28,3 +28,25 @@ The command performs these stages under one subprocess deadline.
 Each stage has a stdout `.log` and a separate `.stderr.log`. `run-report.json` records the final state and failing stage. `weak_labels_ready` requires a published release with at least one accepted weak label and a nonempty `train.jsonl`. If silence, quality checks, or empty transcripts leave no usable labels, the run fails and preserves its diagnostics. Inspect the reported release's `metadata.jsonl` and `report.json`. Labels remain `asr_pseudo` and `unverified_weak_label`; successful processing does not establish transcription accuracy or speech quality.
 
 Raw media and intermediate files remain available in the attempt directory. The published release contains its own audio copy. There is no queue, playlist expansion, automatic upload, or automatic cleanup.
+
+## Verified local example (2026-10-25)
+
+The following ran successfully on the local RTX 3090 and published four weak labels
+in 28.54 seconds. Use a new output directory for another attempt. The environment
+flags prevent an unrelated inherited TensorFlow installation from being imported.
+
+```bash
+USE_TF=0 USE_FLAX=0 /mnt/HDD2/proj_tts/.venvs/taigi-pipeline/bin/python \
+  -m training.taigi.build_video \
+  'https://www.youtube.com/watch?v=T_X7HGDuMYc' \
+  data/taigi-enhancement-pilot/one-command-v3 \
+  --enhancer-python /mnt/HDD2/proj_tts/.venvs/taigi-enhance/bin/python \
+  --group-id youtube-playlist-PL9X_7mTn8zvVmd2vyiWdneNZhtkGzogI- \
+  --train-only --start 10 --duration 20 --timeout 300 \
+  --cache-dir /mnt/HDD2/proj_bark/pretrained_model/huggingface/hub
+```
+
+The existing successful attempt is `data/taigi-enhancement-pilot/one-command-v2/`.
+Its `run-report.json` points to release `f961f5fd869a24fa`. The manual-stage release
+`4ac2724d60b54204` contains the same source interval; do not merge these two as
+independent examples. See [measured feasibility and limits](plans/2026-10-25-youtube-weak-label-feasibility.md).

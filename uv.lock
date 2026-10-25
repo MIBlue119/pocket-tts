@@ -1658,6 +1658,7 @@ dev = [
     { name = "whisper-normalizer" },
 ]
 taigi = [
+    { name = "jiwer" },
     { name = "pyyaml" },
     { name = "soundfile" },
     { name = "sphn" },
@@ -1712,6 +1713,7 @@ dev = [
     { name = "whisper-normalizer", specifier = ">=0.0.10" },
 ]
 taigi = [
+    { name = "jiwer", specifier = ">=3" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "soundfile", specifier = ">=0.12" },
     { name = "sphn", specifier = ">=0.1.4" },
