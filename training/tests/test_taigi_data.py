@@ -305,3 +305,41 @@ def test_cli_prepare_supports_train_only_smoke(
 
     assert main(["prepare", str(manifest), str(tmp_path / "work"), "--train-only"]) == 0
     assert capsys.readouterr().out.strip().endswith("candidates.jsonl")
+
+
+def test_breeze_batch_resamples_mixed_rates_lengths_and_uses_fresh_inputs(tmp_path: Path) -> None:
+    from training.taigi.transcriber import BreezeTranscriber
+
+    intervals = []
+    expected_lengths = []
+    for index, (rate, duration) in enumerate([(8000, 0.2), (24000, 0.35), (48000, 0.5)]):
+        audio = tmp_path / f"batch-{index}.wav"
+        _wav(audio, [(duration, 0.2)], sample_rate=rate)
+        intervals.append((audio, 0.0, duration))
+        expected_lengths.append(round(duration * 16000))
+    calls = []
+
+    class MutatingPipe:
+        def __call__(
+            self: Any,
+            inputs: list[dict[str, Any]],
+            batch_size: int,
+            generate_kwargs: dict[str, str],
+        ) -> list[dict[str, str]]:
+            assert batch_size == 3
+            assert generate_kwargs == {"language": "zh", "task": "transcribe"}
+            assert len({id(item) for item in inputs}) == 3
+            lengths = []
+            for item in inputs:
+                assert item.pop("sampling_rate") == 16000
+                lengths.append(len(item.pop("array")))
+            calls.append(lengths)
+            return [{"text": f"ordered-{length}"} for length in lengths]
+
+    transcribe = BreezeTranscriber(MutatingPipe(), 16000)
+    expected = [f"ordered-{length}" for length in expected_lengths]
+    assert transcribe.transcribe_batch(intervals) == expected
+    assert transcribe.transcribe_batch(intervals) == expected
+    assert calls == [expected_lengths, expected_lengths]
+    with pytest.raises(ValueError, match="1 to 4"):
+        transcribe.transcribe_batch(intervals * 2)

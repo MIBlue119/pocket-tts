@@ -282,3 +282,23 @@ def test_inventory_round_robin_preserves_all_memberships(tmp_path: Path) -> None
     assert queue[0]["playlists"] == ["show-0", "show-1"]
     assert queue[0]["group_id"] == queue[1]["group_id"]
     assert corpus.normalize_inventory(inventory) == queue
+
+
+def test_asr_batch_size_is_opt_in_and_frozen(tmp_path: Path) -> None:
+    args = arguments(tmp_path, [{"id": "abcdefghijk", "duration": 3200}])
+    assert args.asr_batch_size == 1
+    args.asr_batch_size = 4
+    corpus.run(args, execute_fn=fake_execute([]))
+    plan = json.loads((args.output / "plan.json").read_text())
+    assert plan["config"]["asr_batch_size"] == 4
+    spec = json.loads((args.output / "videos/abcdefghijk/spec.json").read_text())
+    assert spec["asr_batch_size"] == 4
+    assert (
+        json.loads((args.output / "videos/abcdefghijk/stage/result.json").read_text())[
+            "asr_batch_size"
+        ]
+        == 4
+    )
+    args.asr_batch_size = 1
+    with pytest.raises(ValueError, match="frozen corpus plan"):
+        corpus.run(args, execute_fn=fake_execute([]))

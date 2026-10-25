@@ -30,17 +30,37 @@ class BreezeTranscriber:
     target_sample_rate: int
     adapter_version: str = BREEZE_ADAPTER_VERSION
 
-    def __call__(self: BreezeTranscriber, path: Path, start: float, duration: float) -> str:
+    def _input(
+        self: BreezeTranscriber, path: Path, start: float, duration: float
+    ) -> dict[str, Any]:
         samples, source_sample_rate = _read_interval(path, start, duration)
         if source_sample_rate != self.target_sample_rate:
             samples = resample_poly(samples, self.target_sample_rate, source_sample_rate).astype(
                 np.float32, copy=False
             )
+        return {"array": samples, "sampling_rate": self.target_sample_rate}
+
+    def __call__(self: BreezeTranscriber, path: Path, start: float, duration: float) -> str:
         result: Any = self.pipe(
-            {"array": samples, "sampling_rate": self.target_sample_rate},
+            self._input(path, start, duration),
             generate_kwargs={"language": "zh", "task": "transcribe"},
         )
         return str(result["text"]).strip()
+
+    def transcribe_batch(
+        self: BreezeTranscriber, intervals: list[tuple[Path, float, float]]
+    ) -> list[str]:
+        if not 1 <= len(intervals) <= 4:
+            raise ValueError("Breeze batch must contain 1 to 4 intervals")
+        # The HF pipeline removes dictionary keys while preparing each example.
+        # Build independent 16 kHz inputs for every invocation and every row.
+        inputs = [self._input(path, start, duration) for path, start, duration in intervals]
+        results = self.pipe(
+            inputs, batch_size=len(inputs), generate_kwargs={"language": "zh", "task": "transcribe"}
+        )
+        if not isinstance(results, list) or len(results) != len(intervals):
+            raise ValueError("Breeze batch output count does not match input")
+        return [str(result["text"]).strip() for result in results]
 
 
 def breeze_transcriber(device: str) -> BreezeTranscriber:

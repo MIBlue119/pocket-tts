@@ -262,3 +262,140 @@ def test_changed_stage_code_refuses_resume(tmp_path: Path, monkeypatch: pytest.M
         worker.enhance(data)
     with pytest.raises(ValueError, match="identity integrity"):
         worker.transcribe(data)
+
+
+def batch_rows(tmp_path: Path, count: int = 7) -> list[dict[str, Any]]:
+    rows = []
+    for index in range(count):
+        path = tmp_path / f"batch-{index}.wav"
+        sf.write(path, np.full(800 + index * 80, 0.01 * index, dtype=np.float32), 8000)
+        rows.append(
+            {
+                "audio_path": str(path),
+                "audio_sha256": worker.sha256_file(path),
+                "start": 0.0,
+                "duration": 0.1 + index * 0.01,
+            }
+        )
+    return rows
+
+
+def test_batch_prefill_caches_order_duplicates_short_batch_and_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows = batch_rows(tmp_path)
+    loads = []
+    batches = []
+    singles = []
+
+    class ASR:
+        target_sample_rate = 16000
+
+        def __call__(self, path: Path, start: float, duration: float) -> str:
+            singles.append(path.name)
+            return path.stem
+
+        def transcribe_batch(self, intervals: list[tuple[Path, float, float]]) -> list[str]:
+            batches.append([path.name for path, _, _ in intervals])
+            return [path.stem for path, _, _ in intervals]
+
+    monkeypatch.setattr(worker, "breeze_transcriber", lambda _: loads.append(1) or ASR())
+    cached = worker.CachedTranscriber(tmp_path, "cpu", 4)
+    assert cached(Path(rows[0]["audio_path"]), 0.0, rows[0]["duration"]) == "batch-0"
+    cached.prefill(rows + rows)
+    assert len(loads) == 1
+    assert singles == ["batch-0.wav"]
+    assert batches == [[f"batch-{i}.wav" for i in range(1, 5)], ["batch-5.wav", "batch-6.wav"]]
+    resumed = worker.CachedTranscriber(tmp_path, "cpu", 4)
+    resumed.prefill(rows)
+    assert [resumed(Path(row["audio_path"]), 0.0, row["duration"]) for row in rows] == [
+        f"batch-{i}" for i in range(7)
+    ]
+    assert len(loads) == 1
+    cache = next((tmp_path / "transcript-cache").glob("*.json"))
+    record = json.loads(cache.read_text())
+    assert record["identity"]["asr_batch_size"] == 4
+    record["text"] = "corrupt"
+    cache.write_text(json.dumps(record))
+    with pytest.raises(ValueError, match="cache integrity"):
+        resumed.prefill(rows)
+    assert len(loads) == 1
+
+
+def test_failed_batch_preserves_prior_batch_for_retry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows = batch_rows(tmp_path)
+    calls = []
+    loads = []
+    fail = True
+
+    class ASR:
+        target_sample_rate = 16000
+
+        def transcribe_batch(self, intervals: list[tuple[Path, float, float]]) -> list[str]:
+            calls.append([path.name for path, _, _ in intervals])
+            if fail and len(calls) == 2:
+                raise RuntimeError("second batch failed")
+            return [path.stem for path, _, _ in intervals]
+
+    monkeypatch.setattr(worker, "breeze_transcriber", lambda _: loads.append(1) or ASR())
+    with pytest.raises(RuntimeError, match="second batch failed"):
+        worker.CachedTranscriber(tmp_path, "cpu", 4).prefill(rows)
+    assert len(list((tmp_path / "transcript-cache").glob("*.json"))) == 4
+    fail = False
+    resumed = worker.CachedTranscriber(tmp_path, "cpu", 4)
+    resumed.prefill(rows)
+    assert len(loads) == 2
+    assert calls == [
+        [f"batch-{i}.wav" for i in range(4)],
+        [f"batch-{i}.wav" for i in range(4, 7)],
+        [f"batch-{i}.wav" for i in range(4, 7)],
+    ]
+    assert len(list((tmp_path / "transcript-cache").glob("*.json"))) == 7
+    resumed.prefill(rows)
+    assert len(calls) == 3
+
+
+def test_batch_prefill_rejects_candidate_audio_hash_before_loading(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows = batch_rows(tmp_path, 1)
+    rows[0]["audio_sha256"] = "bad"
+    monkeypatch.setattr(worker, "breeze_transcriber", lambda _: pytest.fail())
+    with pytest.raises(ValueError, match="audio hash mismatch"):
+        worker.CachedTranscriber(tmp_path, "cpu", 4).prefill(rows)
+
+
+def test_worker_prefills_opt_in_batch_then_release_reads_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = spec(tmp_path, seconds=4)
+    data["asr_batch_size"] = 4
+    predictor(monkeypatch)
+    monkeypatch.setattr(worker, "MAX_CHUNK_SECONDS", 1)
+    worker.enhance(data)
+    batches = []
+    loads = []
+
+    class ASR:
+        target_sample_rate = 16000
+
+        def __call__(self, path: Path, start: float, duration: float) -> str:
+            raise AssertionError("release must read prefilled per-row caches")
+
+        def transcribe_batch(self, intervals: list[tuple[Path, float, float]]) -> list[str]:
+            batches.append(intervals)
+            return ["中文弱標註"] * len(intervals)
+
+    monkeypatch.setattr(worker, "breeze_transcriber", lambda _: loads.append(1) or ASR())
+    result = worker.transcribe(data)
+    assert result["asr_batch_size"] == 4
+    assert result["accepted_weak_label_count"] == 4
+    assert len(loads) == len(batches) == 1
+    assert len(batches[0]) == 4
+    assert worker.transcribe(data) == result
+    assert len(loads) == 1
+    data["asr_batch_size"] = 1
+    with pytest.raises(ValueError, match="identity integrity"):
+        worker.transcribe(data)

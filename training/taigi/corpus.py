@@ -297,6 +297,9 @@ def run(args: argparse.Namespace, *, execute_fn: Executor = execute) -> dict[str
             raise ValueError(f"invalid {key}")
     if args.max_attempts < 1 or not math.isfinite(args.min_free_gib) or args.min_free_gib < 0:
         raise ValueError("invalid attempt limit or disk reserve")
+    asr_batch_size = getattr(args, "asr_batch_size", 1)
+    if type(asr_batch_size) is not int or asr_batch_size not in range(1, 5):
+        raise ValueError("asr_batch_size must be 1 to 4")
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     config = {
@@ -304,6 +307,7 @@ def run(args: argparse.Namespace, *, execute_fn: Executor = execute) -> dict[str
         for key, value in vars(args).items()
         if key not in {"command", "inventory", "output", "max_seconds", "min_free_gib"}
     }
+    config["asr_batch_size"] = asr_batch_size
     plan = dict(
         version=1,
         inventory_sha256=sha256_file(args.inventory),
@@ -462,6 +466,7 @@ def run(args: argparse.Namespace, *, execute_fn: Executor = execute) -> dict[str
                                     output_dir=str(video_dir / "stage"),
                                     cache_dir=config["cache_dir"],
                                     device=args.device,
+                                    asr_batch_size=asr_batch_size,
                                 )
                                 if spec_path.exists() and json.loads(spec_path.read_text()) != spec:
                                     raise ValueError("persisted worker spec changed")
@@ -545,6 +550,7 @@ def parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--enhancer-python", type=Path, required=True)
     run_parser.add_argument("--cache-dir", type=Path)
     run_parser.add_argument("--device", default="cuda:0")
+    run_parser.add_argument("--asr-batch-size", type=int, choices=range(1, 5), default=1)
     run_parser.add_argument("--max-seconds", type=float, default=86400)
     run_parser.add_argument("--max-attempts", type=int, default=2)
     run_parser.add_argument("--min-free-gib", type=float, default=10)

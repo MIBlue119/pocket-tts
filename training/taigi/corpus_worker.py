@@ -65,6 +65,10 @@ def _context(spec: dict[str, Any]) -> tuple[Path, Path, dict[str, Any]]:
     if not raw.is_absolute() or not output.is_absolute():
         raise ValueError("raw_audio and output_dir must be absolute")
     identity = {key: spec[key] for key in ("video_id", "group_id", "original_url", "license")}
+    batch_size = spec.get("asr_batch_size", 1)
+    if type(batch_size) is not int or batch_size not in range(1, 5):
+        raise ValueError("asr_batch_size must be 1 to 4")
+    identity["asr_batch_size"] = batch_size
     identity["raw_audio_sha256"] = sha256_file(raw)
     identity["stage_code_sha256"] = _code_identity()
     return raw, output, identity
@@ -222,17 +226,21 @@ class CachedTranscriber:
     adapter_version = BREEZE_ADAPTER_VERSION
     target_sample_rate = 16000
 
-    def __init__(self, output: Path, device: str):
+    def __init__(self, output: Path, device: str, batch_size: int = 1):
+        if type(batch_size) is not int or batch_size not in range(1, 5):
+            raise ValueError("ASR batch size must be 1 to 4")
+        self.batch_size = batch_size
         self.cache = output / "transcript-cache"
         self.device = device
         self.transcriber = None
         self.hashes: dict[Path, str] = {}
 
-    def __call__(self, path: Path, start: float, duration: float) -> str:
+    def _entry(self, path: Path, start: float, duration: float) -> tuple[Path, dict[str, Any]]:
         if path not in self.hashes:
             self.hashes[path] = sha256_file(path)
         identity = {
             "audio_sha256": self.hashes[path],
+            "asr_batch_size": self.batch_size,
             "start": start,
             "duration": duration,
             "model": BREEZE_MODEL,
@@ -242,7 +250,9 @@ class CachedTranscriber:
             "stage_code_sha256": _code_identity(),
         }
         key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
-        cache_path = self.cache / f"{key}.json"
+        return self.cache / f"{key}.json", identity
+
+    def _cached(self, cache_path: Path, identity: dict[str, Any]) -> str | None:
         if cache_path.exists():
             cached = _json(cache_path)
             if cached.get("identity") != identity or not isinstance(cached.get("text"), str):
@@ -251,11 +261,15 @@ class CachedTranscriber:
             if cached.get("text_sha256") != hashlib.sha256(text.encode()).hexdigest():
                 raise ValueError(f"transcript cache integrity failure: {cache_path}")
             return text
+        return None
+
+    def _load(self) -> None:
         if self.transcriber is None:
             self.transcriber = breeze_transcriber(self.device)
             if self.transcriber.target_sample_rate != self.target_sample_rate:
                 raise ValueError("pinned Breeze target sample rate changed")
-        text = self.transcriber(path, start, duration).strip()
+
+    def _store(self, cache_path: Path, identity: dict[str, Any], text: str) -> None:
         _write(
             cache_path,
             {
@@ -264,7 +278,51 @@ class CachedTranscriber:
                 "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
             },
         )
+
+    def __call__(self, path: Path, start: float, duration: float) -> str:
+        cache_path, identity = self._entry(path, start, duration)
+        cached = self._cached(cache_path, identity)
+        if cached is not None:
+            return cached
+        self._load()
+        assert self.transcriber is not None
+        text = self.transcriber(path, start, duration).strip()
+        self._store(cache_path, identity, text)
         return text
+
+    def prefill(self, rows: list[dict[str, Any]]) -> None:
+        pending: list[tuple[Path, dict[str, Any], tuple[Path, float, float]]] = []
+        seen: set[Path] = set()
+
+        def flush() -> None:
+            if not pending:
+                return
+            self._load()
+            assert self.transcriber is not None
+            texts = self.transcriber.transcribe_batch([item[2] for item in pending])
+            if len(texts) != len(pending) or any(not isinstance(text, str) for text in texts):
+                raise ValueError("Breeze batch output does not match cache inputs")
+            for (cache_path, identity, _), text in zip(pending, texts, strict=True):
+                self._store(cache_path, identity, text.strip())
+            pending.clear()
+
+        for row in rows:
+            interval = (
+                Path(row["audio_path"]).resolve(),
+                float(row["start"]),
+                float(row["duration"]),
+            )
+            cache_path, identity = self._entry(*interval)
+            if identity["audio_sha256"] != row.get("audio_sha256"):
+                raise ValueError("candidate audio hash mismatch before ASR batch")
+            cached = self._cached(cache_path, identity)
+            if cached is not None or cache_path in seen:
+                continue
+            seen.add(cache_path)
+            pending.append((cache_path, identity, interval))
+            if len(pending) == self.batch_size:
+                flush()
+        flush()
 
 
 def transcribe(spec: dict[str, Any]) -> dict[str, Any]:
@@ -301,11 +359,11 @@ def transcribe(spec: dict[str, Any]) -> dict[str, Any]:
     accepted, rejected = 0, enhancement["quarantine_count"]
     artifacts = {**enhancement["artifacts"], **_hashes([output / "enhancement-report.json"])}
     if rows:
+        transcriber = CachedTranscriber(output, spec["device"], identity["asr_batch_size"])
+        if identity["asr_batch_size"] > 1:
+            transcriber.prefill(rows)
         release = transcribe_release(
-            candidates,
-            output / "releases",
-            device=spec["device"],
-            transcriber=CachedTranscriber(output, spec["device"]),
+            candidates, output / "releases", device=spec["device"], transcriber=transcriber
         )
         report = _json(release / "report.json")
         accepted = report["accepted_weak_label_count"]
