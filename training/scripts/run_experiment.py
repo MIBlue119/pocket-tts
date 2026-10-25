@@ -19,6 +19,7 @@ import sys
 import time
 import uuid
 from collections.abc import Generator
+from multiprocessing.synchronize import Event
 from pathlib import Path
 from types import FrameType
 from typing import Any, Protocol
@@ -113,7 +114,12 @@ def numeric_metrics(record: dict[str, Any]) -> dict[str, float | int]:
     return result
 
 
-def wandb_worker(events: EventSource, settings: dict[str, str], metadata: dict[str, Any]) -> None:
+def wandb_worker(
+    events: EventSource,
+    settings: dict[str, str],
+    metadata: dict[str, Any],
+    finished: Event | None = None,
+) -> None:
     # Isolate SDK/network stalls from the trainer's wall-clock budget.
     try:
         import wandb
@@ -147,6 +153,8 @@ def wandb_worker(events: EventSource, settings: dict[str, str], metadata: dict[s
                 break
             run.log(event)
         run.finish()
+        if finished is not None:
+            finished.set()
     except Exception:
         print("W&B unavailable; progress.jsonl remains authoritative", file=sys.stderr)
 
@@ -240,6 +248,9 @@ def run(args: argparse.Namespace, command: list[str] | None = None) -> int:
         or args.grace_seconds < 0
     ):
         raise ValueError("max-seconds must be positive and grace-seconds nonnegative")
+    finish_seconds = args.wandb_finish_seconds
+    if not math.isfinite(finish_seconds) or finish_seconds < 0:
+        raise ValueError("wandb-finish-seconds must be finite and nonnegative")
     with run_lock(run_dir):
         current = identity(config_path, config, args.provenance)
         manifest_path = run_dir / "run_manifest.json"
@@ -266,15 +277,18 @@ def run(args: argparse.Namespace, command: list[str] | None = None) -> int:
             "state": "running",
             "max_seconds": args.max_seconds,
             "grace_seconds": args.grace_seconds,
+            "wandb_finish_seconds": finish_seconds,
+            "wandb_status": "disabled" if args.wandb == "disabled" else "running",
             "resumed_checkpoint": pair[0].name if pair else None,
         }
         write_json(path, record)
         print(f"Run manifest: {manifest_path}\nAttempt: {path}", flush=True)
-        worker = events = None
+        worker = events = finished = None
         try:
             if args.wandb != "disabled":
                 ctx = multiprocessing.get_context("spawn")
                 events = ctx.Queue(maxsize=1000)
+                finished = ctx.Event()
                 metadata = {"git_sha": sha, "config_sha256": current["config_sha256"]}
                 metadata["input_sha256"] = {k: v["sha256"] for k, v in current["inputs"].items()}
                 worker = ctx.Process(
@@ -289,6 +303,7 @@ def run(args: argparse.Namespace, command: list[str] | None = None) -> int:
                             "directory": str(run_dir),
                         },
                         metadata,
+                        finished,
                     ),
                     daemon=True,
                 )
@@ -316,19 +331,29 @@ def run(args: argparse.Namespace, command: list[str] | None = None) -> int:
             record["ended_at"] = time.time()
             write_json(path, record)
             if worker is not None and worker.pid is not None and events is not None:
+                finish_deadline = time.monotonic() + finish_seconds
                 try:
-                    events.put_nowait(None)
+                    events.put(None, timeout=finish_seconds)
                 except queue.Full:
                     pass
-                worker.join(timeout=2)
+                worker.join(timeout=max(0, finish_deadline - time.monotonic()))
                 if worker.is_alive():
+                    record["wandb_status"] = "finish_timeout"
                     worker.terminate()
                     worker.join(timeout=1)
+                else:
+                    record["wandb_status"] = (
+                        "sdk_finished"
+                        if finished is not None and finished.is_set()
+                        else "unavailable"
+                    )
                 if worker.is_alive():
                     worker.kill()
                     worker.join()
                 events.cancel_join_thread()
                 events.close()
+                record["wandb_finished_at"] = time.time()
+                write_json(path, record)
 
 
 def snapshot(run_dir: Path | str, destination: Path | str) -> None:
@@ -365,6 +390,7 @@ def main() -> int:
     launch.add_argument("config")
     launch.add_argument("--max-seconds", type=float, required=True)
     launch.add_argument("--grace-seconds", type=float, default=120)
+    launch.add_argument("--wandb-finish-seconds", type=float, default=30)
     launch.add_argument("--wandb", choices=("disabled", "offline", "online"), default="disabled")
     launch.add_argument("--entity", default="weirenlan")
     launch.add_argument("--project", default="pocket-tts-taigi")

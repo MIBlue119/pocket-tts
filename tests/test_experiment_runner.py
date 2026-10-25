@@ -35,6 +35,7 @@ def setup_run(tmp_path: Path) -> tuple[argparse.Namespace, Path, Path]:
         config=str(config),
         max_seconds=3,
         grace_seconds=0.2,
+        wandb_finish_seconds=30,
         wandb="disabled",
         entity="weirenlan",
         project="pocket-tts-taigi",
@@ -258,3 +259,34 @@ def test_reject_unbounded_duration(tmp_path: Path, value: float) -> None:
     args.max_seconds = value
     with pytest.raises(ValueError, match="max-seconds"):
         runner.run(args, child("pass"))
+
+
+@pytest.mark.parametrize(
+    "finish_seconds, delay, expected", [(4, 2.2, "sdk_finished"), (0.2, 20, "finish_timeout")]
+)
+def test_wandb_finish_budget(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    finish_seconds: float,
+    delay: float,
+    expected: str,
+) -> None:
+    fake_sdk = tmp_path / "fake_sdk"
+    fake_sdk.mkdir()
+    (fake_sdk / "wandb.py").write_text(
+        "import time\n"
+        "class Settings:\n"
+        "    def __init__(self, **kwargs): pass\n"
+        "class Run:\n"
+        "    def log(self, value): pass\n"
+        f"    def finish(self): time.sleep({delay})\n"
+        "def init(**kwargs): return Run()\n"
+    )
+    monkeypatch.syspath_prepend(str(fake_sdk))
+    args, run_dir, _ = setup_run(tmp_path)
+    args.wandb = "offline"
+    args.wandb_finish_seconds = finish_seconds
+    started = time.monotonic()
+    assert runner.run(args, child("pass")) == 0
+    assert attempt(run_dir)["wandb_status"] == expected
+    assert time.monotonic() - started < finish_seconds + 3
