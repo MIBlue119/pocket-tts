@@ -1,0 +1,2088 @@
+{
+  "schema_version": 1,
+  "scope": "all_entries_from_six_user_supplied_playlists",
+  "captured_at": 1792925998.0970194,
+  "source_count": 6,
+  "unique_video_count": 290,
+  "known_duration_seconds": 93947,
+  "sources": [
+    {
+      "playlist_id": "PL9X_7mTn8zvWZZxPOPepMdUYfGEhyouzf",
+      "url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvWZZxPOPepMdUYfGEhyouzf",
+      "title": "《櫻桃丸仔》 (台語版)",
+      "entry_count": 88,
+      "entries": [
+        {
+          "id": "IxomT4nzSZc",
+          "title": "丸仔的畫著獎囉｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=IxomT4nzSZc"
+        },
+        {
+          "id": "bq0DPbhplPc",
+          "title": "美環的翁婿愛選啥人｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bq0DPbhplPc"
+        },
+        {
+          "id": "-DqeACvcYcU",
+          "title": "無愛洗身軀的丸仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=-DqeACvcYcU"
+        },
+        {
+          "id": "lgg1IxCUll8",
+          "title": "囡仔人毋通耍火｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=lgg1IxCUll8"
+        },
+        {
+          "id": "e86IbGX79Cc",
+          "title": "寵物店的阿叔成啥物｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=e86IbGX79Cc"
+        },
+        {
+          "id": "bcVdSbAM3dE",
+          "title": "美環兜的狗仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bcVdSbAM3dE"
+        },
+        {
+          "id": "0UPmmTU7ZX8",
+          "title": "好食的蘋果糖｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=0UPmmTU7ZX8"
+        },
+        {
+          "id": "EBbOa80MBuU",
+          "title": "松壽司的魅力｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=EBbOa80MBuU"
+        },
+        {
+          "id": "nZu_cgxl1FQ",
+          "title": "全牛肉的壽喜燒｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nZu_cgxl1FQ"
+        },
+        {
+          "id": "RFjAFYbj-pk",
+          "title": "鎖匙無去矣｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=RFjAFYbj-pk"
+        },
+        {
+          "id": "zI_5RWAGF9w",
+          "title": "阿公是藝術家｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=zI_5RWAGF9w"
+        },
+        {
+          "id": "EC6DL1Amqxs",
+          "title": "驚娘仔的丸仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=EC6DL1Amqxs"
+        },
+        {
+          "id": "UCx8XCCt7rI",
+          "title": "做伙去野餐｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=UCx8XCCt7rI"
+        },
+        {
+          "id": "ISRoOrn-RW8",
+          "title": "丸仔感冒矣｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ISRoOrn-RW8"
+        },
+        {
+          "id": "CJPKNwlbewk",
+          "title": "阿公刺繡｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=CJPKNwlbewk"
+        },
+        {
+          "id": "2O8YgdouKXE",
+          "title": "有話欲私底下講｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=2O8YgdouKXE"
+        },
+        {
+          "id": "2SJnok7d9sU",
+          "title": "丸仔的祕密｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=2SJnok7d9sU"
+        },
+        {
+          "id": "GJlgwV_gYh0",
+          "title": "丸仔佮藤木的關係｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=GJlgwV_gYh0"
+        },
+        {
+          "id": "psxiaHr3-hI",
+          "title": "阿公的寶物｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=psxiaHr3-hI"
+        },
+        {
+          "id": "bpOCTkTHL1I",
+          "title": "枵饞的小杉｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bpOCTkTHL1I"
+        },
+        {
+          "id": "xgzODQ0WQjY",
+          "title": "丸仔著獎｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xgzODQ0WQjY"
+        },
+        {
+          "id": "EJ9zrq6qDqQ",
+          "title": "囡仔性的丸仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=EJ9zrq6qDqQ"
+        },
+        {
+          "id": "7ndcoDaMIhg",
+          "title": "內褲拍毋見矣｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7ndcoDaMIhg"
+        },
+        {
+          "id": "IBRFF_pULqM",
+          "title": "阿公的煩惱｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=IBRFF_pULqM"
+        },
+        {
+          "id": "bhRLLODSTAY",
+          "title": "驚狗的藤木｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bhRLLODSTAY"
+        },
+        {
+          "id": "YD7ZxKICf90",
+          "title": "丸仔開演唱會｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YD7ZxKICf90"
+        },
+        {
+          "id": "eJ-Re-4iI2g",
+          "title": "丸仔予鴟鴞驚著｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=eJ-Re-4iI2g"
+        },
+        {
+          "id": "uIhXRIV_40U",
+          "title": "丸仔有天份｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=uIhXRIV_40U"
+        },
+        {
+          "id": "kfqUe-dgsMg",
+          "title": "爸爸改酒｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=kfqUe-dgsMg"
+        },
+        {
+          "id": "t4gzOfckKAY",
+          "title": "美環的目標｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=t4gzOfckKAY"
+        },
+        {
+          "id": "bmI3OUllbyQ",
+          "title": "恐怖的生物｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bmI3OUllbyQ"
+        },
+        {
+          "id": "t8nAn7wzqr4",
+          "title": "豬太郎的偽裝｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=t8nAn7wzqr4"
+        },
+        {
+          "id": "82eRBPi9G7w",
+          "title": "愛摒掃的同學｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=82eRBPi9G7w"
+        },
+        {
+          "id": "m1EDZjPVDIk",
+          "title": "姊姊欲做啥物｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=m1EDZjPVDIk"
+        },
+        {
+          "id": "20ikBCN43F4",
+          "title": "惹媽媽受氣😨｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=20ikBCN43F4"
+        },
+        {
+          "id": "fK3avhn5gzk",
+          "title": "幌韆鞦真趣味｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=fK3avhn5gzk"
+        },
+        {
+          "id": "4kXlbukNyYY",
+          "title": "天王花三姊妹｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4kXlbukNyYY"
+        },
+        {
+          "id": "0nAKC4PEhg0",
+          "title": "姊姊是好鼻獅｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=0nAKC4PEhg0"
+        },
+        {
+          "id": "HZCUf77m1DA",
+          "title": "媽媽的話愛聽｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=HZCUf77m1DA"
+        },
+        {
+          "id": "b81GDmkb1mI",
+          "title": "閒𤺪𤺪的丸仔｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=b81GDmkb1mI"
+        },
+        {
+          "id": "YLqYtM6afsA",
+          "title": "錢是啥人開去的｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YLqYtM6afsA"
+        },
+        {
+          "id": "FRiA0lELDW4",
+          "title": "阿公哪少年家咧｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=FRiA0lELDW4"
+        },
+        {
+          "id": "jGMc2sTo2HM",
+          "title": "寒天佇外口巡邏｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=jGMc2sTo2HM"
+        },
+        {
+          "id": "i_VTKyQTNek",
+          "title": "紙牌對決｜《櫻桃丸仔》 (台語版)｜第五季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=i_VTKyQTNek"
+        },
+        {
+          "id": "Q0i9kwkZ2YY",
+          "title": "新年參拜｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Q0i9kwkZ2YY"
+        },
+        {
+          "id": "Vuq0ONktmII",
+          "title": "丸仔有對象矣？！｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Vuq0ONktmII"
+        },
+        {
+          "id": "WJeGGpxK5iQ",
+          "title": "阿公替丸仔縛頭鬃｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=WJeGGpxK5iQ"
+        },
+        {
+          "id": "sMrE_rO3kqI",
+          "title": "做美食評審｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=sMrE_rO3kqI"
+        },
+        {
+          "id": "PcDXoaM_hdc",
+          "title": "楓仔葉天婦羅(thia̋n-pú-lah)的滋味｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=PcDXoaM_hdc"
+        },
+        {
+          "id": "ZjZCtRMGFLY",
+          "title": "貧惰的丸仔｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ZjZCtRMGFLY"
+        },
+        {
+          "id": "dr47CI2gxtI",
+          "title": "阿公是王子｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dr47CI2gxtI"
+        },
+        {
+          "id": "F0FhpUsBaxk",
+          "title": "鴨霸的小杉｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=F0FhpUsBaxk"
+        },
+        {
+          "id": "y4LsVvS41Gw",
+          "title": "腹肚咧滾絞｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=y4LsVvS41Gw"
+        },
+        {
+          "id": "TmZkcZmBqnI",
+          "title": "宇宙的能量｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=TmZkcZmBqnI"
+        },
+        {
+          "id": "Zq0X1m7xvEk",
+          "title": "熱天就是愛去相拍｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Zq0X1m7xvEk"
+        },
+        {
+          "id": "spx1RsJoJZY",
+          "title": "媽媽攏毋捌｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=spx1RsJoJZY"
+        },
+        {
+          "id": "vONNg68nkOo",
+          "title": "丸丸雙人組｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=vONNg68nkOo"
+        },
+        {
+          "id": "IC2blazbHKg",
+          "title": "做伙放煙花枝｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=IC2blazbHKg"
+        },
+        {
+          "id": "hL3R5eO28ko",
+          "title": "丸仔變煮熟的thak-khooh🐙｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=hL3R5eO28ko"
+        },
+        {
+          "id": "7-DeHteG6GU",
+          "title": "生菇的俗麭｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7-DeHteG6GU"
+        },
+        {
+          "id": "a3spkABsZzQ",
+          "title": "喙唇反烏的藤木｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=a3spkABsZzQ"
+        },
+        {
+          "id": "ieAQmxTUQLU",
+          "title": "起怨妒的美環｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ieAQmxTUQLU"
+        },
+        {
+          "id": "J6RVin1lNy0",
+          "title": "鬥陣飼雞仔囝🐣｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=J6RVin1lNy0"
+        },
+        {
+          "id": "EST5RynKr8w",
+          "title": "想欲見牛郎的綠子同學｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=EST5RynKr8w"
+        },
+        {
+          "id": "C5S_7oQxnZg",
+          "title": "櫻桃家是糊塗家族｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=C5S_7oQxnZg"
+        },
+        {
+          "id": "Ffrs0v6c_F4",
+          "title": "想欲走便所｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Ffrs0v6c_F4"
+        },
+        {
+          "id": "bMOjl2YyrM8",
+          "title": "出名的困擾｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bMOjl2YyrM8"
+        },
+        {
+          "id": "4Gs74SiF-sw",
+          "title": "魔法果汁｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4Gs74SiF-sw"
+        },
+        {
+          "id": "ZYwm8HJXKqY",
+          "title": "丸仔是地基主｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ZYwm8HJXKqY"
+        },
+        {
+          "id": "QvVJtDBYtmE",
+          "title": "運動比賽｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=QvVJtDBYtmE"
+        },
+        {
+          "id": "H0LpmT90nuY",
+          "title": "阿玉仔爸爸的煩惱｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=H0LpmT90nuY"
+        },
+        {
+          "id": "cXYox1eknhg",
+          "title": "愛食草莓的丸仔｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=cXYox1eknhg"
+        },
+        {
+          "id": "j9Byyt9Iago",
+          "title": "偷食步的丸仔｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=j9Byyt9Iago"
+        },
+        {
+          "id": "4i5fRYWO2cU",
+          "title": "練習騎跤踏車｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4i5fRYWO2cU"
+        },
+        {
+          "id": "mPlL_enwu7w",
+          "title": "捌真濟的長山同學｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=mPlL_enwu7w"
+        },
+        {
+          "id": "wi0zp5CsJ2g",
+          "title": "咖啡的滋味｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=wi0zp5CsJ2g"
+        },
+        {
+          "id": "QdzB-wyHPcQ",
+          "title": "丸仔惹媽媽受氣｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=QdzB-wyHPcQ"
+        },
+        {
+          "id": "ogHWj9r6w6M",
+          "title": "阿公老人目｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ogHWj9r6w6M"
+        },
+        {
+          "id": "qjDb3dn4-tw",
+          "title": "驚烏的丸仔｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=qjDb3dn4-tw"
+        },
+        {
+          "id": "OCLrvdQbobs",
+          "title": "偷看別人兜｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=OCLrvdQbobs"
+        },
+        {
+          "id": "cpRYTjb3J64",
+          "title": "全班攏掛面罩😨｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=cpRYTjb3J64"
+        },
+        {
+          "id": "uOCNREeyFr0",
+          "title": "丸仔共物件用害去？！｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=uOCNREeyFr0"
+        },
+        {
+          "id": "n7Uo-x66XUE",
+          "title": "囡仔人是烏魚子｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=n7Uo-x66XUE"
+        },
+        {
+          "id": "PlWy2teHQCk",
+          "title": "氣怫怫的阿姊｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=PlWy2teHQCk"
+        },
+        {
+          "id": "-6-pAKVtIF4",
+          "title": "到底是啥物咧振動啦😨｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=-6-pAKVtIF4"
+        },
+        {
+          "id": "wkmhJVulSrk",
+          "title": "啥物衫穿起來像雪人｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=wkmhJVulSrk"
+        },
+        {
+          "id": "YqlMaKaYSkA",
+          "title": "算盤好抑是電子計算機好｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YqlMaKaYSkA"
+        },
+        {
+          "id": "QZkbh1K8PbU",
+          "title": "姊妹仔相爭看電視｜《櫻桃丸仔》 (台語版)｜第四季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=QZkbh1K8PbU"
+        }
+      ]
+    },
+    {
+      "playlist_id": "PL9X_7mTn8zvUHn5P_-ngeHVUgqi4-zMha",
+      "url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvUHn5P_-ngeHVUgqi4-zMha",
+      "title": "《史努比》(台語配音版) 預告",
+      "entry_count": 26,
+      "entries": [
+        {
+          "id": "u2XnFe1jJK0",
+          "title": "《史努比》51+52 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=u2XnFe1jJK0"
+        },
+        {
+          "id": "dn8jYnY0vVI",
+          "title": "《史努比》49+50 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dn8jYnY0vVI"
+        },
+        {
+          "id": "HCVRn4jxYUo",
+          "title": "《史努比》47+48 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=HCVRn4jxYUo"
+        },
+        {
+          "id": "-VnZh-iq3E4",
+          "title": "《史努比》45+46 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=-VnZh-iq3E4"
+        },
+        {
+          "id": "DwtTD7KFTLQ",
+          "title": "《史努比》43+44 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=DwtTD7KFTLQ"
+        },
+        {
+          "id": "eWvgtUeSEdg",
+          "title": "《史努比》41+42 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=eWvgtUeSEdg"
+        },
+        {
+          "id": "Zidq6YXixLU",
+          "title": "《史努比》39+40 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Zidq6YXixLU"
+        },
+        {
+          "id": "MovOk8LAYPA",
+          "title": "《史努比》37+38預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=MovOk8LAYPA"
+        },
+        {
+          "id": "xXw11WilvhE",
+          "title": "《史努比》35+36 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xXw11WilvhE"
+        },
+        {
+          "id": "s7bDMNUKu_0",
+          "title": "《史努比》33+34 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=s7bDMNUKu_0"
+        },
+        {
+          "id": "-IJwTNcIn2Q",
+          "title": "《史努比》31+32 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=-IJwTNcIn2Q"
+        },
+        {
+          "id": "YIqvTDk_rGc",
+          "title": "《史努比》29+30 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YIqvTDk_rGc"
+        },
+        {
+          "id": "RxQVJwJc2WM",
+          "title": "《史努比》27+28 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=RxQVJwJc2WM"
+        },
+        {
+          "id": "UOd7LU_t77U",
+          "title": "《史努比》25+26 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=UOd7LU_t77U"
+        },
+        {
+          "id": "C7Z3aMwTWes",
+          "title": "《史努比》23+24 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=C7Z3aMwTWes"
+        },
+        {
+          "id": "54CBJHEHsjQ",
+          "title": "《史努比》21+22 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=54CBJHEHsjQ"
+        },
+        {
+          "id": "14JJj9b7caU",
+          "title": "《史努比》19+20 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=14JJj9b7caU"
+        },
+        {
+          "id": "WYJMzT31pt8",
+          "title": "《史努比》17+18 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=WYJMzT31pt8"
+        },
+        {
+          "id": "CHwpwgP0oQc",
+          "title": "《史努比》15+16 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=CHwpwgP0oQc"
+        },
+        {
+          "id": "xHCHUvLoYsU",
+          "title": "《史努比》EP13+14預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xHCHUvLoYsU"
+        },
+        {
+          "id": "SBU-9Pxyii4",
+          "title": "《史努比》EP11+12預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=SBU-9Pxyii4"
+        },
+        {
+          "id": "rOdsIBGkZU0",
+          "title": "《史努比》EP9+10 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=rOdsIBGkZU0"
+        },
+        {
+          "id": "yvSbjNZjNrM",
+          "title": "《史努比》EP7+8 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=yvSbjNZjNrM"
+        },
+        {
+          "id": "22INtyvJrZU",
+          "title": "《史努比》EP5+6 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=22INtyvJrZU"
+        },
+        {
+          "id": "JgB-jvFMegs",
+          "title": "《史努比》EP3+4 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=JgB-jvFMegs"
+        },
+        {
+          "id": "1X7Ixih7EDk",
+          "title": "《史努比》EP1+2 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1X7Ixih7EDk"
+        }
+      ]
+    },
+    {
+      "playlist_id": "PL9X_7mTn8zvWZjg0sAwhGR8zmUf9DiTiJ",
+      "url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvWZjg0sAwhGR8zmUf9DiTiJ",
+      "title": "《月薪嬌妻(台語配音)》",
+      "entry_count": 22,
+      "entries": [
+        {
+          "id": "fivb_rdG5ts",
+          "title": "《月薪嬌妻(台語配音)》EP7 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=fivb_rdG5ts"
+        },
+        {
+          "id": "aVveGUtU-7Q",
+          "title": "《月薪嬌妻(台語配音)》EP7 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=aVveGUtU-7Q"
+        },
+        {
+          "id": "5GGKG_4w6uE",
+          "title": "《月薪嬌妻(台語配音)》EP6 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=5GGKG_4w6uE"
+        },
+        {
+          "id": "Huy2hnwSNSA",
+          "title": "《月薪嬌妻(台語配音)》EP6 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Huy2hnwSNSA"
+        },
+        {
+          "id": "FjZDP4h_Stw",
+          "title": "《月薪嬌妻(台語配音)》EP5 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=FjZDP4h_Stw"
+        },
+        {
+          "id": "q9FEGwFyqzc",
+          "title": "《月薪嬌妻(台語配音)》EP5 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=q9FEGwFyqzc"
+        },
+        {
+          "id": "RDpgQCOqpE4",
+          "title": "《月薪嬌妻(台語配音)》EP4 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=RDpgQCOqpE4"
+        },
+        {
+          "id": "4A7TykR4R5s",
+          "title": "《月薪嬌妻(台語配音)》EP4 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4A7TykR4R5s"
+        },
+        {
+          "id": "AYpeqBOw0F4",
+          "title": "《月薪嬌妻(台語配音)》EP3 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=AYpeqBOw0F4"
+        },
+        {
+          "id": "edEEC50xPD8",
+          "title": "《月薪嬌妻(台語配音)》EP3 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=edEEC50xPD8"
+        },
+        {
+          "id": "aaN42xIn3ok",
+          "title": "《月薪嬌妻(台語配音)》EP2 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=aaN42xIn3ok"
+        },
+        {
+          "id": "UGOegQ0BRs0",
+          "title": "《月薪嬌妻(台語配音)》EP2 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=UGOegQ0BRs0"
+        },
+        {
+          "id": "sH-UaNASqAE",
+          "title": "《月薪嬌妻(台語配音)》Ep1 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=sH-UaNASqAE"
+        },
+        {
+          "id": "qtBCXqWxsS0",
+          "title": "《月薪嬌妻(台語配音)》EP9 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=qtBCXqWxsS0"
+        },
+        {
+          "id": "1S-nSB7nD6o",
+          "title": "《月薪嬌妻(台語配音)》EP9 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1S-nSB7nD6o"
+        },
+        {
+          "id": "jGQHPh0QPPA",
+          "title": "《月薪嬌妻(台語配音)》EP8預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=jGQHPh0QPPA"
+        },
+        {
+          "id": "Ta9GK4IE9bA",
+          "title": "《月薪嬌妻(台語配音)》EP8 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Ta9GK4IE9bA"
+        },
+        {
+          "id": "eOEu0yPAwpo",
+          "title": "《月薪嬌妻(台語配音)》EP10 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=eOEu0yPAwpo"
+        },
+        {
+          "id": "Ye6UU9v3Mnk",
+          "title": "《月薪嬌妻(台語配音)》EP10 預告",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Ye6UU9v3Mnk"
+        },
+        {
+          "id": "Wy0XJcVtz3k",
+          "title": "《月薪嬌妻(台語配音)》EP11 預告",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Wy0XJcVtz3k"
+        },
+        {
+          "id": "IqyTxq52Co4",
+          "title": "《月薪嬌妻特別篇(台語配音)》 預告",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=IqyTxq52Co4"
+        },
+        {
+          "id": "fhZHbGu1Uhk",
+          "title": "《月薪嬌妻特別篇(台語配音)》 預告",
+          "duration": 16,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=fhZHbGu1Uhk"
+        }
+      ]
+    },
+    {
+      "playlist_id": "PL9X_7mTn8zvW0St3t74IXQt9hR6C77Nni",
+      "url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvW0St3t74IXQt9hR6C77Nni",
+      "title": "✧˚. ﹏🧝 葬送的芙莉蓮 🪄﹏ ₊⊹",
+      "entry_count": 91,
+      "entries": [
+        {
+          "id": "X9ziAXaIfyY",
+          "title": "費倫生日，毋過費倫受氣😠｜台語版《葬送的芙莉蓮》EP14預告【年輕人的特權】",
+          "duration": 51,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=X9ziAXaIfyY"
+        },
+        {
+          "id": "XTt6Y01n-78",
+          "title": "世界上的大人，攏是足垃圾的｜台語版《葬送的芙莉蓮》EP13預告【同類厭惡】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=XTt6Y01n-78"
+        },
+        {
+          "id": "sa8mmv5LTN4",
+          "title": "必看！芙莉蓮展威！！！｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 43,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=sa8mmv5LTN4"
+        },
+        {
+          "id": "iM08qdhW-oc",
+          "title": "這箍的予人誠火大＜(´⌯ ̫⌯`)＞｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 47,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=iM08qdhW-oc"
+        },
+        {
+          "id": "0HPEAiFAVhU",
+          "title": "弗蘭梅上佮意的魔法😍｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=0HPEAiFAVhU"
+        },
+        {
+          "id": "P38LXCahfYA",
+          "title": "拍贏魔族的秘訣就是……｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 35,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=P38LXCahfYA"
+        },
+        {
+          "id": "jorDh3MCTZA",
+          "title": "靠勢到予人想欲吐🤮｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 35,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=jorDh3MCTZA"
+        },
+        {
+          "id": "bT7KR3plqOo",
+          "title": "卑鄙小人？！｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 37,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bT7KR3plqOo"
+        },
+        {
+          "id": "1dW3ANSkjAI",
+          "title": "芙莉蓮和弗蘭梅的初見面｜台語版《葬送的芙莉蓮》EP10精華",
+          "duration": 50,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1dW3ANSkjAI"
+        },
+        {
+          "id": "CqXXhKrRXI4",
+          "title": "勇者之劍⚔️｜台語版《葬送的芙莉蓮》EP12預告【真正的勇者】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=CqXXhKrRXI4"
+        },
+        {
+          "id": "xquZ762YHLM",
+          "title": "芙莉蓮予欣梅爾罵才改的｜台語版《葬送的芙莉蓮》EP11預告【北方諸國的寒天】",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xquZ762YHLM"
+        },
+        {
+          "id": "thbn8fgcXcQ",
+          "title": "師父「阿搭馬孔固力」｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=thbn8fgcXcQ"
+        },
+        {
+          "id": "YSCruX_UbDY",
+          "title": "戰士拍贏對手的秘訣｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 38,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YSCruX_UbDY"
+        },
+        {
+          "id": "S27af12RLuY",
+          "title": "修塔爾克對抗魔族｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 28,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=S27af12RLuY"
+        },
+        {
+          "id": "1f2F-ul0o1A",
+          "title": "可惡的芙莉蓮｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 54,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1f2F-ul0o1A"
+        },
+        {
+          "id": "aAjdmsb57nE",
+          "title": "費倫的厲害｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=aAjdmsb57nE"
+        },
+        {
+          "id": "7FWX3P_Qp0I",
+          "title": "下性命跪！｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7FWX3P_Qp0I"
+        },
+        {
+          "id": "76KeXJC9GLw",
+          "title": "魔族攏是無感情的怪物｜台語版《葬送的芙莉蓮》EP9精華",
+          "duration": 37,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=76KeXJC9GLw"
+        },
+        {
+          "id": "Zkq8k0wqqUI",
+          "title": "伊就是「送葬的 𝗛𝘂-𝗹𝗶́-𝗹𝗶𝗮̀𝗻」！｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 49,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Zkq8k0wqqUI"
+        },
+        {
+          "id": "YvxwfNO0zfo",
+          "title": "敢按呢？｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=YvxwfNO0zfo"
+        },
+        {
+          "id": "qjPrIxR33F4",
+          "title": "阿烏拉！｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 21,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=qjPrIxR33F4"
+        },
+        {
+          "id": "gtS_Cq4mrJc",
+          "title": "出一支喙｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 55,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=gtS_Cq4mrJc"
+        },
+        {
+          "id": "MNvSrFKT0FM",
+          "title": "暴力解決，足快樂 (≖‿ゝ≖)✧｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 50,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=MNvSrFKT0FM"
+        },
+        {
+          "id": "JZ5xm15Lq1o",
+          "title": "我驚甲軟跤…｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 42,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=JZ5xm15Lq1o"
+        },
+        {
+          "id": "2tjQEuFQPeg",
+          "title": "魔族誠魯呢｜台語版《葬送的芙莉蓮》EP8精華",
+          "duration": 50,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=2tjQEuFQPeg"
+        },
+        {
+          "id": "K2F6SXdiKso",
+          "title": "我誠厲害喔 ＜(´⌯ ̫⌯`)＞｜台語版《葬送的芙莉蓮》EP7精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=K2F6SXdiKso"
+        },
+        {
+          "id": "bS9wBWq6MKM",
+          "title": "敢若「魔法」仝款的詞｜台語版《葬送的芙莉蓮》EP7精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bS9wBWq6MKM"
+        },
+        {
+          "id": "NV1AirqJGlM",
+          "title": "芙莉蓮大人竟然遮早起床？｜台語版《葬送的芙莉蓮》EP7預告【童話般的事物】",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=NV1AirqJGlM"
+        },
+        {
+          "id": "7lJ7897-K7A",
+          "title": "逐家敢閣會記得欣梅爾？｜台語版《葬送的芙莉蓮》EP7精華",
+          "duration": 55,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7lJ7897-K7A"
+        },
+        {
+          "id": "jA7bgqp8ZH0",
+          "title": "聽無人話的野獸｜台語版《葬送的芙莉蓮》EP7精華",
+          "duration": 32,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=jA7bgqp8ZH0"
+        },
+        {
+          "id": "a60WxrjRVF0",
+          "title": "講咱的魔法阿媽 #芙莉蓮 是卑鄙小人？！｜台語版《葬送的芙莉蓮》EP10預告【強大的魔法使】",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=a60WxrjRVF0"
+        },
+        {
+          "id": "LnUyp_TiF3w",
+          "title": "是按怎芙莉蓮欲做「了戇工」的代誌？｜台語版《葬送的芙莉蓮》EP9預告【斷頭台阿烏拉】",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=LnUyp_TiF3w"
+        },
+        {
+          "id": "-rISsGr7gq8",
+          "title": "【幕後直擊】#芙莉蓮 拄著 #安妮亞，會發生啥物代誌咧？來聽「魔法使阿媽」和「間諜查某囡仔」分享幕後配音的趣味",
+          "duration": 209,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=-rISsGr7gq8"
+        },
+        {
+          "id": "gJchDzwpQTk",
+          "title": "修塔爾克懷疑🍨草莓聖代…｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 52,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=gJchDzwpQTk"
+        },
+        {
+          "id": "9QZDGLslj3E",
+          "title": "嘛是真阿莎力（a̍t-sá-lih）｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 47,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=9QZDGLslj3E"
+        },
+        {
+          "id": "r7sHq3KrHV8",
+          "title": "雖然修塔爾克是無藥醫的軟跤蝦（！｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=r7sHq3KrHV8"
+        },
+        {
+          "id": "SnuQ3N_Cnx8",
+          "title": "我可能猶是會落跑喔 (ゝ∀･)⌒☆｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 27,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=SnuQ3N_Cnx8"
+        },
+        {
+          "id": "T151IB7igbo",
+          "title": "費倫叫是家己穩死的講…｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=T151IB7igbo"
+        },
+        {
+          "id": "7so1_X0675o",
+          "title": "芙莉蓮竟然走敢若飛（？｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 40,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7so1_X0675o"
+        },
+        {
+          "id": "dRjexXlmWw8",
+          "title": "若是欣梅爾…｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 33,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dRjexXlmWw8"
+        },
+        {
+          "id": "93xMVwXMmf8",
+          "title": "無彩芙莉蓮的時間（咦？｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=93xMVwXMmf8"
+        },
+        {
+          "id": "seQ3QeXfal4",
+          "title": "有夠無聊的歡喜旅行 ^_^｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 39,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=seQ3QeXfal4"
+        },
+        {
+          "id": "dXTakkPo_V0",
+          "title": "不得了的戰士！｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 42,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dXTakkPo_V0"
+        },
+        {
+          "id": "ujz0XtpkC90",
+          "title": "修坦爾克和芙莉蓮的約定｜台語版《葬送的芙莉蓮》EP6精華",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ujz0XtpkC90"
+        },
+        {
+          "id": "QLq5JQ2yNvo",
+          "title": "芙莉蓮大人，修塔爾克這齒的袂使得…（毋過這段配音有夠讚！）｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 52,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=QLq5JQ2yNvo"
+        },
+        {
+          "id": "TKkG60-xVas",
+          "title": "芙莉蓮戰鬥的理由｜台語版《葬送的芙莉蓮》EP5精華",
+          "duration": 42,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=TKkG60-xVas"
+        },
+        {
+          "id": "gY99nlyRkhU",
+          "title": "芙莉蓮輕輕鬆鬆對付魔族｜台語版《葬送的芙莉蓮》EP8預告【葬送的芙莉蓮】",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=gY99nlyRkhU"
+        },
+        {
+          "id": "NYW9SfaoFnk",
+          "title": "芙莉蓮大人竟然遮早起床？｜台語版《葬送的芙莉蓮》EP7預告【童話般的事物】",
+          "duration": 36,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=NYW9SfaoFnk"
+        },
+        {
+          "id": "JOaswWY-oP4",
+          "title": "庄頭英雄「修塔爾克」｜台語版《葬送的芙莉蓮》EP6預告【村子的英雄】",
+          "duration": 30,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=JOaswWY-oP4"
+        },
+        {
+          "id": "dvhmH7QqmJE",
+          "title": "做伙冒險的日子，干焦芙莉蓮人生的百分之一｜台語版《葬送的芙莉蓮》EP5預告【死者的幻影】",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dvhmH7QqmJE"
+        },
+        {
+          "id": "Mydcm0EeO8U",
+          "title": "看日出的芙莉蓮，感覺😊｜台語版《葬送的芙莉蓮》𝗘𝗣𝟰精華",
+          "duration": 27,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Mydcm0EeO8U"
+        },
+        {
+          "id": "yW1SjiKRJ8A",
+          "title": "懶屍閣躽床…原來咱逐家和芙莉蓮的距離，無蓋遠嘛…",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=yW1SjiKRJ8A"
+        },
+        {
+          "id": "EefqSxxTXTc",
+          "title": "芙莉蓮大人，莫閣愛睏矣啦！｜台語版《葬送的芙莉蓮》𝗘𝗣𝟰精華",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=EefqSxxTXTc"
+        },
+        {
+          "id": "4vwsoGU6hNY",
+          "title": "費倫使用防禦魔法！｜台語版《葬送的芙莉蓮》𝗘𝗣𝟯精華",
+          "duration": 25,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4vwsoGU6hNY"
+        },
+        {
+          "id": "1lwxlspo0PQ",
+          "title": "芙莉蓮發現費倫已經大漢矣｜台語版《葬送的芙莉蓮》𝗘𝗣𝟯精華",
+          "duration": 19,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1lwxlspo0PQ"
+        },
+        {
+          "id": "OTgj4Isc6qQ",
+          "title": "費倫偷偷仔綴芙莉蓮，發現...｜台語版《葬送的芙莉蓮》𝗘𝗣𝟯精華",
+          "duration": 26,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=OTgj4Isc6qQ"
+        },
+        {
+          "id": "74xxAqVsCWI",
+          "title": "費倫感覺芙莉蓮大人怪怪，毋知欲變啥魍？｜台語版《葬送的芙莉蓮》𝗘𝗣𝟯精華",
+          "duration": 30,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=74xxAqVsCWI"
+        },
+        {
+          "id": "QDJtpAod-dU",
+          "title": "費倫共睏袂醒的芙莉蓮大人，拖去上班｜台語版《葬送的芙莉蓮》EP4預告【靈魂長眠之地】",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=QDJtpAod-dU"
+        },
+        {
+          "id": "FoQB5UasUQ4",
+          "title": "芙莉蓮的秘密？｜台語版《葬送的芙莉蓮》EP3預告【殺人魔法】",
+          "duration": 36,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=FoQB5UasUQ4"
+        },
+        {
+          "id": "FY9wojDaME4",
+          "title": "欣梅爾的心願，芙莉蓮總算是看著矣…｜台語版《葬送的芙莉蓮》EP2精華",
+          "duration": 33,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=FY9wojDaME4"
+        },
+        {
+          "id": "2NAee4ViVOA",
+          "title": "欣梅爾最後的快樂冒險｜台語版《葬送的芙莉蓮》𝗘𝗣𝟭精華",
+          "duration": 34,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=2NAee4ViVOA"
+        },
+        {
+          "id": "kKQI5OO5dF8",
+          "title": "芙莉蓮嫌欣梅爾老硞硞矣…｜台語版《葬送的芙莉蓮》𝗘𝗣𝟭精華",
+          "duration": 33,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=kKQI5OO5dF8"
+        },
+        {
+          "id": "w3xKbW_wSq4",
+          "title": "欣梅爾感嘆，芙莉蓮到底是活偌久？｜台語版《葬送的芙莉蓮》𝗘𝗣𝟭精華",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=w3xKbW_wSq4"
+        },
+        {
+          "id": "zszFEnBKG5s",
+          "title": "𝟱𝟬年後，敢欲做伙看「流星雨」？｜台語版《葬送的芙莉蓮》𝗘𝗣𝟭精華",
+          "duration": 24,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=zszFEnBKG5s"
+        },
+        {
+          "id": "J17chVbHLJM",
+          "title": "芙莉蓮想起欣梅爾佮意的花…｜台語版《葬送的芙莉蓮》EP2預告【不見得一定是靠魔法…】",
+          "duration": 36,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=J17chVbHLJM"
+        },
+        {
+          "id": "dRIPvjUsxz0",
+          "title": "芙莉蓮和欣梅爾，看流星約定🌠｜台語版《葬送的芙莉蓮》EP1預告【冒險結束】",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dRIPvjUsxz0"
+        },
+        {
+          "id": "kbeueh4vYOA",
+          "title": "台語版 #葬送的芙莉蓮，這禮拜六𝟱/𝟮播出！𝗬𝗼𝘂𝗧𝘂𝗯𝗲嘛看會著！𝟮𝟮:𝟬𝟬仝步播出！",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=kbeueh4vYOA"
+        },
+        {
+          "id": "XJ8WVyOnqfw",
+          "title": "葬送的芙莉蓮｜阿媽講台語，合理！",
+          "duration": 101,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=XJ8WVyOnqfw"
+        },
+        {
+          "id": "WSG-rc3zGb4",
+          "title": "敲碗成功！台語版《葬送的芙莉蓮》，來矣！",
+          "duration": 121,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=WSG-rc3zGb4"
+        },
+        {
+          "id": "pE8gG0aSYQc",
+          "title": "欣梅爾共芙莉蓮雕甲真好｜台語版《葬送的芙莉蓮》EP11精華",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=pE8gG0aSYQc"
+        },
+        {
+          "id": "NQacYJz9sCk",
+          "title": "修塔爾克大人昏昏去😵‍💫｜台語版《葬送的芙莉蓮》EP11精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=NQacYJz9sCk"
+        },
+        {
+          "id": "nkEM8Xrfix8",
+          "title": "費倫：有一个變態的🫵｜台語版《葬送的芙莉蓮》EP11精華",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nkEM8Xrfix8"
+        },
+        {
+          "id": "6SzBV7UgD5k",
+          "title": "修塔爾克：我佮這个oo-jí-sáng 😱｜台語版《葬送的芙莉蓮》EP11精華",
+          "duration": 40,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=6SzBV7UgD5k"
+        },
+        {
+          "id": "ugxaMHnbWBI",
+          "title": "呵咾你一切的人｜台語版《葬送的芙莉蓮》EP11精華",
+          "duration": 45,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ugxaMHnbWBI"
+        },
+        {
+          "id": "dfPxBTggoQI",
+          "title": "送予未來勇者的禮物🎁｜台語版《葬送的芙莉蓮》EP12精華",
+          "duration": 59,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=dfPxBTggoQI"
+        },
+        {
+          "id": "JcSAFcMG-VI",
+          "title": "費倫偝芙莉蓮｜台語版《葬送的芙莉蓮》EP12精華",
+          "duration": 34,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=JcSAFcMG-VI"
+        },
+        {
+          "id": "P_a_Ts-z21Y",
+          "title": "費倫教示芙莉蓮，共下流的藥水🧪倒掉！｜台語版《葬送的芙莉蓮》EP12精華",
+          "duration": 48,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=P_a_Ts-z21Y"
+        },
+        {
+          "id": "Wqwh3q9eSiU",
+          "title": "這齒的就是囡仔疕！｜台語版《葬送的芙莉蓮》EP12精華",
+          "duration": 60,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Wqwh3q9eSiU"
+        },
+        {
+          "id": "PvNRA3lXSPU",
+          "title": "老罔老，閣會哺塗豆啦～｜台語版《葬送的芙莉蓮》EP16預告【長壽朋友】",
+          "duration": 66,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=PvNRA3lXSPU"
+        },
+        {
+          "id": "B6z0LIsMnPs",
+          "title": "我摸看覓🖐️｜台語版《葬送的芙莉蓮》EP17預告【那就多保重了】",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=B6z0LIsMnPs"
+        },
+        {
+          "id": "ItiJLahVyzo",
+          "title": "莫叫我老阿婆啦！🥺｜台語版《葬送的芙莉蓮》EP18預告【一級魔法使選拔測驗】",
+          "duration": 51,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ItiJLahVyzo"
+        },
+        {
+          "id": "WPIVQdWT310",
+          "title": "佳哉有你，欣梅爾！｜台語版《葬送的芙莉蓮》EP19預告【精心安排的計畫】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=WPIVQdWT310"
+        },
+        {
+          "id": "toA3oqzOoaY",
+          "title": "你竟然遮爾亂來，費倫！｜台語版《葬送的芙莉蓮》EP20預告【必要的殺戮】",
+          "duration": 36,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=toA3oqzOoaY"
+        },
+        {
+          "id": "2UrnM7ooymo",
+          "title": "總有一工，芙莉蓮會拍敗魔王｜台語版《葬送的芙莉蓮》EP21預告【魔法的世界】",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=2UrnM7ooymo"
+        },
+        {
+          "id": "bygqgSYzeRQ",
+          "title": "芙莉蓮去掃著風颱尾｜台語版《葬送的芙莉蓮》EP22預告【下次開始就是敵人】",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bygqgSYzeRQ"
+        },
+        {
+          "id": "zUkbKjIiS8I",
+          "title": "攏是因為欣梅爾｜台語版《葬送的芙莉蓮》EP23預告【攻略迷宮】",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=zUkbKjIiS8I"
+        },
+        {
+          "id": "hti0ZoLkIpM",
+          "title": "魔法使測驗，無咧和你講耍笑的！｜台語版《葬送的芙莉蓮》EP24預告【完美的複製體】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=hti0ZoLkIpM"
+        },
+        {
+          "id": "paQW_RNuULY",
+          "title": "顧人怨的oo-jí-sáng，失禮啦｜台語版《葬送的芙莉蓮》EP25預告【致命破綻】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=paQW_RNuULY"
+        },
+        {
+          "id": "1Xw_XIITlEo",
+          "title": "這就是魔法高深的所在｜台語版《葬送的芙莉蓮》EP26預告【魔法的高深之處】",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=1Xw_XIITlEo"
+        },
+        {
+          "id": "4IyhWO1EX2c",
+          "title": "海塔大人送我的法杖...｜台語版《葬送的芙莉蓮》EP27預告【人類的時代】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4IyhWO1EX2c"
+        },
+        {
+          "id": "WY1HAi0cfIc",
+          "title": "魔法使上尾改測驗！｜台語版《葬送的芙莉蓮》EP28預告【因為下次再見時會很難為情】",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=WY1HAi0cfIc"
+        }
+      ]
+    },
+    {
+      "playlist_id": "PL9X_7mTn8zvVmd2vyiWdneNZhtkGzogI-",
+      "url": "https://www.youtube.com/playlist?list=PL9X_7mTn8zvVmd2vyiWdneNZhtkGzogI-",
+      "title": "《間諜家家酒》台語配音版 精華",
+      "entry_count": 36,
+      "entries": [
+        {
+          "id": "T_X7HGDuMYc",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜情緒勒索的 #安妮亞 be like｜台語版 第二季",
+          "duration": 71,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=T_X7HGDuMYc"
+        },
+        {
+          "id": "y_BHlnTKPlI",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜配音用4秒就改變 #安妮亞 情緒！｜台語版 第二季",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=y_BHlnTKPlI"
+        },
+        {
+          "id": "REvF37V6bGA",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜共我當做塑膠？｜台語版 第二季",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=REvF37V6bGA"
+        },
+        {
+          "id": "538mryZJzIY",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜安妮亞到底講幾遍 𝘄𝗮𝗸𝘂-𝘄𝗮𝗸𝘂？｜台語版 第二季",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=538mryZJzIY"
+        },
+        {
+          "id": "E6VcJciKUcs",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜安妮亞會傷心(ಥ﹏ಥ)｜台語版 第二季",
+          "duration": 51,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=E6VcJciKUcs"
+        },
+        {
+          "id": "oTDkxbFewec",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜好膽莫走！｜台語版 第二季",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=oTDkxbFewec"
+        },
+        {
+          "id": "KuWviQ1Yyes",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜少爺吔，安啦！｜台語版 第二季",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=KuWviQ1Yyes"
+        },
+        {
+          "id": "ysSsTJakPz4",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜做一隻狗嘛是無簡單呢！｜台語版 第二季",
+          "duration": 56,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=ysSsTJakPz4"
+        },
+        {
+          "id": "VBU134sHnzo",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜乂煞氣a安妮亞乂｜台語版 第二季",
+          "duration": 41,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=VBU134sHnzo"
+        },
+        {
+          "id": "nvOYy62LiA4",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 間諜家家酒｜咱來去約會好無？｜台語版 第二季",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nvOYy62LiA4"
+        },
+        {
+          "id": "v8EvBbJ2r5g",
+          "title": "【台語】𝗦𝗣𝗬×𝗙𝗔𝗠𝗜𝗟𝗬 #間諜家家酒 第二季 𝙘𝙤𝙢𝙞𝙣𝙜 𝙨𝙤𝙤𝙣 わくわく⁽ᵂᵃᵏᵘ ᵂᵃᵏᵘ⁾！",
+          "duration": 111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=v8EvBbJ2r5g"
+        },
+        {
+          "id": "rsP0ZyudOaM",
+          "title": "《間諜家家酒》台語配音版 EP25 精華 達米安佮未來的丈人見面😳｜第一季完",
+          "duration": 29,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=rsP0ZyudOaM"
+        },
+        {
+          "id": "oWd-1uU8Bds",
+          "title": "《間諜家家酒》台語配音版 EP24 精華 特務黃昏的桃色陷阱",
+          "duration": 62,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=oWd-1uU8Bds"
+        },
+        {
+          "id": "yXvxFXoQ3wo",
+          "title": "《間諜家家酒》台語配音版 EP23 精華 查某人的戰爭🎾",
+          "duration": 62,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=yXvxFXoQ3wo"
+        },
+        {
+          "id": "CF0HpMdpm2Q",
+          "title": "《間諜家家酒》台語配音版 EP22 精華 人猶閣Not Ready呢",
+          "duration": 28,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=CF0HpMdpm2Q"
+        },
+        {
+          "id": "6yGeOsKohLo",
+          "title": "《間諜家家酒》台語配音版 EP21 精華  黃昏前輩 佮~~~~~~~意~~~~~~~😍😍",
+          "duration": 36,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=6yGeOsKohLo"
+        },
+        {
+          "id": "nWWdFgZ2WGI",
+          "title": "《間諜家家酒》台語配音版 EP20 精華   這間病院有鬼👻😱😱😱",
+          "duration": 60,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nWWdFgZ2WGI"
+        },
+        {
+          "id": "JmTcK9pAhA0",
+          "title": "《間諜家家酒》台語配音版 EP19 精華  去學校出任務🤫",
+          "duration": 37,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=JmTcK9pAhA0"
+        },
+        {
+          "id": "NTUnY7pllm0",
+          "title": "《間諜家家酒》台語配音版 EP17 精華  安妮亞來鬥相共",
+          "duration": 42,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=NTUnY7pllm0"
+        },
+        {
+          "id": "7l5k_Zmpglk",
+          "title": "《間諜家家酒》台語配音版 EP16 精華  阿姊煮的我攏愛😍😍",
+          "duration": 39,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7l5k_Zmpglk"
+        },
+        {
+          "id": "twE1iWAKzN8",
+          "title": "《間諜家家酒》台語配音版 EP18 精華  發揮吉娃娃的力量",
+          "duration": 60,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=twE1iWAKzN8"
+        },
+        {
+          "id": "AbfSYbOTQ94",
+          "title": "《間諜家家酒》台語配音版 EP15 精華  世界去了了矣😨😨",
+          "duration": 31,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=AbfSYbOTQ94"
+        },
+        {
+          "id": "vWIpsZ_YCiI",
+          "title": "《間諜家家酒》台語配音版 EP14 精華 炸彈危機😱😱😱",
+          "duration": 40,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=vWIpsZ_YCiI"
+        },
+        {
+          "id": "qXP414XbOP4",
+          "title": "《間諜家家酒》台語配音版 EP13 精華 安妮亞的動物伴",
+          "duration": 46,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=qXP414XbOP4"
+        },
+        {
+          "id": "s49jkDqxNU0",
+          "title": "《間諜家家酒》台語配音版 EP12 精華  一家伙仔出門𨑨迌",
+          "duration": 64,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=s49jkDqxNU0"
+        },
+        {
+          "id": "mn1mlx6od90",
+          "title": "《間諜家家酒》台語配音版 EP11 精華  培養安妮亞的專長",
+          "duration": 49,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=mn1mlx6od90"
+        },
+        {
+          "id": "SUNhTNZqVQ4",
+          "title": "《間諜家家酒》台語配音版 EP10 精華  安妮亞參加比賽",
+          "duration": 44,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=SUNhTNZqVQ4"
+        },
+        {
+          "id": "nFm7HhhmHrc",
+          "title": "《間諜家家酒》台語配音版 EP9 精華  尤利：阿姊😨😭😨😭",
+          "duration": 48,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nFm7HhhmHrc"
+        },
+        {
+          "id": "DJtcORBS8I0",
+          "title": "《間諜家家酒》台語配音版 EP8 精華 愛約兒的心啥人佮我比😤",
+          "duration": 59,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=DJtcORBS8I0"
+        },
+        {
+          "id": "iOOvMTxPRUo",
+          "title": "《間諜家家酒》台語配音版 EP7 精華 來自阿爸的關心",
+          "duration": 55,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=iOOvMTxPRUo"
+        },
+        {
+          "id": "nJ-Abj44wGY",
+          "title": "《間諜家家酒》台語配音版 EP6 精華 伊甸學院的同學出場",
+          "duration": 64,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=nJ-Abj44wGY"
+        },
+        {
+          "id": "pDWYvi4ZGMQ",
+          "title": "《間諜家家酒》台語配音版 EP5 精華 黃昏cosplay彭德曼",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=pDWYvi4ZGMQ"
+        },
+        {
+          "id": "mgQWrJBQesU",
+          "title": "《間諜家家酒》台語配音版 EP4 精華",
+          "duration": 52,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=mgQWrJBQesU"
+        },
+        {
+          "id": "seiYdF72-gs",
+          "title": "《間諜家家酒》台語配音版 EP3 精華",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=seiYdF72-gs"
+        },
+        {
+          "id": "GDNDZzXUp08",
+          "title": "《間諜家家酒》台語配音版 EP2 精華",
+          "duration": 57,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=GDNDZzXUp08"
+        },
+        {
+          "id": "jhn0-xgD53E",
+          "title": "《間諜家家酒》台語配音版 EP1 精華",
+          "duration": 61,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=jhn0-xgD53E"
+        }
+      ]
+    },
+    {
+      "playlist_id": "PLNAzP8UNX2-p0eXJ_LpWc380m8muAz2j5",
+      "url": "https://www.youtube.com/playlist?list=PLNAzP8UNX2-p0eXJ_LpWc380m8muAz2j5",
+      "title": "2025文化新台灣",
+      "entry_count": 27,
+      "entries": [
+        {
+          "id": "e9PV-etOXEI",
+          "title": "Team Develops Self-Healing Materials | Interview with Chen Chun-tai, Dean of the College of Scien...",
+          "duration": 3151,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=e9PV-etOXEI"
+        },
+        {
+          "id": "NoAfmwG5oUE",
+          "title": "Taiwanese Prisoners of War in Post-War Siberia | Interview with Documentary Director Hsu Ming-Chu...",
+          "duration": 3190,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=NoAfmwG5oUE"
+        },
+        {
+          "id": "UInK1UnZiAg",
+          "title": "Technology-Driven Clownfish Farming for Global Export | Interview with Changhua Fishery Youth Hsi...",
+          "duration": 2970,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=UInK1UnZiAg"
+        },
+        {
+          "id": "R9af-3k0zbg",
+          "title": "Weathering With You: 33 Winters of Weathering Journey | Interview with Former Central Weather Bur...",
+          "duration": 3081,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=R9af-3k0zbg"
+        },
+        {
+          "id": "xC7KWHBw8zY",
+          "title": "北斗青年回鄉創生捒運動 ｜專訪北斗回鄉豆農 陳光鏡｜台灣新眼界．文化新台灣 20251103｜完整版",
+          "duration": 3061,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xC7KWHBw8zY"
+        },
+        {
+          "id": "0G48IbeQwVI",
+          "title": "全女性反輾轉馬戲印象 ｜專訪女子馬戲推捒團體 創造焦點｜台灣新眼界．文化新台灣 20251006｜完整版",
+          "duration": 3111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=0G48IbeQwVI"
+        },
+        {
+          "id": "4OyG52yWM4w",
+          "title": "姐弟仔科技養殖有機蚶仔 ｜專訪芳苑漢寶有機青農 楊宜樺˙楊家泓｜台灣新眼界．文化新台灣 20250929｜完整版",
+          "duration": 3181,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=4OyG52yWM4w"
+        },
+        {
+          "id": "PDcvHUREZhw",
+          "title": "佮柴做伙用手思考建築 ｜專訪自然建築師 郭恩愷｜台灣新眼界．文化新台灣 20250915｜完整版",
+          "duration": 3111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=PDcvHUREZhw"
+        },
+        {
+          "id": "7wdXu266FsA",
+          "title": "科學種出臺灣好米 ｜專訪台灣米食味鑑定士協會理事長 簡碩宏｜台灣新眼界．文化新台灣 20250901｜完整版",
+          "duration": 3200,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=7wdXu266FsA"
+        },
+        {
+          "id": "y12DMAcRhOo",
+          "title": "對曲盤聽著臺灣好聲音 ｜專訪蟲膠唱片收藏家 徐登芳｜台灣新眼界．文化新台灣 20250818｜完整版",
+          "duration": 3091,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=y12DMAcRhOo"
+        },
+        {
+          "id": "A-N9BhbCtkk",
+          "title": "辦街報雜誌助弱勢自立 ｜專訪街報雜誌創辦人 李取中｜台灣新眼界．文化新台灣 20250804｜完整版",
+          "duration": 3190,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=A-N9BhbCtkk"
+        },
+        {
+          "id": "GRM5wGflK4s",
+          "title": "狡怪愛耍作品七彩繽紛 ｜專訪當代藝術家 可樂王(詹振興)｜台灣新眼界．文化新台灣 20250721｜完整版",
+          "duration": 3130,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=GRM5wGflK4s"
+        },
+        {
+          "id": "BijjRjaosiM",
+          "title": "刺蔣案女性身影 春雨發新穎 ｜專訪424刺蔣案主角 鄭自才、《春雨424》導演 馮賢賢｜台灣新眼界．文化新台灣 20250707｜完整版",
+          "duration": 3041,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=BijjRjaosiM"
+        },
+        {
+          "id": "IzmbmjQWxkg",
+          "title": "藝術創作自由探索｜專訪藝術家 妙工俊陽(李俊陽)｜台灣新眼界．文化新台灣 20250630｜完整版",
+          "duration": 3111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=IzmbmjQWxkg"
+        },
+        {
+          "id": "bAtU5ZTDAaQ",
+          "title": "物資勸募送出新希望｜專訪台灣全民食物銀行協會理事長 周志輝｜台灣新眼界．文化新台灣 20250616｜完整版",
+          "duration": 3111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=bAtU5ZTDAaQ"
+        },
+        {
+          "id": "Qdv0QW1_bWo",
+          "title": "重現文物性命新光彩｜專訪正修科大文物修護研究中心主任 李益成｜台灣新眼界．文化新台灣 20250602｜完整版",
+          "duration": 3101,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Qdv0QW1_bWo"
+        },
+        {
+          "id": "hUP7pGKXDKA",
+          "title": "臺灣變形金剛行入世界舞台｜專訪舞台車設計製造負責人 張頤銘｜台灣新眼界．文化新台灣 20250519｜完整版",
+          "duration": 3041,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=hUP7pGKXDKA"
+        },
+        {
+          "id": "Bnmq7q6dDTk",
+          "title": "原住民囡仔的親愛愛樂人生｜專訪親愛愛樂弦樂團團長 王子建｜台灣新眼界．文化新台灣 20250505｜完整版",
+          "duration": 3051,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Bnmq7q6dDTk"
+        },
+        {
+          "id": "56F97GKKAaw",
+          "title": "佇雕塑看見性命的重生｜專訪雕塑藝術家 康木祥｜台灣新眼界．文化新台灣 20250421｜完整版",
+          "duration": 3000,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=56F97GKKAaw"
+        },
+        {
+          "id": "XN5ADymHuRI",
+          "title": "廢舊布料重生助弱勢 ｜專訪袋代設計創辦人 林育君｜台灣新眼界．文化新台灣 20250407｜完整版",
+          "duration": 3091,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=XN5ADymHuRI"
+        },
+        {
+          "id": "Gp6Rr7Ij6bc",
+          "title": "林摶秋的玉峯精神 ｜專訪清大台文所副教授 石婉舜｜台灣新眼界．文化新台灣 20250324｜完整版",
+          "duration": 3101,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=Gp6Rr7Ij6bc"
+        },
+        {
+          "id": "xsfspSwxNa8",
+          "title": "人道飼養足好豬 ｜專訪南投精品豬肉品牌業者 吳昆民｜台灣新眼界．文化新台灣 20250317｜完整版",
+          "duration": 3121,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=xsfspSwxNa8"
+        },
+        {
+          "id": "vGKL10ClpoM",
+          "title": "苦茶油風土味｜專訪南投有機苦茶油業者 陳生慶/陳致甫｜台灣新眼界．文化新台灣 20250303｜完整版",
+          "duration": 3071,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=vGKL10ClpoM"
+        },
+        {
+          "id": "TLo5eQD8KvY",
+          "title": "廢棄太陽能枋新價值｜專訪臺南大學綠色能源科技系特聘教授 傅耀賢｜台灣新眼界．文化新台灣 20250217｜完整版",
+          "duration": 3121,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=TLo5eQD8KvY"
+        },
+        {
+          "id": "r7TGGR8JsMM",
+          "title": "永續循環產業魔法師｜專訪宜蘭農業生技業者 蔡瀚霆｜台灣新眼界．文化新台灣 20250203｜完整版",
+          "duration": 3111,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=r7TGGR8JsMM"
+        },
+        {
+          "id": "AJSU-UUc2Qk",
+          "title": "綴陳澄波跤步走揣臺灣｜專訪陳澄波文化基金會董事長 陳立栢｜台灣新眼界．文化新台灣 20250120｜完整版",
+          "duration": 3121,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=AJSU-UUc2Qk"
+        },
+        {
+          "id": "eqFpu5LvYzw",
+          "title": "百大青農投入草藥生技產業｜專訪草藥生技業者 謝蕙雯｜台灣新眼界．文化新台灣 20250106｜完整版",
+          "duration": 3151,
+          "availability": null,
+          "url": "https://www.youtube.com/watch?v=eqFpu5LvYzw"
+        }
+      ]
+    }
+  ]
+}
