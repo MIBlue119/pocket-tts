@@ -1,4 +1,6 @@
 import json
+import sys
+import types
 import wave
 from pathlib import Path
 from typing import Any
@@ -9,15 +11,17 @@ import pytest
 from training.taigi.cli import main
 from training.taigi.audio import sha256_file
 from training.taigi.pipeline import prepare_candidates, transcribe_release
-from training.taigi.transcriber import BREEZE_REVISION
+from training.taigi.transcriber import BREEZE_ADAPTER_VERSION, BREEZE_REVISION, breeze_transcriber
 
 
-def _wav(path: Path, parts: list[tuple[float, float]], sample_rate: int = 16000) -> None:
+def _wav(
+    path: Path, parts: list[tuple[float, float]], sample_rate: int = 16000, frequency: float = 220
+) -> None:
     samples = []
     for duration, amplitude in parts:
         count = round(duration * sample_rate)
         time = np.arange(count) / sample_rate
-        samples.append(amplitude * np.sin(2 * np.pi * 220 * time))
+        samples.append(amplitude * np.sin(2 * np.pi * frequency * time))
     audio = np.concatenate(samples)
     with wave.open(str(path), "wb") as handle:
         handle.setnchannels(1)
@@ -218,6 +222,40 @@ def test_transcribe_rejects_changed_audio_before_calling_asr(tmp_path: Path) -> 
     with pytest.raises(ValueError, match="hash mismatch"):
         transcribe_release(candidates, tmp_path / "releases", transcriber=must_not_run)
     assert not called
+
+
+def test_breeze_transcriber_resamples_exact_48khz_interval_before_pipeline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    audio = tmp_path / "48khz.wav"
+    _wav(audio, [(1.0, 0.0), (20.0, 0.2), (1.0, 0.0)], sample_rate=48000, frequency=400)
+    observed: dict[str, Any] = {}
+
+    class FakePipe:
+        feature_extractor = types.SimpleNamespace(sampling_rate=16000)
+
+        def __call__(
+            self: Any, inputs: dict[str, Any], generate_kwargs: dict[str, str]
+        ) -> dict[str, str]:
+            observed.update(inputs)
+            observed["generate_kwargs"] = generate_kwargs
+            return {"text": "測試"}
+
+    fake_transformers = types.ModuleType("transformers")
+    setattr(fake_transformers, "pipeline", lambda *args, **kwargs: FakePipe())
+    monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
+
+    transcribe = breeze_transcriber("cpu")
+    text = transcribe(audio, 1.0, 20.0)
+
+    samples = observed["array"]
+    frequencies = np.fft.rfftfreq(len(samples), d=1 / 16000)
+    dominant_frequency = frequencies[int(np.argmax(np.abs(np.fft.rfft(samples))))]
+    assert text == "測試"
+    assert transcribe.adapter_version == BREEZE_ADAPTER_VERSION
+    assert observed["sampling_rate"] == 16000
+    assert len(samples) == 320000
+    assert dominant_frequency == pytest.approx(400, abs=1)
 
 
 def test_cli_prepare_supports_train_only_smoke(

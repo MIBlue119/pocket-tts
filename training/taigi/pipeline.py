@@ -214,6 +214,8 @@ def transcribe_release(
         if len(expected_hash) != 64 or actual_hash != expected_hash:
             raise ValueError(f"candidate audio hash mismatch: {audio_path}")
     transcribe = transcriber or breeze_transcriber(device)
+    label_adapter_version = getattr(transcribe, "adapter_version", "external_or_test")
+    label_target_sample_rate = getattr(transcribe, "target_sample_rate", None)
     accepted: list[dict[str, Any]] = []
     quarantine: list[dict[str, Any]] = []
     for row in rows:
@@ -228,6 +230,8 @@ def transcribe_release(
             "label_provenance": "Breeze-ASR-26",
             "label_model": BREEZE_MODEL,
             "label_model_revision": BREEZE_REVISION,
+            "label_adapter_version": label_adapter_version,
+            "label_target_sample_rate": label_target_sample_rate,
             "verification": "unverified_weak_label",
         }
         if not text:
@@ -289,6 +293,8 @@ def transcribe_release(
             "quarantine_count": len(quarantine),
             "model": BREEZE_MODEL,
             "revision": BREEZE_REVISION,
+            "label_adapter_version": label_adapter_version,
+            "label_target_sample_rate": label_target_sample_rate,
             "verified_labels": 0,
         }
         (temporary / "report.json").write_text(

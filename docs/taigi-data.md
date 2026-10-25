@@ -44,7 +44,7 @@ A single source group cannot produce a real validation split. For a pipeline smo
   data/taigi-work/candidates.jsonl data/taigi-releases --device cuda:0
 ```
 
-The transcriber pins `MediaTek-Research/Breeze-ASR-26` to revision `7b992682e7f5ceedd0a41ebec240f01ba469d19e`. It reads existing Hugging Face authentication and does not accept credentials as arguments. Each complete selected interval gets one Chinese semantic pseudo label.
+The transcriber pins `MediaTek-Research/Breeze-ASR-26` to revision `7b992682e7f5ceedd0a41ebec240f01ba469d19e`. Adapter `breeze-resample/v2` reads the exact source interval and resamples it to the model feature extractor rate before inference. Release metadata records that rate. The command reads existing Hugging Face authentication and does not accept credentials as arguments. Each complete selected interval gets one Chinese semantic pseudo label.
 
 Before transcription, the command verifies each source file against the hash recorded during preparation. It stops before loading or calling ASR if a source changed.
 
