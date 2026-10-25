@@ -21,6 +21,8 @@ Write one JSON object per source. Declare `language` as `nan-tw`. The command re
 
 `group_id` defaults to `source_id`. You can set `split` to `train` or `valid`. All sources in one group must use the same split. Sources with identical audio bytes also stay in one split, even when their source or group IDs differ. The command preserves extra fields such as `license`, `repo`, and `revision` in each candidate's `source_metadata`.
 
+Set `audio_variant` to `enhanced` for RE-USE output. It defaults to `raw`. Put lineage such as `raw_sha256`, the enhancer name, its revision, and its settings in additional source fields. The command retains those fields in `source_metadata`.
+
 For a bounded YouTube download, replace `audio_path` with one explicit video `url`. The command records yt-dlp's stable video ID in the source ID and uses `download-archive.txt`. It rejects playlist URLs.
 
 ## Prepare candidates

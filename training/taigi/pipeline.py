@@ -46,6 +46,9 @@ def _parse_sources(path: Path, acquisition_dir: Path) -> list[SourceRecord]:
         split = row.get("split")
         if split not in {None, "train", "valid"}:
             raise ValueError(f"source {source_id} has invalid split {split!r}")
+        audio_variant = row.get("audio_variant", "raw")
+        if audio_variant not in {"raw", "enhanced"}:
+            raise ValueError(f"source {source_id} has invalid audio_variant {audio_variant!r}")
         sources.append(
             SourceRecord(
                 source_id=source_id,
@@ -59,8 +62,17 @@ def _parse_sources(path: Path, acquisition_dir: Path) -> list[SourceRecord]:
                     key: value
                     for key, value in row.items()
                     if key
-                    not in {"audio_path", "url", "source_id", "language", "group_id", "split"}
+                    not in {
+                        "audio_path",
+                        "url",
+                        "source_id",
+                        "language",
+                        "group_id",
+                        "split",
+                        "audio_variant",
+                    }
                 },
+                audio_variant=audio_variant,
             )
         )
     if not sources:
@@ -167,6 +179,7 @@ def prepare_candidates(
                 start=round(start, 6),
                 duration=round(duration, 6),
                 audio_sha256=digest,
+                audio_variant=source.audio_variant,
                 split=splits[source.group],
                 status="quarantined" if reason else "candidate",
                 quarantine_reason=reason,

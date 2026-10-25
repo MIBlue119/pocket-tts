@@ -143,6 +143,43 @@ def test_prepare_quarantines_long_interval_without_inventing_a_cut(tmp_path: Pat
     assert float(quarantine[0]["duration"]) == pytest.approx(2.0, abs=0.02)
 
 
+def test_enhanced_source_keeps_variant_and_lineage_in_release(tmp_path: Path) -> None:
+    audio = tmp_path / "enhanced.wav"
+    _wav(audio, [(1.0, 0.2)])
+    source_manifest = tmp_path / "sources.jsonl"
+    _jsonl(
+        source_manifest,
+        [
+            {
+                "audio_path": str(audio),
+                "source_id": "reuse-one",
+                "group_id": "original-one",
+                "language": "nan-tw",
+                "audio_variant": "enhanced",
+                "raw_sha256": "1" * 64,
+                "enhancer": "nvidia-reuse",
+                "enhancer_revision": "pinned-revision",
+            }
+        ],
+    )
+    candidates = prepare_candidates(source_manifest, tmp_path / "work", train_only=True)
+    candidate = _rows(candidates)[0]
+
+    assert candidate["audio_variant"] == "enhanced"
+    assert candidate["source_metadata"] == {
+        "raw_sha256": "1" * 64,
+        "enhancer": "nvidia-reuse",
+        "enhancer_revision": "pinned-revision",
+    }
+
+    release = transcribe_release(
+        candidates, tmp_path / "releases", transcriber=lambda path, start, duration: "中文弱標註"
+    )
+    metadata = _rows(release / "metadata.jsonl")[0]
+    assert metadata["audio_variant"] == "enhanced"
+    assert metadata["source_metadata"]["raw_sha256"] == "1" * 64
+
+
 def test_transcribe_writes_immutable_compact_release_and_quarantine(tmp_path: Path) -> None:
     audio = tmp_path / "one.wav"
     _wav(audio, [(2.0, 0.2)])

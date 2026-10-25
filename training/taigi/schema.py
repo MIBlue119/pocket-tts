@@ -16,6 +16,7 @@ class SourceRecord:
     split: Literal["train", "valid"] | None = None
     audio_sha256: str = ""
     source_metadata: dict[str, Any] = field(default_factory=dict)
+    audio_variant: Literal["raw", "enhanced"] = "raw"
 
     @property
     def group(self: SourceRecord) -> str:
@@ -33,7 +34,7 @@ class SegmentRecord:
     audio_sha256: str
     language: Literal["nan-tw"] = "nan-tw"
     language_provenance: Literal["source_declared"] = "source_declared"
-    audio_variant: Literal["raw"] = "raw"
+    audio_variant: Literal["raw", "enhanced"] = "raw"
     split: Literal["train", "valid"] | None = None
     status: Literal["candidate", "quarantined"] = "candidate"
     quarantine_reason: str | None = None
