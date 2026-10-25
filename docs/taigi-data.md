@@ -6,7 +6,9 @@ This command builds sentence-level weak labels for direct Chinese text to Taigi 
 
 Run the commands in the repository environment. Local WAV and FLAC input needs `soundfile`. Breeze transcription needs `transformers`. URL acquisition also needs the `yt-dlp` executable and FFmpeg.
 
-The development dependency group already includes `soundfile` and `transformers`. The project does not declare `yt-dlp` because local files are the default input.
+The `taigi` dependency group includes `soundfile`, the tested Transformers version,
+and `yt-dlp`. Use the isolated environment in [taigi-pilot.md](taigi-pilot.md);
+FFmpeg is a separate system dependency for URL acquisition.
 
 ## Create a source manifest
 
@@ -24,7 +26,7 @@ For a bounded YouTube download, replace `audio_path` with one explicit video `ur
 ## Prepare candidates
 
 ```bash
-/mnt/HDD1/miniconda3/bin/python -m training.taigi prepare sources.jsonl data/taigi-work
+.venv-train/bin/python -m training.taigi prepare sources.jsonl data/taigi-work
 ```
 
 The command finds deterministic RMS silence boundaries. It quarantines an interval longer than 20 seconds instead of inventing a cut without a pause. These boundaries are pauses, not semantic or punctuation claims. It writes:
@@ -38,7 +40,7 @@ A single source group cannot produce a real validation split. For a pipeline smo
 ## Generate Breeze weak labels
 
 ```bash
-/mnt/HDD1/miniconda3/bin/python -m training.taigi transcribe \
+.venv-train/bin/python -m training.taigi transcribe \
   data/taigi-work/candidates.jsonl data/taigi-releases --device cuda:0
 ```
 

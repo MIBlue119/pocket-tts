@@ -1,0 +1,58 @@
+{
+  "repository": "adi-gov-tw/Taiwan-Tongues-ASR-CE-dataset-hokkien",
+  "revision": "ffcc36b9afe31ec50f7742c0c4c614f1a5b40151",
+  "verified_at": "2026-10-25",
+  "source_api": "https://huggingface.co/api/datasets/adi-gov-tw/Taiwan-Tongues-ASR-CE-dataset-hokkien",
+  "files": {
+    "train": {
+      "url": "https://huggingface.co/datasets/adi-gov-tw/Taiwan-Tongues-ASR-CE-dataset-hokkien/resolve/ffcc36b9afe31ec50f7742c0c4c614f1a5b40151/train.tsv",
+      "bytes": 9137526,
+      "sha256": "2e2771a5a9e87c8bc731e9fb7c83b20c0f947820570eadeeece092afed5739cf",
+      "rows_excluding_header": 31482,
+      "locale_counts": {
+        "nan-tw": 23158,
+        "zh-CN": 2792,
+        "blank": 5532
+      },
+      "path_provenance_counts": {
+        "common_voice_nan-tw": 28688,
+        "common_voice_zh-CN": 2794
+      },
+      "path_locale_crosscheck": {
+        "nan-tw_path_nan-tw_locale": 23158,
+        "nan-tw_path_blank_locale": 5530,
+        "zh-CN_path_zh-CN_locale": 2792,
+        "zh-CN_path_blank_locale": 2
+      },
+      "sentence_rows_containing_ascii_question_mark": 27186,
+      "sentence_ascii_question_marks": 72935,
+      "question_row_percentage": 86.3541
+    },
+    "test": {
+      "url": "https://huggingface.co/datasets/adi-gov-tw/Taiwan-Tongues-ASR-CE-dataset-hokkien/resolve/ffcc36b9afe31ec50f7742c0c4c614f1a5b40151/test.tsv",
+      "bytes": 93667,
+      "sha256": "4c68aee6dc25da7acdd5c373e04c4d8cbec1eb815b1282e82946d6b43f6a07b0",
+      "rows_excluding_header": 323,
+      "locale_counts": {
+        "nan-tw": 241,
+        "zh-CN": 16,
+        "blank": 66
+      },
+      "path_provenance_counts": {
+        "common_voice_nan-tw": 307,
+        "common_voice_zh-CN": 16
+      },
+      "sentence_rows_containing_ascii_question_mark": 286,
+      "sentence_ascii_question_marks": 737,
+      "question_row_percentage": 88.5449
+    }
+  },
+  "encoding_evidence": {
+    "file_is_valid_utf8": true,
+    "first_affected_sentence": "大屯橋（T?a-t?n-ki?）",
+    "hex_excerpt": "54 3f 61 2d 74 3f 6e 2d 6b 69 3f",
+    "interpretation": "The replacement characters are literal ASCII question marks, byte 0x3f, in a valid UTF-8 TSV. This is stored data loss, not a terminal or HTML rendering problem."
+  },
+  "counting_rule": "TSV header excluded. Locale is column 7 after stripping CR. Provenance is inferred only from the path field prefixes common_voice_nan-tw_ and common_voice_zh-CN_. Both slash and backslash path separators are included.",
+  "scope": "Metadata-only verification. No tar shards or audio were downloaded."
+}
