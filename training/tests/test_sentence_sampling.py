@@ -2,13 +2,14 @@
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 import pytest
 import sphn
 import torch
 
+from pocket_tts.models.mimi import MimiModel
 from training.args import DataArgs
 from training.dataloader import DataLoader, encode_batch
 from training.dataloader.loader import InvalidSentenceEntry
@@ -49,6 +50,8 @@ def row(path: str, **kwargs: Any) -> dict[str, Any]:  # noqa: ANN401
 
 
 class Codec:
+    """Mimi test double restricted to the encoder boundary used by encode_batch."""
+
     def __init__(self):
         self.calls = []
 
@@ -67,7 +70,9 @@ def test_full_chinese_sentence_and_no_prompt(tmp_path: Path):
     assert batch.voice_audio.shape == (1, 1, 0)
     assert batch.num_voice_prompt_frames.tolist() == [0]
     codec = Codec()
-    latents, mask, prompt, lengths = encode_batch(codec, batch, torch.device("cpu"))
+    latents, mask, prompt, lengths = encode_batch(
+        cast(MimiModel, codec), batch, torch.device("cpu")
+    )
     assert len(codec.calls) == 1
     assert latents.shape == (1, 25, 4)
     assert mask.all()
@@ -80,7 +85,7 @@ def test_mixed_prompts_encode_only_present_rows(tmp_path: Path):
     prompt = {"path": write_audio(tmp_path, "prompt.wav", 440), "start": 0, "duration": 1}
     batch = next(iter(make_loader(tmp_path, [row(target), row(target, prompt=prompt)])))
     codec = Codec()
-    _, _, voice, lengths = encode_batch(codec, batch, torch.device("cpu"))
+    _, _, voice, lengths = encode_batch(cast(MimiModel, codec), batch, torch.device("cpu"))
     assert codec.calls == [(2, 1, 2 * SR), (1, 1, SR)]
     assert lengths.tolist() == [0, 12]
     assert torch.count_nonzero(voice[0]) == 0
