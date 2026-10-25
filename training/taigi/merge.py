@@ -104,7 +104,9 @@ def _validate_release(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]
         except ValueError as error:
             raise ValueError(f"published audio escapes release: {audio_path}") from error
         expected_hash = str(row["audio_sha256"])
-        actual_hash = seen_audio.setdefault(audio_path, sha256_file(audio_path))
+        if audio_path not in seen_audio:
+            seen_audio[audio_path] = sha256_file(audio_path)
+        actual_hash = seen_audio[audio_path]
         if len(expected_hash) != 64 or actual_hash != expected_hash:
             raise ValueError(f"release audio hash mismatch: {audio_path}")
         if audio_path not in audio_bounds:
@@ -342,13 +344,18 @@ def _validate_published(
             raise ValueError(
                 f"existing merged release {split} manifest is not the intended content: {release}"
             )
+    seen_audio: dict[Path, str] = {}
     for row in metadata:
         audio = Path(row["published_audio_path"]).resolve()
         try:
             audio.relative_to((release / "audio").resolve())
         except ValueError as error:
             raise ValueError(f"existing merged release audio escapes release: {audio}") from error
-        if not audio.is_file() or sha256_file(audio) != row["audio_sha256"]:
+        if not audio.is_file():
+            raise ValueError(f"existing merged release audio failed integrity check: {audio}")
+        if audio not in seen_audio:
+            seen_audio[audio] = sha256_file(audio)
+        if seen_audio[audio] != row["audio_sha256"]:
             raise ValueError(f"existing merged release audio failed integrity check: {audio}")
     if len(metadata) != report.get("accepted_weak_label_count"):
         raise ValueError("existing merged release metadata count failed integrity check")

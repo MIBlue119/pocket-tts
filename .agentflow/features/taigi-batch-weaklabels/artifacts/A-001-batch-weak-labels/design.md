@@ -183,3 +183,14 @@ regression red/green, complete real parity, frozen corpus code identity unchange
 correct service targets and stop-post containment, unchanged source-attempt counts,
 and observed actual training progress. Stop-control fallback must never describe
 SSH shutdown as provider-confirmed stopped or verified billing cessation.
+
+Recovery exposed a second concrete defect before training: input validation used
+`dict.setdefault(path, sha256_file(path))`, eagerly hashing the same full audio
+for every segment; existing merged releases also rehashed every row. Use a cache
+local to each validation call, keyed by resolved path, while still comparing every
+row's expected digest. Preserve containment, bounds, manifests, metadata and copy
+verification. Real metadata has22754rows referencing421paths; cache reuse removes
+redundant hash calls, not integrity checks. Pause backup/publication before stopping
+the pretraining parent, preserve that attempt, and restart in fresh
+`production/recovery-20261026-r2`. No trained checkpoint is discarded, no corpus
+identity file changes, and original budget/deadline remain in force.

@@ -280,3 +280,113 @@ def test_reuse_rejects_compact_manifest_tampering_even_when_report_hash_is_updat
 
     with pytest.raises(ValueError, match="train manifest is not the intended content"):
         merge_releases([source], tmp_path / "merged", train_only=True)
+
+
+def _shared_audio_release(root: Path, count: int = 8) -> Path:
+    release = _release(
+        root,
+        "shared",
+        [
+            {
+                "audio_bytes": b"same-audio",
+                "group_id": "same",
+                "start": index * 0.1,
+                "duration": 0.05,
+            }
+            for index in range(count)
+        ],
+    )
+    metadata = read_jsonl(release / "metadata.jsonl")
+    shared = metadata[0]["published_audio_path"]
+    for row in metadata:
+        row["published_audio_path"] = shared
+    _jsonl(release / "metadata.jsonl", metadata)
+    for split in ("train", "valid"):
+        manifest = read_jsonl(release / f"{split}.jsonl")
+        for row in manifest:
+            row["path"] = shared
+        _jsonl(release / f"{split}.jsonl", manifest)
+    return release
+
+
+def test_input_validation_hashes_shared_audio_once_per_pass(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from training.taigi import merge
+
+    release = _shared_audio_release(tmp_path)
+    calls: list[Path] = []
+
+    def count(path: Path) -> str:
+        if path.parent.name == "audio":
+            calls.append(path.resolve())
+        return sha256_file(path)
+
+    monkeypatch.setattr(merge, "sha256_file", count)
+    merge._validate_release(release)
+    assert calls == [release / "audio/0.wav"]
+    calls.clear()
+    merge._validate_release(release)
+    assert calls == [release / "audio/0.wav"]
+    (release / "audio/0.wav").write_bytes(b"tampered between validation passes")
+    with pytest.raises(ValueError, match="audio hash mismatch"):
+        merge._validate_release(release)
+
+
+def test_existing_merge_hashes_each_shared_audio_path_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from collections import Counter
+
+    from training.taigi import merge
+
+    source = _shared_audio_release(tmp_path)
+    output = tmp_path / "merged"
+    release = merge_releases([source], output, train_only=True)
+    calls: list[Path] = []
+
+    def count(path: Path) -> str:
+        if path.parent.name == "audio":
+            calls.append(path.resolve())
+        return sha256_file(path)
+
+    monkeypatch.setattr(merge, "sha256_file", count)
+    assert merge_releases([source], output, train_only=True) == release
+    assert Counter(calls) == Counter(
+        {
+            source / "audio/0.wav": 1,
+            Path(read_jsonl(release / "metadata.jsonl")[0]["published_audio_path"]): 1,
+        }
+    )
+
+
+def test_cached_audio_digest_is_still_checked_against_every_row(tmp_path: Path) -> None:
+    from training.taigi import merge
+
+    release = _shared_audio_release(tmp_path)
+    rows = read_jsonl(release / "metadata.jsonl")
+    rows[1]["audio_sha256"] = "0" * 64
+    _jsonl(release / "metadata.jsonl", rows)
+    with pytest.raises(ValueError, match="audio hash mismatch"):
+        merge._validate_release(release)
+
+
+def test_distinct_paths_with_same_claimed_digest_are_each_hashed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from training.taigi import merge
+
+    release = _release(tmp_path, "separate", [{"audio_bytes": b"same"}, {"audio_bytes": b"same"}])
+    calls = []
+
+    def count(path: Path) -> str:
+        if path.parent.name == "audio":
+            calls.append(path.resolve())
+        return sha256_file(path)
+
+    monkeypatch.setattr(merge, "sha256_file", count)
+    merge._validate_release(release)
+    assert calls == [release / "audio/0.wav", release / "audio/1.wav"]
+    (release / "audio/1.wav").write_bytes(b"corrupt second file")
+    with pytest.raises(ValueError, match="audio hash mismatch"):
+        merge._validate_release(release)
