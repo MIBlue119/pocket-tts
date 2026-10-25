@@ -16,7 +16,7 @@ Astra and Sol handled implementation, diagnosis, cloud operations and independen
 - [x] Phase B: Design the workflow. Reuse the researched sentence-level design. A second architecture bakeoff is skipped because the direct-task design was already compared with the cascade by the preceding explorer team.
 - [x] Phase C: Run the loop. Implement and verify each owned unit.
 - [x] Phase D: Keep the audit trail. Append actual decisions and evidence.
-- [ ] Phase E: Verify and hand back. Inspect real data, training events, checkpoint restoration, tracker, and published branch.
+- [x] Phase E: Verify and hand back. Inspect real data, training events, checkpoint restoration, tracker, and published branch.
 
 ## Work partition
 
@@ -70,3 +70,5 @@ produced four weak labels from a supplied video, and 170 targeted tests passed.
 - [Pilot results, correction and cleanup](2026-10-25-taigi-pilot-results.md)
 - [YouTube weak-label evidence and expansion boundaries](2026-10-25-youtube-weak-label-feasibility.md)
 - [One-command usage](../taigi-video-weak-labels.md)
+
+Published branch: [MIBlue119/pocket-tts — feat/taigi-training-pipeline](https://github.com/MIBlue119/pocket-tts/tree/feat/taigi-training-pipeline). Remote `ls-remote` matched reviewed delivery commit `8bf92f16bd6827e9daec58888cbe6e60661846c2`; this final checklist update follows that verified push.
