@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import FrameType
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
@@ -83,6 +84,16 @@ def build(args: argparse.Namespace) -> Path:
         "timeout_seconds": args.timeout,
     }
     deadline = time.monotonic() + args.timeout
+
+    def interrupted(signum: int, frame: FrameType | None) -> None:
+        for received in (signal.SIGTERM, signal.SIGINT):
+            signal.signal(received, signal.SIG_IGN)
+        raise SystemExit(128 + signum)
+
+    previous = {
+        received: signal.signal(received, interrupted)
+        for received in (signal.SIGTERM, signal.SIGINT)
+    }
     try:
         base = [
             sys.executable,
@@ -248,9 +259,13 @@ def build(args: argparse.Namespace) -> Path:
         raise
     finally:
         report["ended_at"] = time.time()
-        (out / "run-report.json").write_text(
-            json.dumps(report, indent=2, ensure_ascii=False) + "\n"
-        )
+        try:
+            (out / "run-report.json").write_text(
+                json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+            )
+        finally:
+            for received, handler in previous.items():
+                signal.signal(received, handler)
 
 
 def main() -> None:

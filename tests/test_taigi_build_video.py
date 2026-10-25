@@ -1,5 +1,7 @@
 import argparse
 import json
+import os
+import signal
 import subprocess
 import sys
 import time
@@ -153,8 +155,10 @@ def test_stage_failure_is_not_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPa
         raise TimeoutError("deadline expired")
 
     monkeypatch.setattr(build_video, "execute", fail)
+    handlers = {sig: signal.getsignal(sig) for sig in (signal.SIGTERM, signal.SIGINT)}
     with pytest.raises(TimeoutError):
         build_video.build(args)
+    assert all(signal.getsignal(sig) == handler for sig, handler in handlers.items())
     report = json.loads((args.output_dir / "run-report.json").read_text())
     assert report["state"] == "failed" and report["stage"] == "metadata"
     assert "release" not in report
@@ -178,3 +182,73 @@ def test_timeout_kills_external_descendants(tmp_path: Path) -> None:
             break
         time.sleep(0.01)
     assert not status.exists() or status.read_text().split()[2] == "Z"
+
+
+@pytest.mark.parametrize("signum", [signal.SIGTERM, signal.SIGINT])
+def test_cli_signal_cleans_process_group_and_reports_failure(tmp_path: Path, signum: int) -> None:
+    fake = tmp_path / "fake"
+    fake.mkdir()
+    marker = tmp_path / "processes.json"
+    (fake / "yt_dlp.py").write_text(
+        "import json,os,time\nfrom pathlib import Path\n"
+        "descendant=os.fork()\n"
+        "if descendant:\n"
+        f"    Path({str(marker)!r}).write_text(json.dumps([os.getpid(),descendant]))\n"
+        "time.sleep(30)\n"
+    )
+    node = fake / "node"
+    node.write_text("#!/bin/sh\nexit 0\n")
+    node.chmod(0o755)
+    output = tmp_path / "result"
+    env = {**os.environ, "PYTHONPATH": str(fake), "PATH": f"{fake}:{os.environ['PATH']}"}
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "training.taigi.build_video",
+            "https://www.youtube.com/watch?v=abcdefghijk",
+            str(output),
+            "--enhancer-python",
+            sys.executable,
+            "--group-id",
+            "test",
+            "--train-only",
+            "--timeout",
+            "10",
+        ],
+        cwd=build_video.ROOT,
+        env=env,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        deadline = time.monotonic() + 5
+        while not marker.exists() and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert marker.exists()
+        pids = json.loads(marker.read_text())
+        process.send_signal(signum)
+        process.communicate(timeout=3)
+        assert process.returncode == 128 + signum
+        report = json.loads((output / "run-report.json").read_text())
+        assert report["state"] == "failed"
+        assert report["stage"] == "metadata"
+        assert report["error_type"] == "SystemExit"
+        for pid in pids:
+            stat = Path(f"/proc/{pid}/stat")
+            deadline = time.monotonic() + 1
+            while (
+                stat.exists() and stat.read_text().split()[2] != "Z" and time.monotonic() < deadline
+            ):
+                time.sleep(0.01)
+            assert not stat.exists() or stat.read_text().split()[2] == "Z"
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.wait()
+        if marker.exists():
+            for pid in json.loads(marker.read_text()):
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
