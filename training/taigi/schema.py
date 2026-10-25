@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
@@ -14,6 +14,8 @@ class SourceRecord:
     url: str | None = None
     group_id: str | None = None
     split: Literal["train", "valid"] | None = None
+    audio_sha256: str = ""
+    source_metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def group(self: SourceRecord) -> str:
@@ -35,6 +37,7 @@ class SegmentRecord:
     split: Literal["train", "valid"] | None = None
     status: Literal["candidate", "quarantined"] = "candidate"
     quarantine_reason: str | None = None
+    source_metadata: dict[str, Any] = field(default_factory=dict)
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:

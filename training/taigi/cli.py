@@ -18,7 +18,6 @@ def parser() -> argparse.ArgumentParser:
     prepare.add_argument("--min-silence", type=float, default=0.35)
     prepare.add_argument("--min-duration", type=float, default=0.8)
     prepare.add_argument("--max-duration", type=float, default=20.0)
-    prepare.add_argument("--allow-playlist", action="store_true")
     transcribe = commands.add_parser("transcribe", help="create a pinned Breeze weak-label release")
     transcribe.add_argument("candidates", type=Path)
     transcribe.add_argument("releases_dir", type=Path)
@@ -38,7 +37,6 @@ def main(argv: list[str] | None = None) -> int:
             min_silence=args.min_silence,
             min_duration=args.min_duration,
             max_duration=args.max_duration,
-            allow_playlist=args.allow_playlist,
         )
     else:
         result = transcribe_release(args.candidates, args.releases_dir, device=args.device)

@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 
-def acquire_url(url: str, output_dir: Path, allow_playlist: bool) -> tuple[Path, str]:
+def acquire_url(url: str, output_dir: Path) -> tuple[Path, str]:
     executable = shutil.which("yt-dlp")
     if executable is None:
         raise RuntimeError("URL acquisition requires the `yt-dlp` executable")
@@ -18,8 +18,8 @@ def acquire_url(url: str, output_dir: Path, allow_playlist: bool) -> tuple[Path,
         text=True,
     )
     info = json.loads(metadata.stdout)
-    if info.get("_type") == "playlist" and not allow_playlist:
-        raise ValueError("playlist URL rejected; pass --allow-playlist to acquire it explicitly")
+    if info.get("_type") == "playlist":
+        raise ValueError("playlist URLs are not supported; provide one explicit video URL")
     video_id = str(info.get("id") or "")
     if not video_id:
         raise ValueError("yt-dlp did not return a stable video ID")
@@ -28,7 +28,7 @@ def acquire_url(url: str, output_dir: Path, allow_playlist: bool) -> tuple[Path,
     subprocess.run(
         [
             executable,
-            "--no-playlist" if not allow_playlist else "--yes-playlist",
+            "--no-playlist",
             "--download-archive",
             str(archive),
             "-x",

@@ -17,9 +17,9 @@ Write one JSON object per source. Declare `language` as `nan-tw`. The command re
 {"audio_path":"/data/show-b.flac","source_id":"show-b-episode-3","group_id":"show-b-episode-3","language":"nan-tw"}
 ```
 
-`group_id` defaults to `source_id`. You can set `split` to `train` or `valid`. All sources in one group must use the same split. The command assigns any remaining groups before segmentation, so one source cannot cross the train and validation split.
+`group_id` defaults to `source_id`. You can set `split` to `train` or `valid`. All sources in one group must use the same split. Sources with identical audio bytes also stay in one split, even when their source or group IDs differ. The command preserves extra fields such as `license`, `repo`, and `revision` in each candidate's `source_metadata`.
 
-For a bounded YouTube download, replace `audio_path` with one explicit `url`. The command records yt-dlp's stable video ID in the source ID and uses `download-archive.txt`. It rejects playlists unless you pass `--allow-playlist`.
+For a bounded YouTube download, replace `audio_path` with one explicit video `url`. The command records yt-dlp's stable video ID in the source ID and uses `download-archive.txt`. It rejects playlist URLs.
 
 ## Prepare candidates
 
@@ -44,7 +44,9 @@ A single source group cannot produce a real validation split. For a pipeline smo
 
 The transcriber pins `MediaTek-Research/Breeze-ASR-26` to revision `7b992682e7f5ceedd0a41ebec240f01ba469d19e`. It reads existing Hugging Face authentication and does not accept credentials as arguments. Each complete selected interval gets one Chinese semantic pseudo label.
 
-The command writes an immutable content-addressed directory under `data/taigi-releases`. A repeated run with the same outputs returns the existing release. Each release contains:
+Before transcription, the command verifies each source file against the hash recorded during preparation. It stops before loading or calling ASR if a source changed.
+
+The command writes an immutable content-addressed directory under `data/taigi-releases`. It copies accepted source files to hash-named files in the release and points the training manifests at those copies. A repeated run verifies the published copies before returning the existing release. Each release contains:
 
 - `train.jsonl` and `valid.jsonl` with only `path`, `start`, `duration`, and `transcript`.
 - `metadata.jsonl` with source provenance, hashes, the pinned model revision, and `unverified_weak_label` status.

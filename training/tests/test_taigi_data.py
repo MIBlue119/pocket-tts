@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from training.taigi.cli import main
+from training.taigi.audio import sha256_file
 from training.taigi.pipeline import prepare_candidates, transcribe_release
 from training.taigi.transcriber import BREEZE_REVISION
 
@@ -47,6 +48,9 @@ def test_prepare_segments_silence_and_keeps_groups_in_one_split(tmp_path: Path) 
                 "source_id": "a",
                 "language": "nan-tw",
                 "group_id": "show-a",
+                "license": "CC-BY-4.0",
+                "repo": "example/taigi",
+                "revision": "abc123",
             },
             {
                 "audio_path": str(second),
@@ -67,6 +71,32 @@ def test_prepare_segments_silence_and_keeps_groups_in_one_split(tmp_path: Path) 
     assert {row["split"] for row in rows} == {"train", "valid"}
     assert all(float(row["duration"]) <= 20 for row in rows)
     assert all(len(str(row["audio_sha256"])) == 64 for row in rows)
+    first_metadata = next(row["source_metadata"] for row in rows if row["source_id"] == "a")
+    assert first_metadata == {"license": "CC-BY-4.0", "repo": "example/taigi", "revision": "abc123"}
+
+
+def test_prepare_keeps_duplicate_audio_in_one_split(tmp_path: Path) -> None:
+    first = tmp_path / "first.wav"
+    duplicate = tmp_path / "duplicate.wav"
+    distinct = tmp_path / "distinct.wav"
+    _wav(first, [(1.0, 0.2)])
+    duplicate.write_bytes(first.read_bytes())
+    _wav(distinct, [(1.2, 0.15)])
+    manifest = tmp_path / "sources.jsonl"
+    _jsonl(
+        manifest,
+        [
+            {"audio_path": str(first), "source_id": "a", "group_id": "a", "language": "nan-tw"},
+            {"audio_path": str(duplicate), "source_id": "b", "group_id": "b", "language": "nan-tw"},
+            {"audio_path": str(distinct), "source_id": "c", "group_id": "c", "language": "nan-tw"},
+        ],
+    )
+
+    rows = _rows(prepare_candidates(manifest, tmp_path / "work"))
+    splits = {row["source_id"]: row["split"] for row in rows}
+
+    assert splits["a"] == splits["b"]
+    assert splits["a"] != splits["c"]
 
 
 def test_prepare_requires_two_groups_unless_train_only(tmp_path: Path) -> None:
@@ -112,6 +142,7 @@ def test_prepare_quarantines_long_interval_without_inventing_a_cut(tmp_path: Pat
 def test_transcribe_writes_immutable_compact_release_and_quarantine(tmp_path: Path) -> None:
     audio = tmp_path / "one.wav"
     _wav(audio, [(2.0, 0.2)])
+    audio_hash = sha256_file(audio)
     candidates = tmp_path / "candidates.jsonl"
     base = {
         "source_id": "one",
@@ -119,7 +150,7 @@ def test_transcribe_writes_immutable_compact_release_and_quarantine(tmp_path: Pa
         "audio_path": str(audio),
         "start": 0.0,
         "duration": 1.0,
-        "audio_sha256": "a" * 64,
+        "audio_sha256": audio_hash,
         "language": "nan-tw",
         "language_provenance": "source_declared",
         "audio_variant": "raw",
@@ -141,14 +172,52 @@ def test_transcribe_writes_immutable_compact_release_and_quarantine(tmp_path: Pa
     repeated = transcribe_release(candidates, tmp_path / "releases", transcriber=fake_transcriber)
 
     assert release == repeated
-    assert _rows(release / "train.jsonl") == [
-        {"duration": 1.0, "path": str(audio), "start": 0.0, "transcript": "食飽未？"}
-    ]
+    train_row = _rows(release / "train.jsonl")[0]
+    published_audio = Path(train_row["path"])
+    assert train_row == {
+        "duration": 1.0,
+        "path": str(release / "audio" / f"{audio_hash}.wav"),
+        "start": 0.0,
+        "transcript": "食飽未？",
+    }
+    assert published_audio.read_bytes() == audio.read_bytes()
+    assert sha256_file(published_audio) == audio_hash
     assert _rows(release / "valid.jsonl") == []
     metadata = _rows(release / "metadata.jsonl")[0]
     assert metadata["verification"] == "unverified_weak_label"
     assert metadata["label_model_revision"] == BREEZE_REVISION
     assert _rows(release / "quarantine.jsonl")[0]["quarantine_reason"] == "empty_transcript"
+
+
+def test_transcribe_rejects_changed_audio_before_calling_asr(tmp_path: Path) -> None:
+    audio = tmp_path / "changed.wav"
+    _wav(audio, [(1.0, 0.2)])
+    candidates = tmp_path / "candidates.jsonl"
+    _jsonl(
+        candidates,
+        [
+            {
+                "utterance_id": "changed-0",
+                "source_id": "changed",
+                "group_id": "changed",
+                "audio_path": str(audio),
+                "start": 0.0,
+                "duration": 1.0,
+                "audio_sha256": "0" * 64,
+                "split": "train",
+            }
+        ],
+    )
+    called = False
+
+    def must_not_run(path: Path, start: float, duration: float) -> str:
+        nonlocal called
+        called = True
+        return "wrong"
+
+    with pytest.raises(ValueError, match="hash mismatch"):
+        transcribe_release(candidates, tmp_path / "releases", transcriber=must_not_run)
+    assert not called
 
 
 def test_cli_prepare_supports_train_only_smoke(

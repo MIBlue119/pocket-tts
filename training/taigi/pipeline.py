@@ -16,7 +16,7 @@ from training.taigi.schema import SegmentRecord, SourceRecord, read_jsonl, write
 from training.taigi.transcriber import BREEZE_MODEL, BREEZE_REVISION, breeze_transcriber
 
 
-def _parse_sources(path: Path, acquisition_dir: Path, allow_playlist: bool) -> list[SourceRecord]:
+def _parse_sources(path: Path, acquisition_dir: Path) -> list[SourceRecord]:
     sources: list[SourceRecord] = []
     for row in read_jsonl(path):
         language = row.get("language")
@@ -34,7 +34,7 @@ def _parse_sources(path: Path, acquisition_dir: Path, allow_playlist: bool) -> l
         if (audio_path is None) == (url is None):
             raise ValueError(f"source {source_id} requires exactly one of audio_path or url")
         if url is not None:
-            audio_path, video_id = acquire_url(url, acquisition_dir, allow_playlist)
+            audio_path, video_id = acquire_url(url, acquisition_dir)
             if video_id not in source_id:
                 source_id = f"{source_id}-{video_id}"
         assert audio_path is not None
@@ -54,6 +54,13 @@ def _parse_sources(path: Path, acquisition_dir: Path, allow_playlist: bool) -> l
                 url=url,
                 group_id=str(row.get("group_id") or source_id),
                 split=split,
+                audio_sha256=sha256_file(audio_path),
+                source_metadata={
+                    key: value
+                    for key, value in row.items()
+                    if key
+                    not in {"audio_path", "url", "source_id", "language", "group_id", "split"}
+                },
             )
         )
     if not sources:
@@ -64,17 +71,39 @@ def _parse_sources(path: Path, acquisition_dir: Path, allow_playlist: bool) -> l
 def _assign_splits(
     sources: list[SourceRecord], train_only: bool, seed: int
 ) -> dict[str, Literal["train", "valid"]]:
+    parent = {source.group: source.group for source in sources}
+
+    def find(group: str) -> str:
+        while parent[group] != group:
+            parent[group] = parent[parent[group]]
+            group = parent[group]
+        return group
+
+    def union(left: str, right: str) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root != right_root:
+            parent[max(left_root, right_root)] = min(left_root, right_root)
+
+    digest_groups: dict[str, str] = {}
+    for source in sources:
+        previous_group = digest_groups.setdefault(source.audio_sha256, source.group)
+        union(source.group, previous_group)
+
     explicit: dict[str, Literal["train", "valid"]] = {}
-    groups = sorted({source.group for source in sources})
+    groups = sorted({find(source.group) for source in sources})
     for source in sources:
         if source.split is not None:
-            old = explicit.setdefault(source.group, source.split)
+            split_group = find(source.group)
+            old = explicit.setdefault(split_group, source.split)
             if old != source.split:
-                raise ValueError(f"group {source.group} has conflicting supplied splits")
+                raise ValueError(
+                    f"duplicate audio group {split_group} has conflicting supplied splits"
+                )
     if train_only:
         if any(split == "valid" for split in explicit.values()):
             raise ValueError("--train-only conflicts with a supplied valid split")
-        return {group: "train" for group in groups}
+        return {source.group: "train" for source in sources}
     if len(groups) < 2:
         raise ValueError(
             "at least two source groups are required; use --train-only for a smoke run"
@@ -93,7 +122,7 @@ def _assign_splits(
         if candidate is None:
             raise ValueError("supplied splits contain no train group")
         assigned[candidate] = "train"
-    return assigned
+    return {source.group: assigned[find(source.group)] for source in sources}
 
 
 def prepare_candidates(
@@ -106,21 +135,20 @@ def prepare_candidates(
     min_silence: float = 0.35,
     min_duration: float = 0.8,
     max_duration: float = 20.0,
-    allow_playlist: bool = False,
 ) -> Path:
     if min_duration <= 0 or max_duration < min_duration:
         raise ValueError("durations must satisfy 0 < min_duration <= max_duration")
     if min_silence <= 0:
         raise ValueError("min_silence must be positive")
     output_dir.mkdir(parents=True, exist_ok=True)
-    sources = _parse_sources(source_manifest, output_dir / "downloads", allow_playlist)
+    sources = _parse_sources(source_manifest, output_dir / "downloads")
     splits = _assign_splits(sources, train_only, seed)
     candidates: list[SegmentRecord] = []
     quarantined: list[SegmentRecord] = []
     for source in sources:
         assert source.audio_path is not None
         audio = load_audio(source.audio_path)
-        digest = sha256_file(source.audio_path)
+        digest = source.audio_sha256
         intervals = speech_intervals(audio, silence_db, min_silence, min_duration)
         if not intervals:
             intervals = [(0.0, len(audio.samples) / audio.sample_rate)]
@@ -142,6 +170,7 @@ def prepare_candidates(
                 split=splits[source.group],
                 status="quarantined" if reason else "candidate",
                 quarantine_reason=reason,
+                source_metadata=source.source_metadata,
             )
             (quarantined if reason else candidates).append(record)
     write_jsonl(output_dir / "candidates.jsonl", candidates)
@@ -175,12 +204,21 @@ def transcribe_release(
     rows = read_jsonl(candidates_path)
     if not rows:
         raise ValueError("candidate manifest is empty")
+    observed_hashes: dict[Path, str] = {}
+    for row in rows:
+        audio_path = Path(row["audio_path"]).resolve()
+        expected_hash = str(row.get("audio_sha256", ""))
+        if audio_path not in observed_hashes:
+            observed_hashes[audio_path] = sha256_file(audio_path)
+        actual_hash = observed_hashes[audio_path]
+        if len(expected_hash) != 64 or actual_hash != expected_hash:
+            raise ValueError(f"candidate audio hash mismatch: {audio_path}")
     transcribe = transcriber or breeze_transcriber(device)
     accepted: list[dict[str, Any]] = []
     quarantine: list[dict[str, Any]] = []
     for row in rows:
         text = transcribe(
-            Path(row["audio_path"]), float(row["start"]), float(row["duration"])
+            Path(row["audio_path"]).resolve(), float(row["start"]), float(row["duration"])
         ).strip()
         enriched = {
             **row,
@@ -201,16 +239,39 @@ def transcribe_release(
             accepted.append(enriched)
     release_input = json.dumps(accepted + quarantine, ensure_ascii=False, sort_keys=True).encode()
     release_id = hashlib.sha256(release_input).hexdigest()[:16]
+    releases_dir = releases_dir.resolve()
     release = releases_dir / release_id
     if release.exists():
+        for row in accepted:
+            suffix = Path(row["audio_path"]).suffix.lower()
+            published = release / "audio" / f"{row['audio_sha256']}{suffix}"
+            if not published.is_file() or sha256_file(published) != row["audio_sha256"]:
+                raise ValueError(f"existing release audio failed integrity check: {published}")
         return release
     temporary = releases_dir / f".{release_id}.tmp-{os.getpid()}"
     temporary.mkdir(parents=True, exist_ok=False)
     try:
+        audio_dir = temporary / "audio"
+        audio_dir.mkdir()
+        published_paths: dict[tuple[str, str], str] = {}
+        for row in accepted:
+            source = Path(row["audio_path"]).resolve()
+            suffix = source.suffix.lower()
+            key = (row["audio_sha256"], suffix)
+            final_audio = release / "audio" / f"{row['audio_sha256']}{suffix}"
+            if key not in published_paths:
+                temporary_audio = audio_dir / final_audio.name
+                shutil.copyfile(source, temporary_audio)
+                if sha256_file(temporary_audio) != row["audio_sha256"]:
+                    raise ValueError(f"copied release audio failed integrity check: {source}")
+                temporary_audio.chmod(0o444)
+                published_paths[key] = str(final_audio)
+            row["source_audio_path"] = row["audio_path"]
+            row["published_audio_path"] = published_paths[key]
         for split in ("train", "valid"):
             compact = [
                 {
-                    "path": row["audio_path"],
+                    "path": row["published_audio_path"],
                     "start": row["start"],
                     "duration": row["duration"],
                     "transcript": row["input_text_zh"],
