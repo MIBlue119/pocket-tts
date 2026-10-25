@@ -29,6 +29,16 @@ quantize = ["torchao>=0.16.0"]
 
 
 [dependency-groups]
+taigi = [
+    "soundfile>=0.12",
+    "sphn>=0.1.4",
+    "transformers==4.57.1",
+    "torchaudio",
+    "wandb>=0.19",
+    "yt-dlp",
+    "pyyaml>=6",
+    "tqdm>=4.60",
+]
 # Also covers training the models in training/ (see training/README.md) and
 # scoring with training/eval/librispeech.py. Inference needs none of this.
 dev = [

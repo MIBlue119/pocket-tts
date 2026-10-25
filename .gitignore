@@ -97,3 +97,4 @@ italk.yaml
 .venv-train/
 /data*/
 runs/
+wandb/

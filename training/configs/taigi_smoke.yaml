@@ -1,0 +1,35 @@
+model_config: pocket_tts/config/english_2026-04_24l.yaml
+model_overrides:
+  flow_lm.lookup_table.tokenizer_path: data/taigi-pilot/tokenizer.json
+  flow_lm.lookup_table.n_bins: 512
+start_from_pretrained: true
+reset_text_embedding: true
+
+data:
+  train_jsonl: data/taigi-pilot/train.jsonl
+  valid_jsonl: ""
+  sampling_mode: sentence
+  precompute: false
+  max_duration_sec: 20.0
+  loader_procs: 1
+  num_bucket_batches: 1
+
+flow:
+  type: lsd
+optim:
+  lr: 0.0002
+  warmup_steps: 5
+run_dir: runs/taigi-smoke
+batch_size: 1
+grad_accum_steps: 1
+max_steps: 20
+compile: false
+stats_ema_steps: 0
+ema_decay: 0.999
+text_dropout: 0.0
+voice_dropout: 0.0
+flow_batch_multiplier: 1
+log_freq: 1
+ckpt_freq: 5
+num_ckpt_keep: 2
+sample_sentences: []
