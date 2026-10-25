@@ -19,8 +19,8 @@ Create JSONL with one individual YouTube URL per interval:
 Use the same group for related episodes or programs. Each interval is at most
 20 seconds; each full source is at most 300 seconds and 20 MiB of compressed media.
 The current implementation downloads the short source separately for each interval.
-Long interviews need a separate bounded acquisition extension and are not admitted
-by raising the batch timeout. The committed source registry contains metadata,
+For long interviews and whole playlists, use the full-corpus command below instead
+of raising the interval-batch timeout. The committed source registry contains metadata,
 not downloaded audio or proof of a dataset license.
 
 Run from the feature checkout with the existing model environments:
@@ -135,3 +135,59 @@ Only consider longer training or cloud spending when fixed generation and held-o
 diagnostics show a useful signal. Preserve failed diagnostics as evidence. The
 remaining budget is a total ceiling shared by compute and storage, not a reason
 to run more steps on insufficient data.
+
+## Process the complete six-playlist corpus
+
+`training/configs/taigi_youtube_full_inventory.json` freezes 290 unique video IDs
+from all six supplied playlists. The supervisor visits playlists in round-robin
+order, downloads each full source once, and records an explicit outcome for every
+video. Unavailable sources remain failures in the report. A successful download
+does not mean every second is accepted as speech training data.
+
+```bash
+USE_TF=0 USE_FLAX=0 /path/to/asr/bin/python -m training.taigi.corpus run \
+  training/configs/taigi_youtube_full_inventory.json /absolute/path/corpus \
+  --enhancer-python /path/to/enhancer/bin/python --cache-dir /absolute/path/hf/hub \
+  --max-seconds 43200 --min-free-gib 30
+
+/path/to/asr/bin/python -m training.taigi.corpus status /absolute/path/corpus
+```
+
+Sources are limited to two hours and 512 MiB of compressed audio by default;
+all enumerated durations fit that duration bound. RE-USE loads once per video
+and processes the entire decoded source in chunks of at most ten minutes. Breeze
+loads once per video when candidates exist. Completed chunks, transcripts and
+releases have content hashes; restart verifies them before reuse. The plan also
+freezes the processing code and model configuration. Changing those requires a
+new output directory. Deadline and free-space admission limits can change on
+resume; a separate cloud budget clock must never reset with an invocation.
+
+For automatic training after corpus processing, first initialize the corpus plan
+with the command above. A tiny positive `--max-seconds` can initialize the queue
+without admitting a download. Then run the following inside an actual systemd
+service with `KillMode=control-group`, `TimeoutStopSec=60`, and a `RuntimeMaxSec`
+that ends before the external VM stop deadline:
+
+```bash
+/path/to/asr/bin/python -m training.scripts.run_taigi_corpus_job \
+  training/configs/taigi_youtube_full_inventory.json /absolute/path/corpus \
+  /absolute/path/new-training-job \
+  --valid-group playlist:PL9X_7mTn8zvUHn5P_-ngeHVUgqi4-zMha \
+  --max-seconds 64800 --training-seconds 14400
+```
+
+The orchestrator requires systemd's invocation marker, but the operator must
+verify the real service containment properties. It resumes corpus processing
+and refuses training while any source remains pending or interrupted. Explicit
+terminal source failures are counted and can coexist with usable releases.
+Training uses a fresh train-only tokenizer, the pretrained 24-layer teacher with
+reset text embeddings, batch 1 with eight accumulation steps, and at most 2,000
+updates. Validation covers at most 100 held-out rows per check. Twelve fixed
+generated prompts are saved before and after training; W&B runs offline so cloud
+credentials are unnecessary. Training job directories cannot be resumed; use a
+new job directory while retaining the resumable corpus directory.
+
+Keep a separate persistent backup controller and provider-level stop timer.
+Stopping a VM does not delete its billable disk. Verify copied artifacts before
+removing cloud storage. Source licensing, speaker separation and Taiwanese
+pronunciation quality remain separate from pipeline execution success.
