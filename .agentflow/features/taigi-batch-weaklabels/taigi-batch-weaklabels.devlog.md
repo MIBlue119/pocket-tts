@@ -58,6 +58,14 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 進度如何？約莫多久可以處理好
 
++ 處理時間要多久
+
++ 假如狀況不錯 你可以訓練到明天晚上 預算提升到100usd
+
++ 我的目標是我明天晚上至少有一版可以用的pocket tts 台語版
+
++ 然後模型可以幫我放在我的huggingface 先設private
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
@@ -161,3 +169,10 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Delivery commit8887aac73b60990df94d3e64d49fd769b9b77d23 was pushed and independently matched origin/taigi-batch-weaklabels; the worktree was clean. Documentation and operating receipts preserve the remaining asynchronous work rather than claiming completion.
 - At19:54Taipei the resumed backup watcher, Taiwan egress proxy and original stop timer were all active. Backup receipt reported a running remote service/job, successful incremental mirror and no error. Full verification remains pending while the producer writes files.
 - Tracker now validates7/10complete. T5(full corpus), T6(full-data candidate) and T7(final cloud preservation/cleanup) remain active. The owner status answer is: full290queue running; last verified snapshot5complete/1running/284pending; provisional6–10hours data processing plus initial training/checks, with actual quality still unproven. Phone previews were delivered earlier; corrected local trial is synced to W&B.
+
+## [RUN-010] Event — 2026-10-25 20:06:03 +0800 (A-002)
+
+- Owner explicitly raises total budget to USD100, conditionally allows training through tomorrow evening, targets a usable Taiwanese model and authorizes private Hugging Face publication. Design/tracker now include continuation and private artifact delivery; no completed-model claim.
+- Authenticated local Hugging Face account is weiren119. Created weiren119/pocket-tts-taigi and read back private=true; no model weights uploaded yet. Token stays local and was not printed/copied.
+- Native Astra owns bounded continuation planning/implementation and an independent Astra owns deadline-control updates; native Sol owns strict private publication packaging. Shared filesystem access is not OS-enforced isolation. Root integrates and verifies the lifecycle.
+- New local delivery watcher waits for verified backup and checks selected artifact hashes/paths before calling the publisher. Three focused tests pass after the expected missing-module failure. Changed paths match accepted T11; corpus producer code remains frozen.

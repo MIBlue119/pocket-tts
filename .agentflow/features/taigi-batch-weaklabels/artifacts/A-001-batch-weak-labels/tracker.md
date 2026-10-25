@@ -18,11 +18,11 @@
 
 - **Reason:** Work remains.
 
-- **Total:** 10.
+- **Total:** 11.
 
 - **Completed:** 7.
 
-- **Remaining:** 3.
+- **Remaining:** 4.
 
 ## Accepted task checklist
 
@@ -38,7 +38,7 @@
 
 - [ ] **T-6:** Execute a durable corpus-to-training job with grouped validation, train-only tokenizer, offline W&B and fixed generated diagnostics. Source: A-002 continuation of original training authorization. Paths: training/scripts/run_taigi_corpus_job.py and tests/test_taigi_corpus_job.py.
 
-- [ ] **T-7:** Use dedicated Nebius compute within the existing USD50 total, preserve OCR, establish fixed stop deadline, verify model compatibility and backup outputs. Source: A-002 continuation and prior explicit cloud/budget authorization. Paths: corpus-cloud-operations.md, corpus-compute-plan.md, training/scripts/watch_taigi_cloud_job.py, tests/test_taigi_cloud_watch.py and ignored data/taigi-full-corpus/cloud/.
+- [ ] **T-7:** Use dedicated Nebius compute within the owner-updated USD100 total, preserve OCR, establish fixed stop deadline, verify model compatibility and backup outputs. Source: A-002 continuation and prior explicit cloud/budget authorization. Paths: corpus-cloud-operations.md, corpus-compute-plan.md, training/scripts/watch_taigi_cloud_job.py, tests/test_taigi_cloud_watch.py and ignored data/taigi-full-corpus/cloud/.
 
 - [x] **T-8:** Independently review full-corpus behavior and verify actual short/long video execution before production launch. Source: A-002 Astra preference and all-video scope. Paths: full-corpus-review.md and existing notebook/review records. Proof: source reviews, actual2/2whole-video trial with52.501-minute complete frame coverage, cloud5-update teacher tensor verification, persistent-unit and real SSH/rsync/SHA256 acceptance.
 
@@ -46,7 +46,11 @@
 
 - [x] **T-10:** Measure rented GPU utilization and matched throughput, adopt acceleration only when measured useful within the existing budget and source/label invariants. Source: A-002, owner asks to maximize allocated compute. Paths: full-corpus-throughput-plan.md, ignored cloud benchmark receipts, and training/taigi/{corpus.py,corpus_worker.py,transcriber.py} with focused tests. Proof:39variable clips exacttext parity; fair cached batch4 throughput1.339x; no-work resume; duplicate GPU workers did not help; production opts into batch4 at43735eb.
 
+- [ ] **T-11:** Gate bounded continuation on full-data evidence and deliver a reproducible candidate to verified-private weiren119/pocket-tts-taigi. Source: A-002 owner Oct25 evening deadline, USD100 and private Hugging Face instructions. Paths: continuation-plan.md, training/scripts/publish_taigi_model.py, continuation supervisor and focused tests.
+
 ## Accepted scope changes
+
+- Owner raises total cap to USD100, requests usable model by Oct26 evening and private Hugging Face publication. Source: A-002 exact latest owner inputs. Effect: T7 deadline controls update preserving original start; T11 adds conditional continuation and private model delivery.
 
 - Owner explicitly requested Astra for good training; add deterministic baseline/validation and bounded generated-audio diagnostics to T-3. Source: A-002. Effect: T-3 includes deterministic validation and generated-audio checks.
 

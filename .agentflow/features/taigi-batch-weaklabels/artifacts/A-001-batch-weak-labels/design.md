@@ -120,3 +120,43 @@ INV-2/4; they do not add a new product outcome. A controlled real pause/resume w
 verify completed jobs survive while the corrected runner is adopted.
 
 Self-check: Scope follows the existing authorized weak-label/training task; limitations and observable acceptance are explicit.
+
+## 2026-10-25 evening delivery extension
+
+Owner raises the total pilot cap to US$100 and allows training until tomorrow evening
+if results are promising; the desired deliverable is usable Chinese-input Taiwanese
+Pocket-TTS, with model artifacts uploaded to the owner's private Hugging Face repo.
+The operational cutoff is 2026-10-26 22:00 Asia/Taipei (14:00 UTC), preserving the
+original compute start and previous spend. This supersedes the US$50/20-hour limit.
+The current full-corpus producer remains frozen and uninterrupted.
+
+- R-6: Prepare bounded continuation after the full-data 200-update diagnostic, gated
+  on explicit finite-loss, generated-audio and validation evidence. Preserve every
+  stage and stop when evidence does not justify spending more. Loss or same-ASR
+  agreement alone does not establish Taiwanese correctness.
+- R-7: Publish a reproducible inference package to `weiren119/pocket-tts-taigi`,
+  private before any upload and verified private afterward. Include the exact
+  selected weight variant, tokenizer, configuration, code revision and evaluation;
+  no training media, optimizer state or credentials are published.
+- INV-6: New deadlines preserve the original cost clock and cap total estimated
+  spend, with independent cloud/local stop controls. Extension must not silently
+  remove early-stop behavior or consume the entire budget regardless of quality.
+- INV-7: Model publication checks personal namespace and private visibility before
+  sending artifacts; an existing public destination is refused. A successful upload
+  requires remote revision and file integrity verification.
+- INV-8: A continued run keeps the dataset/tokenizer fixed and records parent
+  checkpoint, optimizer and EMA identity. A changed training horizon is a child
+  experiment, never a rewrite of the old run manifest. Evaluated weights must match
+  the published raw/EMA variant.
+
+Acceptance: control readbacks agree on the latest cutoff (INV-6); a public-repo
+fixture fails before upload and a private fixture verifies revision/file checks
+(INV-7); lineage and incompatible-input fixtures prove continuation rejects changed
+inputs (INV-8). Actual artifact loading and generated WAVs, followed by private Hub
+verification, are required before declaring model delivery. Usability remains an
+empirical outcome and is not guaranteed by the deadline.
+
+Minimality check: reuse the current producer, trainer, evaluator and backup watcher.
+A small continuation supervisor and strict artifact publisher add only the missing
+lifecycle and private delivery boundaries. No new VM, database or labeling platform
+is needed. Retain all 290 source outcomes; no deadline-driven silent sample limit.
