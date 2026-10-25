@@ -160,3 +160,26 @@ Minimality check: reuse the current producer, trainer, evaluator and backup watc
 A small continuation supervisor and strict artifact publisher add only the missing
 lifecycle and private delivery boundaries. No new VM, database or labeling platform
 is needed. Retain all 290 source outcomes; no deadline-driven silent sample limit.
+
+## 2026-10-26 morning failure recovery
+
+All290source outcomes are now terminal:288successful and2region-restricted failures.
+The exact parity gate correctly stopped before training because the converter's
+Metaspace pre-tokenizer split adjacent whitespace markers before learned BPE merges.
+The provider stop request also failed after its federation login expired. Existing
+owner authorization covers repairing both failures and continuing within the same
+USD100 total and22:00Taipei deadline; no budget clock is reset.
+
+Recover with a minimal converter correction, proving the original22763parity cases
+without changing the learned model or source transcripts. Keep all failed job and
+backup records intact. A new production subtree `recovery-20261026` holds a fresh
+parent job, continuation, backup receipt and publication attempt. The original
+corpus and immutable outputs are reused; existing verified successes must perform
+zero new download, enhancement or ASR attempts. No source failures are hidden.
+
+The new subtree lets the existing selection-path contract and backup boundary work
+without another feature or a rewrite of failed state. Required checks: converter
+regression red/green, complete real parity, frozen corpus code identity unchanged,
+correct service targets and stop-post containment, unchanged source-attempt counts,
+and observed actual training progress. Stop-control fallback must never describe
+SSH shutdown as provider-confirmed stopped or verified billing cessation.

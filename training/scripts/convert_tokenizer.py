@@ -134,7 +134,8 @@ def build(model_path: Path) -> Tokenizer:
 
     tokenizer = Tokenizer(model)
     tokenizer.normalizer = _normalizer(_fields(proto[3][0]))
-    tokenizer.pre_tokenizer = Metaspace(prepend_scheme="always")
+    # Splitting at every space prevents learned whitespace-only pieces from merging.
+    tokenizer.pre_tokenizer = Metaspace(prepend_scheme="always", split=False)
     tokenizer.decoder = DecoderSequence(
         [MetaspaceDecoder(prepend_scheme="always"), ByteFallback(), Fuse()]
     )

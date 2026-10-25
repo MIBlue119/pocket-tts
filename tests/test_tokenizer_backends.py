@@ -72,3 +72,30 @@ def test_convert_tokenizer_reproduces_sentencepiece() -> None:
     sp = spm.SentencePieceProcessor(model_file=str(model))
     for text in CHECKS + TEXTS:
         assert tokenizer.encode(text).ids == sp.encode(text, out_type=int), text
+
+
+def test_converter_preserves_learned_whitespace_only_bpe_pieces(tmp_path: Path) -> None:
+    import sentencepiece as spm
+
+    from training.scripts.convert_tokenizer import build
+
+    corpus = tmp_path / "corpus.txt"
+    corpus.write_text(("學習" + " " * 58 + "\n  hello  world!\n Hello, world!\n") * 30)
+    prefix = tmp_path / "whitespace"
+    spm.SentencePieceTrainer.train(
+        input=str(corpus),
+        model_prefix=str(prefix),
+        model_type="bpe",
+        vocab_size=80,
+        hard_vocab_limit=False,
+        character_coverage=1.0,
+        normalization_rule_name="identity",
+        remove_extra_whitespaces=False,
+        allow_whitespace_only_pieces=True,
+        max_sentencepiece_length=6,
+    )
+    sp = spm.SentencePieceProcessor(model_file=str(prefix.with_suffix(".model")))
+    assert any(sp.id_to_piece(i) == "▁▁" for i in range(sp.get_piece_size()))
+    converted = build(prefix.with_suffix(".model"))
+    for text in [" ", "  hello  ", " Hello, world!", "學習" + " " * 58, "hello world!"]:
+        assert converted.encode(text).ids == sp.encode(text, out_type=int), repr(text)
