@@ -23,9 +23,23 @@ POLL_SCRIPT = r"""
 import json, subprocess, sys
 from pathlib import Path
 unit, job = sys.argv[1:]
-result = subprocess.run(["systemctl", "show", unit, "--property=ActiveState,SubState"],
+result = subprocess.run(["systemctl", "show", unit, "--property=LoadState,ActiveState,SubState,Result,InvocationID,Restart,MainPID,ControlPID,ControlGroup,ExecMainStartTimestampMonotonic,ExecMainExitTimestampMonotonic"],
                         capture_output=True, text=True, timeout=15, check=True)
 properties = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
+group = properties.get("ControlGroup", "")
+count = 0
+if group:
+    relative = Path(group.lstrip("/"))
+    if ".." in relative.parts:
+        raise ValueError("invalid service cgroup path")
+    directory = Path("/sys/fs/cgroup") / relative
+    paths = [directory / "cgroup.procs", *directory.rglob("cgroup.procs")]
+    for path in set(paths):
+        try:
+            count += len(path.read_text().splitlines())
+        except FileNotFoundError:
+            pass
+properties["CGroupProcessesCount"] = str(count)
 try:
     record = json.loads(Path(job).read_text())
 except (OSError, ValueError):
@@ -91,6 +105,26 @@ def poll(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(value, dict) or not isinstance(value.get("service"), dict):
         raise ValueError("invalid remote service response")
     return value
+
+
+def ended_invocation(status: dict[str, Any]) -> bool:
+    service = status["service"]
+    if (
+        service.get("LoadState") != "loaded"
+        or service.get("ActiveState") not in {"inactive", "failed"}
+        or service.get("Restart") != "no"
+        or service.get("CGroupProcessesCount") != "0"
+        or service.get("MainPID", "0") != "0"
+        or service.get("ControlPID", "0") != "0"
+    ):
+        return False
+    started = str(service.get("ExecMainStartTimestampMonotonic", "0"))
+    failed_attempt = service.get("ActiveState") == "failed" and service.get("Result") not in (
+        None,
+        "",
+        "success",
+    )
+    return (started.isdigit() and int(started) > 0) or failed_attempt
 
 
 def mirror(args: argparse.Namespace) -> None:
@@ -214,14 +248,28 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             receipt["last_polled_at"] = time.time()
             mirror(args)
             receipt["last_mirrored_at"] = time.time()
-            inactive = status["service"].get("ActiveState") in {"inactive", "failed"}
-            job = status.get("job")
-            terminal = isinstance(job, dict) and job.get("state") in {"complete", "failed"}
-            if inactive and terminal:
-                # Recheck inactivity after the final mirror before hashing stable output.
+            if ended_invocation(status):
+                # A killed launcher may leave running/missing JSON. Service history
+                # and an empty cgroup establish that this invocation has ended.
                 final_status = poll(args)
-                if final_status["service"].get("ActiveState") not in {"inactive", "failed"}:
-                    raise ValueError("service restarted during final backup")
+                if not ended_invocation(final_status):
+                    raise ValueError("service restarted or has writers during final backup")
+                for key in ("InvocationID", "ExecMainStartTimestampMonotonic"):
+                    if status["service"].get(key) != final_status["service"].get(key):
+                        raise ValueError("service invocation changed during final backup")
+                receipt["remote_status"] = final_status
+                record = final_status.get("job")
+                job_state = record.get("state") if isinstance(record, dict) else None
+                result = final_status["service"].get("Result")
+                receipt["job_record_state"] = job_state
+                receipt["job_outcome"] = (
+                    "failed"
+                    if job_state == "failed"
+                    else "complete"
+                    if job_state == "complete" and result == "success"
+                    else "interrupted"
+                )
+                receipt["job_incomplete"] = receipt["job_outcome"] != "complete"
                 count = verify(args, manifest)
                 receipt.update(
                     state="complete",

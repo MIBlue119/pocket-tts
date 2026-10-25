@@ -33,7 +33,17 @@ def arguments(tmp_path: Path) -> argparse.Namespace:
 
 def terminal() -> dict[str, object]:
     return {
-        "service": {"ActiveState": "inactive", "SubState": "dead"},
+        "service": {
+            "ActiveState": "inactive",
+            "SubState": "dead",
+            "LoadState": "loaded",
+            "Restart": "no",
+            "Result": "success",
+            "InvocationID": "known-run",
+            "CGroupProcessesCount": "0",
+            "ExecMainStartTimestampMonotonic": "100",
+            "ExecMainExitTimestampMonotonic": "200",
+        },
         "job": {"state": "complete"},
     }
 
@@ -196,3 +206,73 @@ def test_real_streaming_hash_checks_local_artifacts(
     (args.local_output / "nested" / "weights.pt").write_bytes(b"broken checkpoint")
     with pytest.raises(ValueError, match="checksum mismatch"):
         watch.verify(args, manifest)
+
+
+@pytest.mark.parametrize("active,job_state", [("failed", "running"), ("inactive", None)])
+def test_ended_invocation_with_stale_job_stops_after_backup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, active: str, job_state: str | None
+) -> None:
+    args = arguments(tmp_path)
+    status = terminal()
+    service = cast(dict[str, str], status["service"])
+    service.update(ActiveState=active, Result="oom-kill")
+    status["job"] = {"state": job_state} if job_state else None
+    monkeypatch.setattr(watch, "poll", lambda _: status)
+    monkeypatch.setattr(watch, "mirror", lambda _: None)
+    monkeypatch.setattr(watch, "verify", lambda *_: 3)
+    receipt = watch.run(args)
+    assert receipt["backup"] == "verified"
+    assert receipt["job_outcome"] == "interrupted"
+    assert receipt["job_incomplete"] is True
+    assert receipt["stop"] == "stop_not_configured"
+
+
+@pytest.mark.parametrize(
+    "load,start,restart",
+    [("not-found", "0", "no"), ("loaded", "0", "no"), ("loaded", "100", "always")],
+)
+def test_unstarted_missing_or_restarting_unit_cannot_finish(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, load: str, start: str, restart: str
+) -> None:
+    args = arguments(tmp_path)
+    status = terminal()
+    service = cast(dict[str, str], status["service"])
+    service.update(
+        LoadState=load, ExecMainStartTimestampMonotonic=start, InvocationID="", Restart=restart
+    )
+    monkeypatch.setattr(watch, "poll", lambda _: status)
+    monkeypatch.setattr(watch, "mirror", lambda _: None)
+    monkeypatch.setattr(watch, "verify", lambda *_: pytest.fail())
+    receipt = watch.run(args)
+    assert receipt["backup"] == "incomplete"
+    assert "stop" not in receipt
+
+
+def test_lingering_cgroup_writer_prevents_final_backup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = arguments(tmp_path)
+    status = terminal()
+    cast(dict[str, str], status["service"])["CGroupProcessesCount"] = "1"
+    monkeypatch.setattr(watch, "poll", lambda _: status)
+    monkeypatch.setattr(watch, "mirror", lambda _: None)
+    monkeypatch.setattr(watch, "verify", lambda *_: pytest.fail())
+    receipt = watch.run(args)
+    assert receipt["backup"] == "incomplete"
+    assert "stop" not in receipt
+
+
+def test_changed_invocation_during_mirror_prevents_stop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = arguments(tmp_path)
+    before, after = terminal(), terminal()
+    cast(dict[str, str], after["service"])["InvocationID"] = "different-run"
+    statuses = iter([before, after])
+    monkeypatch.setattr(watch, "poll", lambda _: next(statuses))
+    monkeypatch.setattr(watch, "mirror", lambda _: None)
+    monkeypatch.setattr(watch, "verify", lambda *_: pytest.fail())
+    receipt = watch.run(args)
+    assert receipt["backup"] == "incomplete"
+    assert "invocation changed" in receipt["last_error"]
+    assert "stop" not in receipt
