@@ -13,6 +13,25 @@ from pocket_tts.models.flow_lm import FlowLMModel
 from ..args import TrainArgs
 
 
+def teacher_forced_audio_inputs(
+    args: TrainArgs,
+    normalized_latents: torch.Tensor,
+    mask: torch.Tensor | None,
+    bos: torch.Tensor,
+    training: bool,
+) -> torch.Tensor:
+    """Shift clean targets right, optionally perturbing valid predecessor history."""
+    audio_in = torch.cat([bos, normalized_latents[:, :-1]], dim=1)
+    sigma = args.teacher_history_noise_std
+    if not training or sigma == 0:
+        return audio_in
+    if mask is None or mask.shape != normalized_latents.shape[:2]:
+        raise ValueError("teacher-history noise requires the target validity mask")
+    history_mask = torch.cat([mask.new_zeros(mask.shape[0], 1), mask[:, :-1]], dim=1)
+    noise = torch.randn_like(audio_in).mul_(sigma)
+    return torch.where(history_mask.unsqueeze(-1), audio_in + noise, audio_in)
+
+
 def build_sequences_with_conditions(
     args: TrainArgs,
     normalized_latents: torch.Tensor,
@@ -22,6 +41,8 @@ def build_sequences_with_conditions(
     fl: FlowLMModel,
     num_voice_prompt_frames: torch.Tensor | None = None,
     force_null: bool = False,
+    mask: torch.Tensor | None = None,
+    training: bool = False,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Assemble per-sample [beginning_of_prefix, voice_conditioning,
     text_conditioning, beginning_of_sequence, target_audio] rows,
@@ -35,7 +56,7 @@ def build_sequences_with_conditions(
     B = normalized_latents.shape[0]
     device = normalized_latents.device
     bos = fl.bos_emb.view(1, 1, -1).expand(B, 1, -1)
-    audio_in = torch.cat([bos, normalized_latents[:, :-1]], dim=1)
+    audio_in = teacher_forced_audio_inputs(args, normalized_latents, mask, bos, training)
     audio_emb = fl.input_linear(audio_in)
     dtype = audio_emb.dtype
     voice_emb = F.linear(voice_latents.to(fl.speaker_proj_weight.dtype), fl.speaker_proj_weight)

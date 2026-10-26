@@ -63,6 +63,7 @@ class TrainableTTS(nn.Module):
         num_voice_prompt_frames: torch.Tensor | None,
         cfg_dropout: bool,
         force_null: bool = False,
+        mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
         """Teacher-forced backbone output [B, T, dim]: z[:, t] conditions the heads for frame t."""
         x, prefix_lengths = build_sequences_with_conditions(
@@ -74,6 +75,8 @@ class TrainableTTS(nn.Module):
             num_voice_prompt_frames=num_voice_prompt_frames,
             fl=module,
             force_null=force_null,
+            mask=mask,
+            training=self.training,
         )
         out = module.out_norm(module.transformer(x, model_state=None))
         if module.z_proj is not None:
@@ -109,7 +112,7 @@ class TrainableTTS(nn.Module):
                 z = self.backbone_z(fl, *inputs, cfg_dropout=False)
             return self._head_distill(z[mask])
 
-        z = self.backbone_z(fl, *inputs, cfg_dropout=self.training)  # [B, T, dim]
+        z = self.backbone_z(fl, *inputs, cfg_dropout=self.training, mask=mask)  # [B, T, dim]
 
         if self.distill_teacher is not None:
             # Latent CFG distillation: the student's backbone regresses onto the

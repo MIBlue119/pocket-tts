@@ -1,4 +1,5 @@
 import dataclasses
+import math
 import typing as tp
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -155,6 +156,9 @@ class TrainArgs:
     eos_loss_weight: float = 0.1
     text_dropout: float = 0.2  # CFG dropout of the text prefix
     voice_dropout: float = 0.2  # CFG dropout of the voice prefix
+    # Training-only Gaussian perturbation of valid normalized teacher-forced
+    # predecessor audio. Targets, BOS, padding, evaluation, and generation stay clean.
+    teacher_history_noise_std: float = 0.0
     # Update the emb_mean/emb_std latent-normalization buffers by EMA for this
     # many first steps (0 keeps whatever the loaded weights contain).
     stats_ema_steps: int = 0
@@ -233,6 +237,15 @@ class TrainArgs:
     # keeps the early feature extractors contiguous.
 
     def __post_init__(self):
+        if not math.isfinite(self.teacher_history_noise_std) or self.teacher_history_noise_std < 0:
+            raise ValueError("teacher_history_noise_std must be finite and nonnegative")
+        if self.teacher_history_noise_std > 0 and (
+            self.distill_cfg_coef > 0 or self.distill_teacher_config or self.head_distill
+        ):
+            raise ValueError(
+                "teacher_history_noise_std is only supported for ordinary teacher training, "
+                "not teacher or head distillation"
+            )
         if self.grad_accum_steps < 1:
             raise ValueError(f"grad_accum_steps must be >= 1, got {self.grad_accum_steps}")
         if self.num_ckpt_keep < 1:
