@@ -341,3 +341,20 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Owner asks whether ADI has Chinese labels. Direct first-tar inspection confirms native Taiwanese Han/romanization in sentence, no separate Mandarin translation field. Preserve these originals and add explicitly unverified Breeze semantic labels; never rename native Han as Mandarin gold.
 - Owner is away running and authorizes continued optimization. CPU Mimi reconstruction diagnosis and safe GPU handoff planning are delegated. Current 3000-stage trainer remains active; no new cloud resources or budget increase.
 - ADI split policy was revised before labels/training: create primary speaker-disjoint dev, exclude its sentence/audio duplicates, retain official test outside training and report its speaker/text overlap buckets. Removing every official-test speaker would discard 85.9% of strict training rows; that policy is superseded with explicit evidence and Astra review.
+
+## [RUN-027] Event — 2026-10-26 11:00:12 +0800 (A-002)
+
+- Full ADI preparation succeeded on H100 host CPU in58.69s:22745 clips,20617train/2128dev,14.54/1.66hours. Independent source review passed28 tests, all8tar hashes and31805TSV/tar identities. Source7cd62c4 is pushed/deployed. Audio/source readiness is not semantic-label admission.
+- Owner raised total budget toUSD150 and authorized H100. Dedicated H10080GB at89.169.111.99 is allocated with conservative total boundUSD91.557, setup11:12:12 and final22:00 guards. Old RTX instance is provider-confirmedSTOPPED; OCR unchanged.
+- Cloud actual Breeze batch4 took1.30s after2.88s loading; Mimi was finite. Of4 source words, 銅錢仔 became送錢 and斷糧 became大娘. These examples require source-aware semantic admission before training, not a population error-rate claim.
+- Official MOE dictionary parallel fields support an explicit weak-label alternative;805 phrases/1012rawclips remain after heuristic exclusions, with63 dictionary-backed controls reserved. Sol is building a separate provenance type and release rather than falsely marking dictionary labels as ASR. Speaker/native/Mandarin-alias split checks remain required.
+- H100 smoke-r1 had too few rows for configured batch4; fresh r2 batch1/acc4 completed5updates but failed at teardown. Astra proved SSH logout caused logind to delete shared memory/semaphores while the service still ran. Targeted pilot lingering and fresh r3 verification are in progress; setup cutoff remains armed.
+- Changed paths are within T12 preparation/adaptation/semantic-release and T13 research plus scoped operational artifacts. No current tokenizer, local training manifest or model architecture was mutated.
+
+## [WIP-009] Checkpoint — 2026-10-26 11:00:12 +0800 (A-002)
+
+- **Finished:** Pstack research, independent ADI source review, full cloud audio preparation, CPU Mimi reconstruction, and cloud model inference preflights.
+- **Running now:** Local2000→3000 continuation; H100 IPC lifecycle correction/smoke; dictionary-backed release implementation and single-speaker control planning.
+- **Still to do:** Clean H100 training exit, actual semantic-release control and adaptation, exact generated-content evaluation, private candidate/phone delivery, final cloud cleanup.
+- **Next work action:** Verify r3 before setup cutoff, freeze the semantic release and start the bounded text-control run with recorded data/recipe identities.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
