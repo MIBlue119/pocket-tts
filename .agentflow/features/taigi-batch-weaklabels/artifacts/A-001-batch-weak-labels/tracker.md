@@ -18,11 +18,11 @@
 
 - **Reason:** Work remains.
 
-- **Total:** 11.
+- **Total:** 13.
 
-- **Completed:** 9.
+- **Completed:** 10.
 
-- **Remaining:** 2.
+- **Remaining:** 3.
 
 ## Accepted task checklist
 
@@ -46,7 +46,11 @@
 
 - [x] **T-10:** Measure rented GPU utilization and matched throughput, adopt acceleration only when measured useful within the existing budget and source/label invariants. Source: A-002, owner asks to maximize allocated compute. Paths: full-corpus-throughput-plan.md, ignored cloud benchmark receipts, and training/taigi/{corpus.py,corpus_worker.py,transcriber.py} with focused tests. Proof:39variable clips exacttext parity; fair cached batch4 throughput1.339x; no-work resume; duplicate GPU workers did not help; production opts into batch4 at43735eb.
 
-- [ ] **T-11:** Gate bounded continuation on full-data evidence and deliver a reproducible candidate to verified-private weiren119/pocket-tts-taigi. Source: A-002 owner Oct25 evening deadline, USD100 and private Hugging Face instructions. Paths: continuation-plan.md, training/scripts/{continue_taigi_training,extend_taigi_training,publish_taigi_model,publish_taigi_when_ready}.py and their focused tests. Services are deployed; actual candidate publication remains pending.
+- [ ] **T-11:** Gate bounded continuation on full-data evidence and deliver a reproducible candidate to verified-private weiren119/pocket-tts-taigi. Source: A-002 owner Oct25 evening deadline, USD100 and private Hugging Face instructions. Paths: continuation-plan.md, training/scripts/{continue_taigi_training,extend_taigi_training,publish_taigi_model,publish_taigi_when_ready}.py and their focused tests. Private step-200 publication is verified at bec7e32ccc5dbd6d3330954a531adb8999d4a698; usable-model quality remains unproven. Longer continuation is active.
+
+- [ ] **T-12:** Incorporate ADI Hokkien through an audited full eligible source release, corrected Breeze weak labels and a fresh training identity. Source: A-002 owner says ADI台語資料也應該用上. Paths: training/scripts/prepare_adi_taigi.py, tests/test_taigi_adi_prepare.py, ADI-integration-plan.md, ignored data/taigi-adi-20261026 and explicitly documented adaptation configuration. Preserve official test, speaker/sentence/audio isolation, original transcripts and TRAIL notices; exclude Mandarin audio. Proof: actual archive hashes, manifest exclusion counts, focused tests, weak-label receipts and training run manifest naming the ADI release. Failures stay recorded; no silent sample cap or mutation of running YouTube inputs.
+
+- [x] **T-13:** Use pstack Investigation/how with independent recipe and language explorers and a fresh explainer to recommend non-English fine-tuning. Source: A-002 latest explicit pstack/subagent request for 台語、繁體中文、日文. Paths: docs/research/2026-10-26-nonenglish-*.md. Proof: primary-source citations, pinned local architecture evidence, worker reports and consolidated recommendation with uncertainties. Investigation changes no live training configuration. Completed: two independent explorer reports and fresh Astra synthesis saved, actual local config/embedding/evaluator and primary sources checked; recommendation report distinguishes evidence from unexecuted experiments.
 
 ## Accepted scope changes
 
@@ -60,15 +64,15 @@
 
 ## Current recovery
 
-- **Current item:** T-6, T-7 and T-11.
+- **Current item:** T-7, T-11, T-12 and T-13.
 
 - **Last proven result:** Corpus22, orchestration7, watcher14, repeat-filter/orchestration35 focused tests passed; actual short video17pairs; exact BPE parity; actual SSH/rsync checksum fixture passed.
 
-- **Active blocker or running process:** Local RTX3090 resumed the verified200 model/optimizer/EMA at09:55 under taigi-local-long-first.service. Actual201update recorded LR3e-5 and finitegradient1.266. First endpoint1000 has100-minute bound. Controller142bd70passed18focusedtests andindependentAstrareview; taigi-local-long-extend.service is active inwaiting_first1000afterverifiedfrozenparentandactualfirstserviceinspection. The prior488-file cloud backup is verified; SSH shutdown was acknowledged08:38 but providerSTOPPED cannot be confirmed with expired authentication. Experimental200private publication is verified atHF revisionbec7e32ccc5dbd6d3330954a531adb8999d4a698 after fixing service credential lookup.
+- **Active blocker or running process:** Step 1000 completed with validation loss 0.4902513. Its generated text consistency remains poor. Controller 64e7ecd recovered garbage-collected systemd completion using a verified durable receipt and is training toward 3000 under taigi-local-long-extend.service, output local-longer-20261026/longer-20261026-r2. The no-voice packaged BOS fix passed real CPU generation but was not the cause of the native step-1000 sample. Cloud backup is verified; provider STOPPED remains unconfirmed because API authentication expired. ADI all eight archives are downloaded and audited; CPU adapter preparation is active alongside two read-only pstack explorers.
 
-- **Next safe action:** Follow the running1000/3000/6000stages and verify generated diagnostics/private selection. First20resumedupdates and8GiBmemoryuse are proven; private200delivery is complete. Keep model quality unverified.
+- **Next safe action:** Complete non-English research synthesis and the full eligible ADI source manifest. Arrange ADI ASR and adaptation at a completed training boundary without competing GPU trainers. Preserve the current tokenizer and checkpoint lineage unless a separately evidenced experiment justifies a change. No new paid resources or budget extension.
 
-- **Expected changed files:** training/scripts/extend_taigi_training.py, tests/test_taigi_extend_training.py, continuation-longer-plan.md, extend-training-review.md, training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
+- **Expected changed files:** training/scripts/prepare_adi_taigi.py, tests/test_taigi_adi_prepare.py, docs/research/2026-10-26-nonenglish-*.md, training/scripts/extend_taigi_training.py, tests/test_taigi_extend_training.py, continuation-longer-plan.md, extend-training-review.md, training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
 
 ## Completion proof
 
@@ -78,7 +82,7 @@
 
 - **Operation running:** yes.
 
-- **Next action remaining:** T-7 and T-11; generation-quality recovery remains necessary for the owner’s usable-model objective.
+- **Next action remaining:** T-7, T-11, T-12 and T-13; generation-quality recovery remains necessary for the owner’s usable-model objective.
 
 - **Evidence status:** current.
 

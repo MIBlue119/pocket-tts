@@ -76,6 +76,20 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 你目前的訓練資料是有用到我們全部的訓練資料嗎？
 
++ ADI的台語資料你也應該用上才對
+
++ 另外我也好奇你目前是finetune嗎？
+
++ help me let pstack to do with subagent to check how could we finetune pocket tts at non english language like 台語, traditional chinese, japanese go
+
++ 你知道我們目前的目標嗎？
+
++ ＡＤＩ資料的標注？台語訓練資料是有中文標註的嗎？
+
++ 沒有的話你就會需要另外處理了
+
++ 我先去跑步，交給你來優化了
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
@@ -299,3 +313,27 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - TelegramrejectsWAVextensions; generatedandffprobe-verified5.04secondH264/AACMP4,85727bytes. CourierconfirmedSent. Onlyuniformvolumeadjustmentandencoding, no semanticcontentreplacement.
 - Astralogcomparison foundapproximately15%higher observedupdateandwallrates onpriorRTXPRO6000runthanlocal3090; notcontrolledsamebatches. H100hasnobenchmarkhere. Frequent6.4GBcheckpointwritesandduplicatefinalsavearevisibleoverhead; no liveconfigchangewasmade.
 - First1000servicecompleted; extensionremainsactivevalidatinglineagebeforefixed12promptevaluationandlater3000/6000. UserinferenceusedCPUanddidnotstartanotherGPUworker.
+
+## [RUN-025] Event — 2026-10-26 10:33:43 +0800 (A-002)
+
+- Step 1000 is complete. Native `你好嗎？` audio was delivered to Telegram, but Breeze recognized unrelated content; usable Taiwanese synthesis is not proven. Packaged no-voice BOS omission was separately fixed and verified on CPU.
+- Controller 64e7ecd now uses verified durable completion receipts after systemd garbage collection. Fresh longer-20261026-r2 is training toward 3000; current dataset remains YouTube only.
+- ADI all eight pinned archives are verified. Actual metadata identifies 23,158 explicit Taiwanese training clips and 5,530 additional locale-blank Taiwanese-path clips; Mandarin targets remain excluded. Official test shares 78 speakers and 117 sentence IDs with training, requiring leakage filtering.
+- Latest owner pstack request is routed through pinned pstack 18b6c36e Investigation/how. Sol explores the recipe; Astra explores language/text/data; a fresh explainer will synthesize. Native Codex agents use owner-preferred models because pstack model settings are absent. Throughput checkpoint: n/a, read-only investigation.
+- Tracker expanded to T12 ADI integration and T13 non-English investigation, validated 9/13 complete. Current changes are the notebook, tracker and ADI plan within accepted scope; separate source adapter and research reports have assigned owners.
+
+## [WIP-008] Checkpoint — 2026-10-26 10:33:44 +0800 (A-002)
+
+- **Finished:** All YouTube sources have terminal outcomes; private step-200 candidate and exact step-1000 phone sample are delivered. ADI raw archive audit is complete.
+- **Running now:** Local continuation toward step 3000, CPU ADI adapter preparation, and two pstack research explorers.
+- **Still to do:** Research synthesis, ADI weak labels and training integration, independent quality diagnostics, usable private model, and provider-side cloud stop confirmation.
+- **Next work action:** Read explorer findings, dispatch the fresh explainer, and verify the prepared ADI source release before scheduling GPU handoff.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-026] Event — 2026-10-26 10:38:35 +0800 (A-002)
+
+- Pstack investigation completed with Sol recipe exploration, Astra language exploration and a fresh Astra synthesis. Read docs/research/2026-10-26-nonenglish-pocket-tts-recommendation.md first. Main delivery remains ordinary Mandarin text to Taiwanese speech; Mandarin/Japanese are comparison evidence only.
+- Official new-language fine-tuning does reset the text embedding. Current failure does not establish that this choice is wrong. Step 1000 has no capped outputs but mean same-Breeze SequenceMatcher similarity 0.0301, so lower loss has not established text control.
+- Owner asks whether ADI has Chinese labels. Direct first-tar inspection confirms native Taiwanese Han/romanization in sentence, no separate Mandarin translation field. Preserve these originals and add explicitly unverified Breeze semantic labels; never rename native Han as Mandarin gold.
+- Owner is away running and authorizes continued optimization. CPU Mimi reconstruction diagnosis and safe GPU handoff planning are delegated. Current 3000-stage trainer remains active; no new cloud resources or budget increase.
+- ADI split policy was revised before labels/training: create primary speaker-disjoint dev, exclude its sentence/audio duplicates, retain official test outside training and report its speaker/text overlap buckets. Removing every official-test speaker would discard 85.9% of strict training rows; that policy is superseded with explicit evidence and Astra review.
