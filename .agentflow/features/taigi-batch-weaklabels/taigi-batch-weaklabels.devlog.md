@@ -358,3 +358,24 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - **Still to do:** Clean H100 training exit, actual semantic-release control and adaptation, exact generated-content evaluation, private candidate/phone delivery, final cloud cleanup.
 - **Next work action:** Verify r3 before setup cutoff, freeze the semantic release and start the bounded text-control run with recorded data/recipe identities.
 - **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-028] Event — 2026-10-26 11:12:38 +0800 (A-002)
+
+- H100 smoke-r3 passed all five updates, finite checkpoints/export and clean zero exit; pilot lingering prevents logind from deleting live trainer IPC. Retired the setup cutoff after this proof. Guest and independent local final 22:00 shutdown guards remain active under the US$150 total budget.
+- Actual dictionary semantic release 59fa3a25a6cbc4c0d891 passes full cloud verification: 867 train/79 valid, 2064.168/208.296 seconds, 946 hashed audio files. Labels remain dictionary-derived weak labels; audio semantics are not human verified.
+- Source Breeze calibration produced distinct outputs but 12/31 phrases have zero target string similarity. It is a relative diagnostic, not a gold judge. Removing punctuation did not fix the existing model's unrelated speech.
+- Pushed 1ac838b adds explicit finite-positive evaluator CFG with default 1 unchanged; 7 focused CPU tests pass. Planned new control uses CFG2. Single-speaker 284-clip selection and immutable config preparation are delegated; root owns the H100 launch. Local3000 continues, stopped parent cannot launch6000.
+
+## [RUN-029] Event — 2026-10-26 11:14:39 +0800 (A-002)
+
+- H100 semantic-control launch admitted after actual synchronous sentence-loader batch16 passed finite audio and tokenizer checks. Certified subset is284 clips/258 Mandarin labels/603.504seconds, full weak-dev79 unchanged. The first asynchronous one-batch probe returned valid data but aborted at interpreter teardown; its receipt is retained separately, not claimed as clean-exit proof.
+- Source1ac838b deployed. Persistent taigi-h100-semantic-first.service invocation08d27065531b43b5b0d644ee4043a693 runs fixed seen8 baseline CFG2/ASR then200 updates, B16xacc4/FBM4/LR2e-4,100warmup, fresh English24L/reset tokenizer embeddings. Runtime110minutes contains90-minute trainer limit plus baseline/cleanup. No training outcome claimed yet.
+- Saved exact setup/launch scripts in operational artifacts for reproducibility; frozen runtime manifests/config/provenance are under data/taigi-adi-20261026/semantic-control-20261026. W&B is offline with tokenizer+selection provenance; later synchronization retains the user's project. Tracker validation passes10/13; changed paths are authorized T11/T12 runtime evaluation, operational receipts and notebook only.
+
+## [WIP-010] Checkpoint — 2026-10-26 11:15:02 +0800 (A-002)
+
+- **Finished:** H100 clean training preflight, semantic release verification, source-ASR calibration, CFG2 evaluator deployment, actual284-row subset and real finite loader batch.
+- **Running now:** Persistent H100 baseline0 then stage200 semantic-control service; independent local YouTube stage3000 nearing completion with parent paused to prevent6000.
+- **Still to do:** Measure throughput and generated text control, complete bounded800 control if viable, decide broader adaptation, synchronize selected private model and W&B, send useful phone sample, verify final cloud cleanup.
+- **Next work action:** Inspect H100 real optimizer updates/VRAM and baseline results, evaluate raw200 before continuing, and accept local3000 durable completion from monitor.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
