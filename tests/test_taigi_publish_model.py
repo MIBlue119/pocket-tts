@@ -243,9 +243,14 @@ def test_no_success_receipt_if_remote_verification_fails(tmp_path: Path, failure
 
 
 @pytest.mark.parametrize("with_voice", [False, True])
+@pytest.mark.parametrize("insert_bos", [False, True])
 @pytest.mark.parametrize("invalid_audio", [None, "empty", "nonfinite"])
 def test_inference_example_resolves_package_paths_and_calls_actual_api(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, with_voice: bool, invalid_audio: str | None
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    with_voice: bool,
+    insert_bos: bool,
+    invalid_audio: str | None,
 ) -> None:
     import runpy
     import sys
@@ -262,7 +267,17 @@ def test_inference_example_resolves_package_paths_and_calls_actual_api(
 
     class Model:
         sample_rate = 24000
-        flow_lm = object()
+        flow_lm = SimpleNamespace(
+            insert_bos_before_voice=insert_bos, bos_before_voice=torch.ones(1, 1, 3)
+        )
+
+        def _run_flow_lm_and_increment_step(
+            self, model_state: dict[str, str], audio_conditioning: torch.Tensor
+        ) -> None:
+            assert not with_voice and insert_bos and not torch.is_grad_enabled()
+            torch.testing.assert_close(audio_conditioning, self.flow_lm.bos_before_voice)
+            assert model_state == {"prompt": "zero"}
+            model_state["prefix"] = "bos"
 
         def to(self, device: str) -> "Model":
             assert device == "cpu"
@@ -275,7 +290,14 @@ def test_inference_example_resolves_package_paths_and_calls_actual_api(
         def generate_audio(
             self, state: dict[str, str], text: str, frames_after_eos: int
         ) -> torch.Tensor:
-            assert state == ({"voice": "own"} if with_voice else {"prompt": "zero"})
+            expected = (
+                {"voice": "own"}
+                if with_voice
+                else {"prompt": "zero", "prefix": "bos"}
+                if insert_bos
+                else {"prompt": "zero"}
+            )
+            assert state == expected
             assert text == "你好" and frames_after_eos == 1
             if invalid_audio == "empty":
                 return torch.zeros(0)
@@ -304,7 +326,7 @@ def test_inference_example_resolves_package_paths_and_calls_actual_api(
         stateful_module,
         "init_states",
         lambda model, batch_size, sequence_length: {"prompt": "zero"}
-        if batch_size == 1 and sequence_length == 0
+        if batch_size == 1 and sequence_length == (1 if insert_bos else 0)
         else pytest.fail(),
     )
     argv = ["inference.py", "--text", "你好", "--output", str(tmp_path / "candidate.wav")]
@@ -452,3 +474,59 @@ def test_runtime_timeout_and_output_location_are_bounded(tmp_path: Path) -> None
         publisher.runtime_smoke(tmp_path / "package", tmp_path / "runtime.wav", 301)
     with pytest.raises(ValueError, match="outside"):
         publisher.runtime_smoke(tmp_path, tmp_path / "inside.wav", 120)
+
+
+def test_packaged_zero_voice_prefills_actual_bos_only_streaming_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import runpy
+    import sys
+
+    import torch
+    from pocket_tts import TTSModel
+    from pocket_tts.models.mimi import build_mimi
+    from pocket_tts.models.tts_model import stamp_state_names
+    from pocket_tts.modules.stateful_module import ModelState, init_states
+    from pocket_tts.utils.config import Config
+
+    args = fixture_inputs(tmp_path)
+    directory = publisher.package(args)
+    config = Config(**publisher.runtime_config(args.config, args.tokenizer))
+    model = TTSModel._from_pydantic_config(config, 0.3, 1, None, -1, origin=None).eval()
+    model.mimi = build_mimi(config.mimi)
+    stamp_state_names(model)
+    bos = model.flow_lm.bos_before_voice
+    expected = init_states(model.flow_lm, batch_size=1, sequence_length=bos.shape[1])
+    with torch.no_grad():
+        model._run_flow_lm_and_increment_step(model_state=expected, audio_conditioning=bos)
+    calls = []
+    original_prefill = model._run_flow_lm_and_increment_step
+
+    def prefill(
+        model_state: ModelState, audio_conditioning: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        assert not torch.is_grad_enabled()
+        torch.testing.assert_close(audio_conditioning, bos)
+        assert audio_conditioning.shape == (1, 1, model.flow_lm.dim)
+        calls.append("bos_only")
+        return original_prefill(model_state=model_state, audio_conditioning=audio_conditioning)
+
+    def generate(model_state: ModelState, text: str, frames_after_eos: int) -> torch.Tensor:
+        assert text == "你好" and frames_after_eos == 1
+        assert model_state.keys() == expected.keys()
+        for name, values in expected.items():
+            for key, tensor in values.items():
+                torch.testing.assert_close(model_state[name][key], tensor, equal_nan=True)
+                assert not model_state[name][key].requires_grad
+        assert calls == ["bos_only"]
+        return torch.zeros(240)
+
+    monkeypatch.setattr(model, "_run_flow_lm_and_increment_step", prefill)
+    monkeypatch.setattr(model, "generate_audio", generate)
+    monkeypatch.setattr(model, "get_state_for_audio_prompt", lambda *_: pytest.fail())
+    monkeypatch.setattr(TTSModel, "load_model", lambda **_: model)
+    monkeypatch.setattr(
+        sys, "argv", ["inference.py", "--text", "你好", "--output", str(tmp_path / "bos.wav")]
+    )
+    runpy.run_path(str(directory / "inference.py"), run_name="__main__")
+    assert (tmp_path / "bos.wav").is_file()

@@ -60,8 +60,15 @@ with tempfile.TemporaryDirectory() as temporary:
     torch.manual_seed(17)
     model = TTSModel.load_model(config=resolved, temp=0.3, eos_threshold=-1,
                                noise_clamp=None, sampler_decode_steps=1).to(args.device)
-    state = (model.get_state_for_audio_prompt(args.voice.resolve()) if args.voice else
-             init_states(model.flow_lm, batch_size=1, sequence_length=0))
+    if args.voice:
+        state = model.get_state_for_audio_prompt(args.voice.resolve())
+    else:
+        bos = model.flow_lm.bos_before_voice if model.flow_lm.insert_bos_before_voice else None
+        state = init_states(model.flow_lm, batch_size=1,
+                            sequence_length=bos.shape[1] if bos is not None else 0)
+        if bos is not None:
+            with torch.no_grad():
+                model._run_flow_lm_and_increment_step(model_state=state, audio_conditioning=bos)
     torch.manual_seed(17)
     audio = model.generate_audio(state, args.text, frames_after_eos=1)
     if audio.numel() == 0:
@@ -297,6 +304,7 @@ def package(args: argparse.Namespace) -> Path:
             "```bash\npython inference.py --device cpu --text '你好，今天天氣真好。' --output candidate.wav\n```\n\n"
             "The script resolves the packaged weights and custom tokenizer before calling TTSModel.load_model(config=...). "
             "It uses seed 17, temperature 0.3, EOS threshold -1, no noise clamp, one decode step, and one frame after EOS. "
+            "Without a voice, it prefills only the configured BOS-before-voice embedding; no reference audio is encoded. "
             "Optional --voice /path/to/reference.wav enables experimental voice conditioning. "
             "The public streaming runtime differs from the offline diagnostic evaluator; this example is not proof of equivalent output or quality.\n"
         )

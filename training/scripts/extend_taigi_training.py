@@ -21,7 +21,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from training.scripts import continue_taigi_training as continuation
-from training.scripts.run_experiment import ROOT, digest, write_json
+from training.scripts.run_experiment import ROOT, digest, run_lock, write_json
 from training.scripts.run_taigi_corpus_job import command
 from training.scripts.watch_taigi_cloud_job import POLL_SCRIPT, ended_invocation
 
@@ -50,7 +50,52 @@ def source_record() -> dict[str, Any]:
     }
 
 
-def wait_first(args: argparse.Namespace, report: dict[str, Any], path: Path) -> None:
+def durable_first_completion(args: argparse.Namespace) -> tuple[dict[str, str], tuple[Path, Path]]:
+    """Recover completed user units whose volatile systemd history was collected."""
+    config, identity = continuation.verify_parent(args.first_job / "training.yaml")
+    run_dir = Path(config["run_dir"]).resolve()
+    if run_dir != (args.first_job / "training").resolve():
+        raise ValueError("first service run directory mismatch")
+    with run_lock(run_dir):
+        attempts = []
+        for path in (run_dir / "attempts").glob("*.json"):
+            record = continuation.read(path)
+            started = record.get("started_at")
+            if (
+                isinstance(started, bool)
+                or not isinstance(started, (int, float))
+                or not math.isfinite(started)
+                or started <= 0
+            ):
+                raise ValueError("invalid first service attempt timestamp")
+            attempts.append((started, path, record))
+        if not attempts:
+            raise ValueError("collected first service has no durable attempt receipt")
+        attempts.sort(key=lambda item: item[0])
+        started, path, record = attempts[-1]
+        if len(attempts) > 1 and attempts[-2][0] == started:
+            raise ValueError("ambiguous latest first service attempt")
+        ended = record.get("ended_at")
+        if (
+            record.get("state") != "succeeded"
+            or type(record.get("exit_code")) is not int
+            or record["exit_code"] != 0
+            or type(record.get("child_exit_code")) is not int
+            or record["child_exit_code"] != 0
+            or isinstance(ended, bool)
+            or not isinstance(ended, (int, float))
+            or not math.isfinite(ended)
+            or not started <= ended <= time.time()
+            or record.get("identity") != identity
+        ):
+            raise ValueError("latest first service attempt is not verified successful")
+        verified = validate_first(args.parent_200 / "training.yaml", args.first_job)
+        return {"path": str(path), "sha256": digest(path)}, verified
+
+
+def wait_first(
+    args: argparse.Namespace, report: dict[str, Any], path: Path
+) -> tuple[Path, Path] | None:
     invocation = None
     script = POLL_SCRIPT.replace('["systemctl", "show",', '["systemctl", "--user", "show",')
     while True:
@@ -84,6 +129,21 @@ def wait_first(args: argparse.Namespace, report: dict[str, Any], path: Path) -> 
                 # and lineage checks after this wait establish its completion.
                 write_json(path, report)
                 return
+            if (
+                service.get("LoadState") == "loaded"
+                and service.get("ActiveState") == "inactive"
+                and service.get("Restart") == "no"
+                and service.get("Result") == "success"
+                and service.get("MainPID") == "0"
+                and service.get("ControlPID") == "0"
+                and service.get("CGroupProcessesCount") == "0"
+                and service.get("ExecMainStartTimestampMonotonic") == "0"
+                and not current
+            ):
+                receipt, verified = durable_first_completion(args)
+                report["first_completion_receipt"] = receipt
+                write_json(path, report)
+                return verified
         write_json(path, report)
         time.sleep(
             min(
@@ -276,9 +336,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             prompt_sha256=prompt_hash,
         )
         write_json(path, report)
-        wait_first(args, report, path)
+        verified_first = wait_first(args, report, path)
         first_ended = True
-        config, checkpoint = validate_first(parent_config, args.first_job)
+        config, checkpoint = verified_first or validate_first(parent_config, args.first_job)
         for endpoint in (1000, 3000, 6000):
             if digest(prompts) != prompt_hash:
                 raise ValueError("fixed prompts changed")

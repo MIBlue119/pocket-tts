@@ -290,6 +290,75 @@ def test_wait_uses_user_unit_and_allows_missing_job_json_after_success(
 
 
 @pytest.mark.parametrize(
+    "failure", [None, "missing", "running", "failed", "identity", "timestamps"]
+)
+def test_collected_unit_requires_latest_durable_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str | None
+) -> None:
+    args, _ = setup_run(tmp_path, monkeypatch)
+    run = args.first_job / "training"
+    attempts = run / "attempts"
+    attempts.mkdir(parents=True)
+    identity = {"config_sha256": "verified", "inputs": {}}
+    monkeypatch.setattr(
+        extension.continuation, "verify_parent", lambda _: ({"run_dir": str(run)}, identity)
+    )
+    record = {
+        "state": "succeeded",
+        "exit_code": 0,
+        "child_exit_code": 0,
+        "started_at": 100,
+        "ended_at": 200,
+        "identity": identity,
+    }
+    if failure != "missing":
+        (attempts / "ffffffff.json").write_text(json.dumps(record))
+    if failure in {"running", "failed"}:
+        (attempts / "00000000.json").write_text(
+            json.dumps(
+                {**record, "started_at": 300, "ended_at": 400, "state": failure, "exit_code": 1}
+            )
+        )
+    elif failure == "identity":
+        record["identity"] = {"wrong": True}
+        (attempts / "ffffffff.json").write_text(json.dumps(record))
+    elif failure == "timestamps":
+        record["ended_at"] = 50
+        (attempts / "ffffffff.json").write_text(json.dumps(record))
+    terminal = {
+        "job": None,
+        "service": {
+            "LoadState": "loaded",
+            "ActiveState": "inactive",
+            "SubState": "dead",
+            "Restart": "no",
+            "Result": "success",
+            "MainPID": "0",
+            "ControlPID": "0",
+            "CGroupProcessesCount": "0",
+            "InvocationID": "",
+            "ExecMainStartTimestampMonotonic": "0",
+        },
+    }
+    monkeypatch.setattr(
+        extension.subprocess,
+        "run",
+        lambda *a, **kw: subprocess.CompletedProcess(a, 0, json.dumps(terminal)),
+    )
+    monkeypatch.setattr(extension.time, "sleep", lambda _: pytest.fail())
+    report: dict[str, Any] = {}
+    if failure:
+        with pytest.raises(ValueError):
+            wait_first(args, report, tmp_path / "poll.json")
+    else:
+        wait_first(args, report, tmp_path / "poll.json")
+        assert report["first_completion_receipt"]["path"] == str(attempts / "ffffffff.json")
+        assert report["first_completion_receipt"]["sha256"] == extension.digest(
+            attempts / "ffffffff.json"
+        )
+
+
+@pytest.mark.parametrize(
     "mismatch", [None, "checkpoint_hash", "optimizer_path", "partial_step", "recipe"]
 )
 def test_first_stage_requires_exact1000_and_verified_original200_chain(
