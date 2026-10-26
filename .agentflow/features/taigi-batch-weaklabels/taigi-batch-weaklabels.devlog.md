@@ -267,3 +267,22 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Verified20actual resumedupdates201–220, allfinite losses/gradients, LR3e-5; saved resume-proof.json. LocalGPUuse about8GiB/24GiB. First1000remainsactive, originalparentunchanged.
 - Experimental200privatepublication completed. Direct HFAPI confirms private=true, revisionbec7e32ccc5dbd6d3330954a531adb8999d4a698 and8candidatefiles including1.34GBweights. No qualitypromotion; packageincludesfullfailed-generationevaluation.
 - Longercontroller independentreview found and is correcting cancellation/fallback ordering before deployment. First1000doesnotdependonthatnewcontroller andcontinueswithitsown100-minute bound. Source/tests remainwithSol; Astraverifiesfinalsource.
+
+## [RUN-022] Event — 2026-10-26 10:03:06 +0800 (A-002)
+
+- Committed/pushed142bd70 afterSol18focusedtests/Ruff/ty andAstraindependentPASS. HostverifiedCLIflags, exactreviewedsourcehash2b3a247a anduserunitproperties. Firststagehasactual450+updates; val450=.4957895.
+- StartedlocalextensionPID2164739at10:01,KillModecontrol-group,Restartno,RuntimeMaxdeadline-minus90secondsandTimeoutStop90. Freshoutputlocal-longer-20261026/longer-20261026, explicitownerauthorization, endpoints3000/6000andprivatepublicationarmed. Initialparentverificationisreadingfrozencheckpointdata; firststagecontinuesseparately. Deploymentreceiptandunitcopiespreservedlocally.
+- Changedpaths matchT11authorizedcontroller/tests,plans/review,docsandnotebook; no trainer/data/tokenizer/source changes andnoextraGPUworker. The stages and finalselectionare stillpending; do notdescribe6000stepsorqualityascomplete.
+
+## [WIP-007] Checkpoint — 2026-10-26 10:03:06 +0800 (A-002)
+
+- **Finished:** Verified200backup/privateupload, longer-trainingplan, actuallocalresume201withfinitegradients/LR3e-5, reviewedanddeployedautomaticextension.
+- **Running now:** Localfirst1000GPUservice; extensionverifiesfrozenparentthenwaitsforfirst1000.
+- **Still to do:** Actual1000/3000/6000diagnostics, selectedprivatepublication, usable-modelassessment; cloudproviderstopverificationstillneedsrenewedlogin.
+- **Next work action:** Confirmextensionreacheswaiting_first1000withoutchangingthefirsttrainer, thenfollowendpointresults.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-023] Event — 2026-10-26 10:03:26 +0800 (A-002)
+
+- Actualextensionpassedfrozenparentchecksandreachedwaiting_first1000. ItobservestheoriginalfirstunitPID2116026/activewith8cgroupmembers; sourcecommit142bd704387729bf4efd421090da6cba6c3aa14d. Savedextension-start-proof.json; no secondGPUmodelstartedwhilefirststageisrunning.
+- Longertrainingisnowdurablyarmedthrough1000/3000/6000withprivatepublication,withinunchanged22:00cutoff. Completionandqualityremainpending; prior200experimentalpackageisalreadyverifiedprivate.
