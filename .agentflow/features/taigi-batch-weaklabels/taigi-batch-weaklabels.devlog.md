@@ -254,3 +254,16 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - Generation failed quality criteria:7/12caps versus2baseline, unrelated repeated ASR outputs. No v2 continuation was launched and no usable-model claim is justified. Original controller exports200raw as diagnostic; backup/private publisher rearmed unchanged, both active and publication waiting for verified backup.
 - Corrected narrow known decoder-too-short baseline scoring without fabricating ASR or weakening health thresholds. Added contained alternate selection path for recovery. Root42focused tests, Ruff and implementation ty passed; independent Astra source review passed. Keep original live controller frozen.
 - Astra diagnosis finds no proven new training-code bug; only0.0708nominal data passes with reset text embeddings. A bounded checkpoint/stopping-behavior diagnostic is the next evidence step, not blind500-step extension. Budget clock and22:00cutoff unchanged; provider-confirmed shutdown remains unavailable with expired API login.
+
+## [RUN-020] Event — 2026-10-26 09:56:03 +0800 (A-002)
+
+- Owner explicitly requests longertraining. Prepared/committed bounded200→1000→3000→6000exploration plan; oldpilot generation gate is no longer admission for this newly authorized experiment. Recipe, finite/divergence checks,USD100total and22:00deadline preserved.
+- Verified r2backup488files. VM received guardedSSHshutdown08:38; SSHnowunreachable and providerAPIloginexpired. No newpaidcompute; localRTX3090 has availablecapacity. Resumed model/optimizer/EMA with identical tokenizer/split in freshstep-1000; actual201update09:55:39hasLR3e-5,finitegradient1.266. Userunitboundsfirststage6000seconds,cgroupcontainmentandnoautorestart.
+- HFpublicationfailed because systemd lacked cachedtokenpath. Sol'sread-onlywhoami/privatecheckpassedwith explicitHF_TOKEN_PATH (no secret exposed); rootrestartedpublisherusingfreshauthfixoutput because earlierpackage directory already existed. Uploadnowpending,notclaimedcomplete.
+- Solimplementsminimal localextensioncontroller; Astrareviewsplan/source. Newsource/testpaths are authorized withinT11. Parentcloudartifactsstayimmutable; unrelatedlocalGPUprocessuntouched.
+
+## [RUN-021] Event — 2026-10-26 09:57:57 +0800 (A-002)
+
+- Verified20actual resumedupdates201–220, allfinite losses/gradients, LR3e-5; saved resume-proof.json. LocalGPUuse about8GiB/24GiB. First1000remainsactive, originalparentunchanged.
+- Experimental200privatepublication completed. Direct HFAPI confirms private=true, revisionbec7e32ccc5dbd6d3330954a531adb8999d4a698 and8candidatefiles including1.34GBweights. No qualitypromotion; packageincludesfullfailed-generationevaluation.
+- Longercontroller independentreview found and is correcting cancellation/fallback ordering before deployment. First1000doesnotdependonthatnewcontroller andcontinueswithitsown100-minute bound. Source/tests remainwithSol; Astraverifiesfinalsource.

@@ -201,3 +201,12 @@ Keep a separate persistent backup controller and provider-level stop timer.
 Stopping a VM does not delete its billable disk. Verify copied artifacts before
 removing cloud storage. Source licensing, speaker separation and Taiwanese
 pronunciation quality remain separate from pipeline execution success.
+
+
+### Longer continuation after a small pilot
+
+`training.scripts.extend_taigi_training` handles an explicitly authorized longer experiment: it waits for a separately bounded local1000-step user service, verifies its200-step parent lineage, evaluates fixed prompts, and continues to3000then6000cumulative updates. It preserves the tokenizer, data and training recipe. This policy allows exploratory training despite the small pilot's poor generated speech; it does not promote model quality.
+
+Use a persistent user service with `Restart=no`, `KillMode=control-group`, an absolute deadline no later than22:00Asia/Taipei, and at least1800seconds reserved. Supply `--owner-authorized-longer-training`, `--first-unit`, `--absolute-deadline-epoch`, then positional `first_job parent_200 fresh_output`. The controller rejects missing/invalid diagnostics and nonfinite state, and checks for validation divergence at completed endpoints. Partial runs are retained. Optional `--publish-repo USER/REPO` reuses the existing private-only model packager after selection; upload failure preserves local artifacts.
+
+For the2026-10-26run, local results live under `data/taigi-full-corpus/local-longer-20261026`; `step-1000` is the initial continuation and `longer-20261026/job.json` records subsequent stages. The systemd user services are `taigi-local-long-first.service` and `taigi-local-long-extend.service`. Cached Hugging Face credentials must be visible to the service through its cache configuration; never put token values in a unit or repository.

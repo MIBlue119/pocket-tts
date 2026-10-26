@@ -46,9 +46,11 @@
 
 - [x] **T-10:** Measure rented GPU utilization and matched throughput, adopt acceleration only when measured useful within the existing budget and source/label invariants. Source: A-002, owner asks to maximize allocated compute. Paths: full-corpus-throughput-plan.md, ignored cloud benchmark receipts, and training/taigi/{corpus.py,corpus_worker.py,transcriber.py} with focused tests. Proof:39variable clips exacttext parity; fair cached batch4 throughput1.339x; no-work resume; duplicate GPU workers did not help; production opts into batch4 at43735eb.
 
-- [ ] **T-11:** Gate bounded continuation on full-data evidence and deliver a reproducible candidate to verified-private weiren119/pocket-tts-taigi. Source: A-002 owner Oct25 evening deadline, USD100 and private Hugging Face instructions. Paths: continuation-plan.md, training/scripts/{continue_taigi_training,publish_taigi_model,publish_taigi_when_ready}.py and their focused tests. Services are deployed; actual candidate publication remains pending.
+- [ ] **T-11:** Gate bounded continuation on full-data evidence and deliver a reproducible candidate to verified-private weiren119/pocket-tts-taigi. Source: A-002 owner Oct25 evening deadline, USD100 and private Hugging Face instructions. Paths: continuation-plan.md, training/scripts/{continue_taigi_training,extend_taigi_training,publish_taigi_model,publish_taigi_when_ready}.py and their focused tests. Services are deployed; actual candidate publication remains pending.
 
 ## Accepted scope changes
+
+- Owner explicitly asks「還是要訓練久一點」onOct26. Source: A-002 latest owner input. Effect: T11 now includes a separate bounded exploratory continuation200→1000→3000→6000 using local RTX3090 while cloud API authentication is unavailable. Early pilot quality admission is superseded for this exploration; finite/divergence/time limits and honest quality reporting remain. No change toUSD100total or22:00cutoff.
 
 - Owner raises total cap to USD100, requests usable model by Oct26 evening and private Hugging Face publication. Source: A-002 exact latest owner inputs. Effect: T7 deadline controls update preserving original start; T11 adds conditional continuation and private model delivery.
 
@@ -62,11 +64,11 @@
 
 - **Last proven result:** Corpus22, orchestration7, watcher14, repeat-filter/orchestration35 focused tests passed; actual short video17pairs; exact BPE parity; actual SSH/rsync checksum fixture passed.
 
-- **Active blocker or running process:** Full-data r2 training completed200updates. Loss improved5.27%, but7/12generated prompts hit the10-second cap and ASR outputs repeat unrelated phrases. This does not pass continuation quality criteria. Original controller exports a diagnostic candidate; local backup and private publisher were rearmed unchanged. No v2 controller was launched. Provider API authentication remains expired; guarded SSH stop and fixed22:00deadline remain armed.
+- **Active blocker or running process:** Local RTX3090 resumed the verified200 model/optimizer/EMA at09:55 under taigi-local-long-first.service. Actual201update recorded LR3e-5 and finitegradient1.266. First endpoint1000 has100-minute bound. Sol prepares the reviewed automatic3000/6000controller. The prior488-file cloud backup is verified; SSH shutdown was acknowledged08:38 but providerSTOPPED cannot be confirmed with expired authentication. Experimental200private publication retries in fresh authfix output after correcting service HF_TOKEN_PATH.
 
-- **Next safe action:** Verify complete backup and private experimental publication, then inspect checkpoint100/200 generation and stopping behavior from local artifacts. Do not extend training merely on improved loss; do not claim usability or provider-confirmed shutdown.
+- **Next safe action:** Verify20resumedupdates and memory, review/deploy bounded local extension, then verify actual private upload and all completed endpoint diagnostics. Keep model quality unverified.
 
-- **Expected changed files:** training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
+- **Expected changed files:** training/scripts/extend_taigi_training.py, tests/test_taigi_extend_training.py, continuation-longer-plan.md, extend-training-review.md, training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
 
 ## Completion proof
 
