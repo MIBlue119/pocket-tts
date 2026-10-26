@@ -401,3 +401,39 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - H100600 seen8 similarity0.27381 and3/8 own-source discrimination; unseen16=.025, heldout7=.03810. This is limited seen-item learning, not generalized semantic control. Original600/800 gate unchanged.800 training has finished and full fixed-seed evaluation is now starting; no adaptation beyond800 admitted.
 - Optional paired correct/shuffled/null oracle-history probe was independently reviewed. Added finite metric guard; final scriptSHA6c0bfefa32ad04415db2337a6d243ea547f82be5b6169edb6f9b4217b51f963e, staged but not executed. Root tiny untrained CPU full/streaming same-history check passes maxabs8.94e-7; this does not prove trained24L parity.
 - Root reproduced public frontend adding an ASCII period to「你好嗎？」with default append_terminal_punctuation=true; false preserves literal input. Native evaluator is unaffected. Future package must explicitly preserve selected text/CFG behavior; current public TTS API does not expose the native evaluator's CFG2 branch. No inference-quality claim or unrelated frontend change.
+
+## [WIP-012] Checkpoint — 2026-10-26 11:53:22 +0800 (A-002)
+
+- **Finished:** H100800 control and all fixed slices; W&B200/400/600/800 sync; native English positive control; exact trained streaming parity on8 rows;24-wave oracle/block-reset diagnosis. Local3000 retired and evaluated; no usable-model claim.
+- **Running now:** Separate20-minute lower-LR stability preparation and matched CFG1/four-step heldout baseline. Full prepared ADI audio is downloading to local for later bounded weak annotation; no automatic training admission.
+- **Still to do:**1000 early gate and at most1200 stability test, next recipe/data decision, private model/phone delivery when justified, full source-aware data admission, provider cleanup.
+- **Next work action:** Verify actual resumed step800 and LR5e-5, evaluate1000 against matched800, and stop this same-data branch if its predeclared gate fails. Changed operational scripts/plans/receipts remain within T11/T12; tracker passes10/13.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-032] Event — 2026-10-26 11:55:28 +0800 (A-002)
+
+-800 failed originalCFG2 gate: seen mean.24256, reserved16 .0125, heldout7 .07143, general12 .02083; exact「你好嗎？」ASR苦苦痛, no quality claim. CFG1/one-step=.27381 andCFG1/four-step=.37937 are separate diagnostics; original gate remains failed.
+- Oracle-history correct text beats wrong/null in8/8 rows, while actual trained full/streaming results agree to at most4.77e-6. Untouched English24L native route generates recognizable English. Generic inference wiring is not the current evidenced failure.
+-24-wave probe supports self-fed error accumulation: 手剎車 and一串香蕉 reconstruct through oracle history, but fixed-length self-fed outputs become unrelated; short full-history resets recover source-ASR content. Wrong-text oracle also reconstructs content, so history dominance remains and no independent semantic-control claim follows.
+- Committed8c6217b before the separate LR stability trial. Prepared exact800→1000 fork changing onlyLR2e-4→5e-5 plus run/endpoints; first trainer admitted, constant recipe/dataset/optimizer/EMA preserved. Independent guest cutoff is12:12:45Taipei for all named trial units,20minutes total. Final22:00 guards remain active; local watchdog last check successful11:54:57.
+- Full prepared ADI audio is copying cloud→local for a separate bounded ASR weak-label job, not entering training automatically. Existing local3000 is stopped. FullYT cross-cloud transfer whitelist is prepared locally only; old RTX remains unused. Operational scripts and receipts match T11/T12 scope.
+
+## [RUN-033] Event — 2026-10-26 12:00:49 +0800 (A-002)
+
+- Lower-LR1000 completed with actual zero runner/child exits, exact finite1000 checkpoint/optimizer and released lock. Matched CFG1/four-step seen8 improves mean target string similarity .379365→.481448 and own-source-ASR discrimination5/8→7/8, no frame caps. Same-model ASR remains a relative diagnostic, not independent quality proof.
+- Matched800 CFG1/four-step heldout7 and reserved16 both score0. The1000 improvement is therefore seen-item fitting only; no generalization claim. Continuing exact1000→1200 optimizer/model/EMA at5e-5 under existing12:12:45 cutoff; final gate and secondaryCFG2 evaluation unchanged.
+- Evaluation dashboard remotely verified at https://forge.coreweave.com/wandb/weirenlan/pocket-tts-taigi/runs/o4gwsy86 . Full ADI mirror and subsequent complete-hash verification/local ASR are delegated with a5h service bound; all new labels remain candidates. Astra is planning a separate next experiment from diagnostic evidence, not an automatic full-corpus launch.
+
+## [RUN-034] Event — 2026-10-26 12:05:33 +0800 (A-002)
+
+-1200 failed the predeclared LR gate: primary seen mean.417560 (only+.038195 vs800, required+.07), strict retrieval5/8(required6), no caps. Heldout7mean.047619 still mostly unrelated, with one long repeated output. The better1000 outcome remains recorded; it does not make the1200endpoint gate pass. Stop same284-row extensions and do not admit the conditional1200data-only branch.
+- Root separately selected a bounded fallback for planning: preserve best1000 model/optimizer/EMA andLR5e-5, expand filtered dictionary pairs, add small teacher-history noise only with clean targets/BOS/eval unchanged. Astra is finalizing the concrete45-minute/1000-update plan; Sol preparation/source changes await plan commit and cheap invariant proof. This combined recipe cannot isolate noise versus expanded-data contributions.
+-1000 and1200 training W&B runs synchronized successfully. Operational scripts, diagnostic report and fallback design remain within T11/T12 scope; tracker validates10/13. No usable model, native-transcript relabeling, fullYT admission or unrelated service changes.
+
+## [WIP-013] Checkpoint — 2026-10-26 12:05:33 +0800 (A-002)
+
+- **Finished:** Clean1200 training and matched seen/development evaluation; predeclared LR gate failed. Both LR training runs synchronized to W&B. Diagnostic code archive parses and report reviewed against actual metrics.
+- **Running now:** Final reserved/CFG2 compatibility evaluation, full ADI local-mirror verification/ASR handoff, independent fallback recipe and expanded-data preparation.
+- **Still to do:** Commit final fallback plan, verify minimal history-noise invariant and clean1000baseline, run one bounded evidence-driven trial, private model/phone delivery when justified, provider cleanup.
+- **Next work action:** Collect final1200 receipts, obtain1000heldout baseline, then review preparation and test evidence before admitting new GPU work.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
