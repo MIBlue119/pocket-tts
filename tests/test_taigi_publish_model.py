@@ -127,6 +127,11 @@ def test_package_is_complete_allowlisted_and_runnable_example_uses_real_api(tmp_
     assert manifest["evaluation_identity_matches"] is True
     assert manifest["quality_verified"] is False
     assert manifest["weights_variant"] == "raw"
+    assert manifest["generation_settings"] == {
+        "sampler_decode_steps": 1,
+        "append_terminal_punctuation": True,
+        "cfg_coef": 1,
+    }
     config = yaml.safe_load((package / "config.yaml").read_text())
     assert config["weights_path"] == "model.safetensors"
     assert config["flow_lm"]["lookup_table"]["tokenizer_path"] == "tokenizer.json"
@@ -134,6 +139,8 @@ def test_package_is_complete_allowlisted_and_runnable_example_uses_real_api(tmp_
     compile((package / "inference.py").read_text(), "inference.py", "exec")
     assert "get_state_for_audio_prompt" in (package / "inference.py").read_text()
     assert json.loads((package / "evaluation.json").read_text())["weights"] == "raw_checkpoint"
+    assert "1 decode step(s)" in (package / "README.md").read_text()
+    assert "Automatic terminal punctuation is enabled" in (package / "README.md").read_text()
     (package / "optim_001.pt").write_text("must not upload")
     with pytest.raises(ValueError, match="exactly"):
         publisher.validate_package(package)
@@ -143,6 +150,153 @@ def test_raw_evaluation_cannot_be_attached_to_ema_export(tmp_path: Path) -> None
     args = fixture_inputs(tmp_path)
     args.weights_variant = "ema"
     with pytest.raises(ValueError, match="variant"):
+        publisher.package(args)
+    assert not args.package.exists()
+
+
+def test_decode4_no_terminal_punctuation_profile_drives_packaged_runtime(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import json
+    import runpy
+    import sys
+
+    import torch
+    import yaml
+    from pocket_tts import TTSModel
+    from pocket_tts.modules import stateful_module
+
+    args = fixture_inputs(tmp_path)
+    evaluation = json.loads(args.evaluation.read_text())
+    evaluation.update(sampler_decode_steps=4, cfg_coef=1)
+    args.evaluation.write_text(json.dumps(evaluation))
+    args.sampler_decode_steps = 4
+    args.no_append_terminal_punctuation = True
+    directory = publisher.package(args)
+    manifest = json.loads((directory / "manifest.json").read_text())
+    assert manifest["generation_settings"] == {
+        "sampler_decode_steps": 4,
+        "append_terminal_punctuation": False,
+        "cfg_coef": 1,
+    }
+    readme = (directory / "README.md").read_text()
+    assert "4 decode step(s)" in readme
+    assert "Automatic terminal punctuation is disabled" in readme
+    assert "Normal runtime text normalization still applies" in readme
+
+    class Model:
+        sample_rate = 24000
+        flow_lm = SimpleNamespace(insert_bos_before_voice=False, bos_before_voice=None)
+
+        def to(self, device: str) -> "Model":
+            assert device == "cpu"
+            return self
+
+        def generate_audio(self, state: object, text: str, frames_after_eos: int) -> torch.Tensor:
+            assert text == "你好嗎" and frames_after_eos == 1
+            return torch.zeros(240)
+
+    def load(config: Path, **kwargs: object) -> Model:
+        assert kwargs["sampler_decode_steps"] == 4
+        resolved = yaml.safe_load(config.read_text())
+        assert resolved["append_terminal_punctuation"] is False
+        return Model()
+
+    monkeypatch.setattr(TTSModel, "load_model", load)
+    monkeypatch.setattr(stateful_module, "init_states", lambda *args, **kwargs: {})
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["inference.py", "--text", "你好嗎", "--output", str(tmp_path / "decode4.wav")],
+    )
+    runpy.run_path(str(directory / "inference.py"), run_name="__main__")
+    assert (tmp_path / "decode4.wav").is_file()
+
+
+def test_legacy_profile_preserves_disabled_punctuation_from_runtime_config(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import json
+    import runpy
+    import sys
+
+    import torch
+    import yaml
+    from pocket_tts import TTSModel
+    from pocket_tts.modules import stateful_module
+
+    args = fixture_inputs(tmp_path)
+    config = yaml.safe_load(args.config.read_text())
+    config["append_terminal_punctuation"] = False
+    args.config.write_text(yaml.safe_dump(config))
+    directory = publisher.package(args)
+    manifest = json.loads((directory / "manifest.json").read_text())
+    assert manifest["generation_settings"]["append_terminal_punctuation"] is False
+    assert "Automatic terminal punctuation is disabled" in (directory / "README.md").read_text()
+
+    class Model:
+        sample_rate = 24000
+        flow_lm = SimpleNamespace(insert_bos_before_voice=False, bos_before_voice=None)
+
+        def to(self, device: str) -> "Model":
+            return self
+
+        def generate_audio(self, state: object, text: str, frames_after_eos: int) -> torch.Tensor:
+            return torch.zeros(240)
+
+    def load(config: Path, **kwargs: object) -> Model:
+        assert kwargs["sampler_decode_steps"] == 1
+        assert yaml.safe_load(config.read_text())["append_terminal_punctuation"] is False
+        return Model()
+
+    monkeypatch.setattr(TTSModel, "load_model", load)
+    monkeypatch.setattr(stateful_module, "init_states", lambda *args, **kwargs: {})
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["inference.py", "--text", "你好", "--output", str(tmp_path / "legacy.wav")],
+    )
+    runpy.run_path(str(directory / "inference.py"), run_name="__main__")
+    assert (tmp_path / "legacy.wav").is_file()
+
+
+def test_no_append_setting_keeps_existing_chinese_question_mark_but_not_other_normalization() -> None:
+    from pocket_tts.models.text_chunking import prepare_text_prompt
+
+    chinese, _ = prepare_text_prompt(
+        "「你好嗎？」",
+        pad_with_spaces_for_short_inputs=False,
+        remove_semicolons=False,
+        append_terminal_punctuation=False,
+        capitalize_first_letter=True,
+    )
+    english, _ = prepare_text_prompt(
+        "  hello  world  ",
+        pad_with_spaces_for_short_inputs=False,
+        remove_semicolons=False,
+        append_terminal_punctuation=False,
+        capitalize_first_letter=True,
+    )
+    assert chinese == "「你好嗎？」"
+    assert english == "Hello world"
+
+
+@pytest.mark.parametrize(
+    ("steps", "cfg"),
+    [(1, 1), (4, 2)],
+)
+def test_explicit_generation_profile_requires_matching_complete_evaluation(
+    tmp_path: Path, steps: int, cfg: int
+) -> None:
+    import json
+
+    args = fixture_inputs(tmp_path)
+    evaluation = json.loads(args.evaluation.read_text())
+    evaluation.update(sampler_decode_steps=steps, cfg_coef=cfg)
+    args.evaluation.write_text(json.dumps(evaluation))
+    args.sampler_decode_steps = 4
+    args.no_append_terminal_punctuation = True
+    with pytest.raises(ValueError, match="explicit generation profile"):
         publisher.package(args)
     assert not args.package.exists()
 

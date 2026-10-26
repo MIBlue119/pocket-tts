@@ -35,6 +35,7 @@ FILES = {
 }
 INFERENCE = '''"""Run from the same pocket-tts checkout used for this candidate."""
 import argparse
+import json
 import tempfile
 from pathlib import Path
 
@@ -52,14 +53,17 @@ parser.add_argument("--output", type=Path, default=Path("candidate.wav"))
 args = parser.parse_args()
 root = Path(__file__).resolve().parent
 config = yaml.safe_load((root / "config.yaml").read_text())
+settings = json.loads((root / "manifest.json").read_text())["generation_settings"]
 config["weights_path"] = str(root / "model.safetensors")
 config["flow_lm"]["lookup_table"]["tokenizer_path"] = str(root / "tokenizer.json")
+config["append_terminal_punctuation"] = settings["append_terminal_punctuation"]
 with tempfile.TemporaryDirectory() as temporary:
     resolved = Path(temporary) / "config.yaml"
     resolved.write_text(yaml.safe_dump(config))
     torch.manual_seed(17)
     model = TTSModel.load_model(config=resolved, temp=0.3, eos_threshold=-1,
-                               noise_clamp=None, sampler_decode_steps=1).to(args.device)
+                               noise_clamp=None,
+                               sampler_decode_steps=settings["sampler_decode_steps"]).to(args.device)
     if args.voice:
         state = model.get_state_for_audio_prompt(args.voice.resolve())
     else:
@@ -250,7 +254,21 @@ def package(args: argparse.Namespace) -> Path:
             raise ValueError("evaluation checkpoint does not match export provenance")
         if evaluation.get("tokenizer_sha256") != sha256(inputs["tokenizer"]):
             raise ValueError("evaluation tokenizer does not match export")
+    explicit_profile = args.sampler_decode_steps != 1 or args.no_append_terminal_punctuation
+    if explicit_profile and (
+        evaluation.get("state") != "complete"
+        or evaluation.get("sampler_decode_steps") != args.sampler_decode_steps
+        or evaluation.get("cfg_coef") != 1
+    ):
+        raise ValueError(
+            "explicit generation profile requires a complete matching decode-step evaluation with cfg_coef=1"
+        )
     config = runtime_config(inputs["config"], inputs["tokenizer"])
+    effective_append_terminal_punctuation = (
+        False
+        if args.no_append_terminal_punctuation
+        else bool(config.get("append_terminal_punctuation", True))
+    )
     validate_weights(inputs["weights"], config)
     weight_hash = sha256(inputs["weights"])
     if provenance.get("exported_weights_sha256", weight_hash) != weight_hash:
@@ -270,6 +288,11 @@ def package(args: argparse.Namespace) -> Path:
         "exported_weights_sha256": weight_hash,
         "evaluation_identity_matches": matched,
         "evaluation_identity_meaning": "declared checkpoint and tokenizer match; export derivation is caller-supplied provenance",
+        "generation_settings": {
+            "sampler_decode_steps": args.sampler_decode_steps,
+            "append_terminal_punctuation": effective_append_terminal_punctuation,
+            "cfg_coef": 1,
+        },
     }
     destination = args.package.resolve()
     if destination.exists():
@@ -303,7 +326,8 @@ def package(args: argparse.Namespace) -> Path:
             "Run from the same pocket-tts checkout as the candidate with its dependencies installed. Default inference uses no audio prompt, matching the training condition:\n\n"
             "```bash\npython inference.py --device cpu --text '你好，今天天氣真好。' --output candidate.wav\n```\n\n"
             "The script resolves the packaged weights and custom tokenizer before calling TTSModel.load_model(config=...). "
-            "It uses seed 17, temperature 0.3, EOS threshold -1, no noise clamp, one decode step, and one frame after EOS. "
+            f"It uses seed 17, temperature 0.3, EOS threshold -1, no noise clamp, {args.sampler_decode_steps} decode step(s), and one frame after EOS. "
+            f"Automatic terminal punctuation is {'enabled' if effective_append_terminal_punctuation else 'disabled'}. Normal runtime text normalization still applies. "
             "Without a voice, it prefills only the configured BOS-before-voice embedding; no reference audio is encoded. "
             "Optional --voice /path/to/reference.wav enables experimental voice conditioning. "
             "The public streaming runtime differs from the offline diagnostic evaluator; this example is not proof of equivalent output or quality.\n"
@@ -492,6 +516,12 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--candidate-id", required=True)
     result.add_argument("--weights-variant", choices=("raw", "ema"))
     result.add_argument("--source-checkpoint-sha256")
+    result.add_argument("--sampler-decode-steps", type=int, choices=(1, 4), default=1)
+    result.add_argument(
+        "--no-append-terminal-punctuation",
+        dest="no_append_terminal_punctuation",
+        action="store_true",
+    )
     result.add_argument("--repo-id")
     result.add_argument("--publish", action="store_true")
     result.add_argument(

@@ -75,7 +75,7 @@
 
 - **Next safe action:** Finish all shards, verify exact cache union, finalize ADI, build filtered ADI+YouTube release, validate source hashes/splits/token coverage/real loader and exact1000 restart pair. Then run clean-history LR5e-5 data-only1200 first stage, evaluate fixed unseen demo/heldout panels, and extend only with actual generation evidence. User's one-hour start target is subordinate to complete inputs; goal is honest social-media demo quality. Private experimental Hugging Face backup remains authorized.
 
-- **Expected changed files:** Existing training implementation remains unchanged this turn. Operational helpers, configs, cached labels and receipts live under ignored data/taigi-adi-20261026/ and data/taigi-full-corpus/cloud/. Tracked work is this tracker, the stream devlog, and a concise experiment report after actual outcomes. Original teacher-history noise implementation remains committed but disabled for this experiment.
+- **Expected changed files:** ASR and trainer implementations remain unchanged this turn. Delivery fix touches training/scripts/publish_taigi_model.py and tests/test_taigi_publish_model.py to preserve selected decoding and punctuation settings. Operational helpers/configs/receipts remain under ignored data/taigi-adi-20261026/ and data/taigi-full-corpus/cloud/. Other tracked work is this tracker, stream devlog and experiment report. History-noise implementation stays committed but disabled.
 
 ## Completion proof
 

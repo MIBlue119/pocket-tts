@@ -473,3 +473,9 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - **Still to do:** Complete22745-row accounting, freeze combined corpus, cloud preflight, bounded full-data training and fixed-panel audio evaluation, private model/sample delivery, stop both cloud instances by22:00.
 - **Next work action:** Verify remaining data and transfer rates; preserve complete-input condition before training. Tracker recovery now reflects latest owner demo/full-data goal and three-way processing. Tracked changes are onlytracker/devlog; ignored operation artifacts stay withinT11/T12.
 - **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-038] Event — 2026-10-26 19:43:17 +0800 (A-002)
+
+- Fixed delivery recipe mismatch: publisher now accepts explicit sampler steps1/4 and disables appended terminal punctuation when requested; effective settings are packaged and documented. Nonlegacy settings require a matching complete CFG1 evaluation. Existing exported punctuation=false is preserved by default.
+- Independent Astra review found and corrected default punctuation regression and an overbroad exact-text claim. The final flag is --no-append-terminal-punctuation; normal runtime text normalization is explicitly retained. Root read final diff and reran all37 publisher tests successfully; Ruff/diff checks pass. Actual selected-checkpoint public runtime verification remains pending.
+- Scope matches T11 delivery: only publisher/test source files plus tracker/devlog changed; four identity-pinned ASR source files are untouched. ADI preprocessing is now20024/22745, both cloud GPUs active. No new trainer admitted before complete merged release and baseline finish.
