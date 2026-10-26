@@ -70,6 +70,8 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 還是要訓練久一點
 
++ 這在rtx6000 或是 H100 會訓練的比較快嗎？ 另外可以用你已經訓練的版本跑個推論給我嗎？  模擬我輸入文字 `你好嗎？`
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
@@ -286,3 +288,10 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 - Actualextensionpassedfrozenparentchecksandreachedwaiting_first1000. ItobservestheoriginalfirstunitPID2116026/activewith8cgroupmembers; sourcecommit142bd704387729bf4efd421090da6cba6c3aa14d. Savedextension-start-proof.json; no secondGPUmodelstartedwhilefirststageisrunning.
 - Longertrainingisnowdurablyarmedthrough1000/3000/6000withprivatepublication,withinunchanged22:00cutoff. Completionandqualityremainpending; prior200experimentalpackageisalreadyverifiedprivate.
+
+## [RUN-024] Event — 2026-10-26 10:18:59 +0800 (A-002)
+
+- Exact「你好嗎？」CPUinferencecompletedfromrawstep1000,5.04seconds63frames,finite/unclippedandbelowframecap. Originalreport/WAVandvolume-adjustedlisteningcopy are preservedin/home/weiren/tts-deliverables/2026-10-26-ni-hao-ma. No linguisticqualityclaim.
+- TelegramrejectsWAVextensions; generatedandffprobe-verified5.04secondH264/AACMP4,85727bytes. CourierconfirmedSent. Onlyuniformvolumeadjustmentandencoding, no semanticcontentreplacement.
+- Astralogcomparison foundapproximately15%higher observedupdateandwallrates onpriorRTXPRO6000runthanlocal3090; notcontrolledsamebatches. H100hasnobenchmarkhere. Frequent6.4GBcheckpointwritesandduplicatefinalsavearevisibleoverhead; no liveconfigchangewasmade.
+- First1000servicecompleted; extensionremainsactivevalidatinglineagebeforefixed12promptevaluationandlater3000/6000. UserinferenceusedCPUanddidnotstartanotherGPUworker.
