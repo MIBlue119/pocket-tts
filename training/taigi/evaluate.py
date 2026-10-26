@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import math
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
@@ -37,7 +38,7 @@ def read_prompts(path: Path) -> list[dict[str, Any]]:
     return prompts
 
 
-def audio_metrics(samples: np.ndarray, sample_rate: int) -> dict[str, Any]:
+def audio_metrics(samples: np.ndarray[Any, Any], sample_rate: int) -> dict[str, Any]:
     result: dict[str, Any] = {"samples": int(samples.size), "seconds": samples.size / sample_rate}
     if not samples.size:
         return {**result, "status": "empty"}
@@ -57,6 +58,8 @@ def evaluate(args: argparse.Namespace) -> Path:
     prompts = read_prompts(args.prompts)
     if not 8 <= args.max_frames <= 375:
         raise ValueError("max-frames must be between 8 and 375")
+    if isinstance(args.cfg_coef, bool) or not math.isfinite(args.cfg_coef) or args.cfg_coef <= 0:
+        raise ValueError("cfg-coef must be a finite positive float")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     config = load_args(str(args.config))
@@ -81,7 +84,7 @@ def evaluate(args: argparse.Namespace) -> Path:
         "seed": args.seed,
         "max_frames": args.max_frames,
         "temperature": 0.3,
-        "cfg_coef": 1.0,
+        "cfg_coef": args.cfg_coef,
         "voice_prompt_frames": 0,
         "quality_verified": False,
         "prompts": [],
@@ -104,7 +107,7 @@ def evaluate(args: argparse.Namespace) -> Path:
                     [torch.empty(0, model.ldim, device=device)],
                     max_frames=args.max_frames,
                     temp=0.3,
-                    cfg_coef=1.0,
+                    cfg_coef=args.cfg_coef,
                 )[0]
                 row = {
                     **prompt,
@@ -173,6 +176,7 @@ def main() -> None:
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--max-frames", type=int, default=125)
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument("--cfg-coef", type=float, default=1.0)
     parser.add_argument("--asr", action="store_true")
     print(evaluate(parser.parse_args()))
 
