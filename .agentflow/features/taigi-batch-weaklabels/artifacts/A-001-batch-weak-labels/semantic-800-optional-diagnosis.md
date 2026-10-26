@@ -1,0 +1,39 @@
+# Optional diagnosis only if the predeclared 800-step control fails
+
+Read-only source inspection. No GPU work, checkpoint loading, cloud mutations or training changes performed. Keep the original 800-step pass/fail gate unchanged; diagnostic successes do not retroactively pass it. Do not stage full corpus merely because teacher-forced loss falls.
+
+## What current numbers establish
+
+Train .02098 versus held-out .546 is not a comparable paired experiment. `training/modules/samplers.py:LSD.loss` uses learned uncertainty normalization, training-only probabilistic self-distillation skipping (default distill_prob=.25), and different weighting when the term is included; training also applies text dropout. Validation includes both terms. Read actual checkpoint/config values, and log raw `flow_diag / ldim`, `flow_distill / ldim`, EOS and endpoint MSE, not only aggregate loss. A low next-frame loss under real audio history may reflect acoustic continuity rather than text control.
+
+The evaluator uses raw checkpoint, no voice, temp=.3, default `n_steps=1`; `--cfg-coef` is exposed but decode steps are not. In `TrainableTTS.generate`, guidance combines backbone z (not final audio), and that guided z also drives EOS. CFG2 can thus affect content and length. Training `stats_ema_steps=0` means latent statistics are frozen; it is not EMA decay zero. Train and generation both use BOS then shifted normalized latents; no obvious mismatch is established from inspection.
+
+## Cheapest ordered probes
+
+1. **Actual-row identity and paired text dependence (CPU-capable, 4–8 seen rows).** Use exactly the eight training row IDs already assessed, not eight unrelated samples. Read through the production DataLoader in sentence mode, batch_size1, shuffle=False, final punctuation dropout0; compare the decoded `batch.text_tokens` with expected text and actual audio start/duration. Read effective config and prove max_voice_prompt_sec=0 or actual voice counts=0. Encode once with `training.dataloader.encode.encode_batch(mimi,batch,device)`; keep raw latents/mask and original token tensors. This checks actual loader output without proposing another tokenizer review.
+
+   Load using `load_args(str(config)); torch.manual_seed(args.seed); model,mimi,_=build_models(args); load_checkpoint(checkpoint,model); model.to(device).eval(); mimi.to(device).eval()`. For each row normalize `y=(latents-fl.emb_mean)/fl.emb_std`; call `model.backbone_z(fl,y,[tokens],latents.new_zeros(1,0,model.ldim),None,cfg_dropout=False)` for correct text, a different seen text (prefer equal token length), and `force_null=True`. Never remove history in one arm only. Compare paired errors separately on first1, first4 and all valid frames. The first frame can be silence, so do not interpret it alone.
+
+   Avoid stochastic learned-weight loss for the decisive statistic: choose fixed `e=torch.randn_like(y)` and t in {.1,.5,.9}, form `xt=t*y+(1-t)*e`, and compute raw squared error of `fl.flow_net(z_flat,t_tensor,t_tensor,xt_flat)` against `(y-e).reshape(-1,C)`. Use the identical e/t across correct/shuffled/null arms. Also compute `model.flow.decode(partial(fl.flow_net,z_flat),sqrt(.3)*e_flat,n_steps)` against y with n_steps1 and4. These are per-frame normalized-latent MSEs. Noise0.3 endpoint mismatch is descriptive, not a calibrated likelihood; compare arms rather than absolute thresholds.
+
+   Result: correct text clearly reduces early-frame errors versus wrong/null → text is used under oracle history. Little paired difference across seeds/rows → text is weak/ignored on these seen examples (or early silence dominates); declining whole-sequence loss alone is insufficient. Large raw diagonal error even on seen data → not an exposure-bias-only explanation. Good diagonal error but poor endpoint decode → flow sampling/distillation endpoint mismatch deserves attention before longer training.
+
+2. **Same-history streaming parity (one row, CPU, no ASR).** Only if text-conditioned teacher forcing looks good. Compute `z_full=model.backbone_z(...)`. Reproduce `generate` prefix `[bos_before_voice,conditioner(tokens)]`, use `init_states(fl,1,prefix_len+T+2)`, feed prefix plus `input_linear(bos_emb)` for t0, then `input_linear(y[:,t-1:t])` for later frames. After each transformer call apply out_norm/z_proj and `increment_steps(fl,state,increment=input_length)` exactly as `generate`. Compare every z against z_full at the matching frame, and compare EOS logits and decoded latents using identical noise. CFG1 first; run full precision and batch1, then optional existing bf16 context. This is a diagnostic scratch loop, not a product refactor.
+
+   Result: appreciable parity disagreement with identical inputs/history → streaming state/prefix/precision route error; localize first differing frame before more training. Agreement → streaming wiring is unlikely to explain poor free generation. Do not compare free-running z with teacher-forced z and call their expected disagreement a bug.
+
+3. **Only two additional generation settings, same eight prompts/seed.** Existing CFG2/one-step output is baseline. Run CFG1/one-step using existing CLI:
+
+   `python -m training.taigi.evaluate CONFIG PROMPTS NEW_OUTPUT --checkpoint CHECKPOINT800 --device cuda:0 --max-frames 125 --seed 17 --cfg-coef 1 --asr`
+
+   For CFG1/four-step, use existing Python interface rather than adding CLI/framework: `model.generate([tokens],[torch.empty(0,model.ldim,device=device)],max_frames=125,temp=.3,n_steps=4,cfg_coef=1.0)`. Reset seed17 before each prompt and reuse evaluator Mimi decode/ASR path. Keep max-frames/EOS unchanged. Four-step is a discriminating probe, not a promise of improvement.
+
+   Result: CFG1 rescues many seen items → guidance/null branch/EOS interaction; four-step alone rescues → one-step sampling mismatch. Neither rescues, oracle-history reconstruction strong and parity passes → consider rollout exposure bias below. Different ASR strings alone do not establish a rescue; use the same frozen target/reference scoring protocol and frame counts.
+
+4. **Oracle-history versus short autoregressive rollout (only if needed).** With exact seen-row y, decode all frames independently from the oracle-history z of probe1, concatenate decoded predictions, denormalize once and Mimi-decode. Compare its ASR/content against the existing ground-truth Mimi reconstruction and free rollout. Then in the same streaming scratch loop reset history to ground truth every1,4,8frames (same noise sequence, fixed original T, EOS ignored *for this diagnostic only*). No voice prompt from target audio; target latent history is explicitly oracle information.
+
+   Result: oracle predictions preserve content, increasingly long self-fed blocks rapidly lose it, parity passes → compounding rollout error/exposure bias is supported. Oracle prediction audio already wrong despite low aggregate loss → low loss is not sufficient phonetic reconstruction or text learning, so exposure bias is not isolated. Oracle success with correct and wrong text both equally good → history supplies content; do not claim learned Mandarin→Taigi control. Fixed-T diagnostics cannot prove EOS behavior correct; compare original EOS firing index/logits separately if generated lengths are systematically short.
+
+## Stop rule
+
+No Cartesian CFG/temperature/steps sweep, no new training branch, no corpus transfer, no user listening request. Start with probes1–2; at most16 extra short generations plus oracle reconstructions if their results justify them. Use CPU for small identity/parity checks or schedule bounded GPU work only after owner/root decides the failed800gate needs diagnosis. Preserve all original evaluation outputs and record config/checkpoint hashes, row IDs, seeds, dtype and paired per-row scores. Strong pronunciation ambiguity in ASR (e.g. 公雞 versus 雞蟲) remains an evaluator limitation, not evidence of semantic success or failure by itself.

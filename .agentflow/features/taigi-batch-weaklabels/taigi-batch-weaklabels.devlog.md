@@ -379,3 +379,18 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - **Still to do:** Measure throughput and generated text control, complete bounded800 control if viable, decide broader adaptation, synchronize selected private model and W&B, send useful phone sample, verify final cloud cleanup.
 - **Next work action:** Inspect H100 real optimizer updates/VRAM and baseline results, evaluate raw200 before continuing, and accept local3000 durable completion from monitor.
 - **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-030] Event — 2026-10-26 11:23:27 +0800 (A-002)
+
+- H100200 finished cleanly: attempt50ba49dcee484eca99eca411beea3e3a, both exit codes0, finite exact200 pair, input identity unchanged, lock released and GPU free before evaluation. Actual optimizer throughput3.3-3.6updates/s for this short-clip batch; peak allocated8.5GiB. This is not a controlled hardware comparison.
+- W&B sync completed with existing local login: https://forge.coreweave.com/wandb/weirenlan/pocket-tts-taigi/runs/50ba49dcee484eca99eca411beea3e3a . Cloud uses offline logging and local authenticated synchronization; no secret copied to source or logs.
+- Fixed seen8 mean target string similarity: baseline0=0,100=0,200=0.0982;200 same-speaker unseen16=0.025 and heldout7=0. No200 duration caps, but content remains mostly wrong. Own-source-ASR discrimination is1/8, not quality verified. All original output reports preserved.
+- Continued unchanged recipe/model/optimizer/EMA to400 in separate lineage-verified directory; invocationfb956aa4f36e4f01a0509c2a7b356760. Planned800 control remains bounded. Optional post800 diagnostics distinguish text dependence, streaming parity and sampling effects; no broad sweep or full-corpus transfer launched on low loss alone.
+
+## [WIP-011] Checkpoint — 2026-10-26 11:25:16 +0800 (A-002)
+
+- **Finished:** Clean H100200 and400 training, verified200 diagnostics across8/16/7 slices, authenticated W&B200 synchronization, frozen optional post800 diagnosis plan.
+- **Running now:** H100300/400 fixed-seed evaluation; local YouTube3000 approaching endpoint with a dedicated completion monitor. No full-corpus transfer yet.
+- **Still to do:** Exact600/800 control and generation gate, optional root-cause probes if it fails, larger-data decision, private candidate/phone delivery and final stopped-billing proof.
+- **Next work action:** Read400 generation, continue finite unchanged control toward600, and independently accept local3000 completion/evaluation. Preparation scripts and diagnostic plans remain within T11/T12 operational artifacts; tracker validates10/13.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
