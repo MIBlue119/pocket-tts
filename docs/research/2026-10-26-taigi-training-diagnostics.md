@@ -1,10 +1,10 @@
 ---
-title: Taiwanese Hokkien training diagnostics through semantic step 1000
+title: Taiwanese Hokkien training diagnostics through semantic step 1200
 date: 2026-10-26
-status: measured; step 1200 pending
+status: measured; predeclared LR gate failed
 ---
 
-# Taiwanese Hokkien training diagnostics through semantic step 1000
+# Taiwanese Hokkien training diagnostics through semantic step 1200
 
 ## Decision snapshot
 
@@ -12,8 +12,7 @@ No completed checkpoint is a usable ordinary-Traditional-Mandarin-to-Taiwanese-H
 The H100 semantic control learned some of its eight assessed training phrases, but the original
 step-800 gate failed and matched held-out evidence remained absent. A lower-learning-rate
 continuation improved the same-Breeze seen score at step 1000 from `0.379365` to `0.481448`, with
-strict own-source ASR retrieval rising from 5/8 to 7/8. This is better memorization evidence, not a quality
-or generalization result.
+strict own-source ASR retrieval rising from 5/8 to 7/8. Step 1200 then fell to `0.417560` and 5/8, failing the predeclared `+0.07`/6-of-8 continuation gate. Matched speaker-heldout at step 1200 was `0.047619` (1/7), including a long repeated output. The step-1000 seen gain did not transfer reliably.
 
 The completed probes rule out a large full-sequence/streaming wiring discrepancy at step 800 and
 show that the model uses text under ground-truth audio history. They also show that ground-truth
@@ -21,9 +20,7 @@ history can dominate the requested text and that errors grow sharply when the mo
 own predictions. This supports an error-accumulation or exposure-gap hypothesis, but it does not
 establish a single root cause.
 
-The authorized budget remains **US$150 total**. The next hard decision cutoff is **22:00
-Asia/Taipei on 2026-10-26**. The active owner controls the step-1200 run and any later pipeline
-action. Step 1200 was still pending when this note was written and has no result here.
+The authorized budget remains **US$150 total** and the original provider cutoff is **22:00 Asia/Taipei on 2026-10-26**. The owner then directed that all local ADI processing finish before any cloud training. Nebius is provider-confirmed stopped. Local Breeze-ASR processing is running against the verified 22,745-clip ADI release; cached results resume from 7,452 unique segments. No training will start until that local release and label calibration are complete.
 
 ## Experiments and measurement boundary
 
@@ -49,7 +46,8 @@ quality judgments.
 | Step 800, CFG 2 / one step | 0.242560 | 3/8 | Original gate failed; held-out was 0.071429 (2/7 nonzero), reserved 0.012500 (1/16), general panel 0.020833 (1/12). |
 | Step 800, CFG 1 / one step | 0.273810 | 4/8 | Inference change alone did not rescue the failed phrases. |
 | Step 800, CFG 1 / four steps | **0.379365** | **5/8** | Matched held-out and reserved panels were both 0.000000. |
-| Step 1000, CFG 1 / four steps, LR `5e-5` | **0.481448** | **7/8** | LR-only continuation from step 800; no completed matched step-1000 held-out or reserved result is recorded. |
+| Step 1000, CFG 1 / four steps, LR `5e-5` | **0.481448** | **7/8** | LR-only continuation from step 800. Matched held-out7 baseline: `0.047619` (1/7); reserved16 also `0.000000`. |
+| Step 1200, CFG 1 / four steps, LR `5e-5` | **0.417560** | **5/8** | Gate failed: delta `+0.038194` vs step800 (required `+0.07`) and only5/8 retrieval (required6/8). Held-out7 `0.047619` (1/7); reserved16 `0.025000`; no caps. |
 
 Own-source retrieval requires the output to score strictly above every wrong source transcript;
 ties fail. It is separate from the simpler nonzero-target count. The two happened to agree at
@@ -90,7 +88,7 @@ Probe 3 moved the seen mean from 0.242560 under the original CFG-2/one-step gate
 CFG-1/one-step and 0.379365 under CFG-1/four-step. Four-step decoding recovered five nonzero seen
 targets, but three still scored zero, and matched CFG-1/four-step held-out and reserved panels both
 scored zero. Inference settings affect the measurement, but no tested setting turned step 800 into
-a usable model.
+a usable model; the separate LR step-1200 gate failed as recorded above.
 
 ### Oracle history dominates content; self-fed error accumulates
 
@@ -139,8 +137,10 @@ been isolated as the sole cause.
   `data/taigi-adi-20261026/semantic-control-20261026/provenance.json`
 - Original evaluation series:
   `data/taigi-adi-20261026/semantic-control-20261026/seen-diagnostics-summary.json`
-- Step-1000 LR-only evaluation:
-  `data/taigi-adi-20261026/semantic-control-20261026/lr-stability/eval1000-seen/report.json`
+- LR-only evaluation and predeclared gate receipt:
+  `data/taigi-adi-20261026/semantic-control-20261026/lr-stability/eval1000-seen/report.json`,
+  `.../lr-stability/eval1200-seen/report.json`, and `.../lr-stability/lr-trial-decision.json`
+- Step-1200 matched held-out7/reserved16 reports: `.../lr-stability/eval1200-heldout/report.json` and `.../lr-stability/eval1200-reserved/report.json`
 - Probe 1: `data/taigi-adi-20261026/semantic-control-20261026/probe1-step800/results.json`
 - Probe 2: `data/taigi-adi-20261026/semantic-control-20261026/probe2-step800/results.json`
 - Probe 3 four-step:
@@ -155,5 +155,4 @@ been isolated as the sole cause.
   and
   `data/taigi-full-corpus/local-longer-20261026/longer-20261026-r2/step-3000/evaluation-cfg1-seed17-asr-20261026T1130/report.json`
 
-This document records completed evidence only. It does not promote a checkpoint, modify a running
-job, authorize new spend, or predict the pending step-1200 result.
+This document records measured diagnostics and current processing order. It does not promote a checkpoint or call the model usable; WER, Taiwanese pronunciation and naturalness remain unverified.

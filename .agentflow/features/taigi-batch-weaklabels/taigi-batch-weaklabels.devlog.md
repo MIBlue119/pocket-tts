@@ -437,3 +437,23 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 - **Still to do:** Commit final fallback plan, verify minimal history-noise invariant and clean1000baseline, run one bounded evidence-driven trial, private model/phone delivery when justified, provider cleanup.
 - **Next work action:** Collect final1200 receipts, obtain1000heldout baseline, then review preparation and test evidence before admitting new GPU work.
 - **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-035] Event — 2026-10-26 15:29:20 +0800 (A-002)
+
+- Owner redirected sequence: finish all local ADI processing before any cloud training. H100 has been provider-confirmed STOPPED; no training or ASR is running in cloud. No H100 training begins until full local ASR data release and calibration are complete.
+- Root briefly stopped the single-GPU ASR after measuring its remaining throughput (~0.5–0.6 clips/s, insufficient margin for reliable completion before22:00) while considering a disjoint H100 shard. No duplicate shard or cloud transcription launched. Preserved cache and resumed the original identity-pinned single-process job under a fresh6h20 runtime bound; at stop it held7452/22745 unique cache entries. User's local-first instruction supersedes H100-sharding plan.
+- Provider API readback confirms instance STOPPED; independent root22:00/US$150 watchdog remains active. Current local ASR uses RTX3090 (~17GB GPU memory), the unrelated /app PID2362995 remains untouched. Local 5h agent estimate is not applicable; fresh progress interval will establish actual completion forecast.
+- Teacher-history noise implementation passes11 focused CPU invariants/config tests, including sequence-builder integration; Ruff passes. Training code/conditional-plan changes remain uncommitted until root finishes local task sequencing review. No cloud trainer was deployed.
+
+## [WIP-014] Checkpoint — 2026-10-26 15:29:20 +0800 (A-002)
+
+- **Finished:** Original LR continuation has a failed gate; evidence and bounded history-noise fallback are committed. H100 has been stopped and provider-confirmed. Local ADI mirror hash verification passed; Breeze cache holds7452 complete unique entries. Focused noise-path tests pass11.
+- **Running now:** Full ASR transcribe is resumed locally from its verified cache under a new6h20 unit; no remote training or transcription.
+- **Still to do:** Complete full local ASR release, calibrate weak-label precision/coverage against dictionary-aligned pairs, decide which weak labels merit a bounded cloud experiment, then use H100 only for training after local data processing completes. Package/send a sample only when a candidate merits it; final provider stop at22:00.
+- **Next work action:** Measure fresh local ASR throughput, forecast against22:00, and continue offline completion/candidate calibration. Preserve all original caches and source identities.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
+
+## [RUN-036] Event — 2026-10-26 15:29:26 +0800 (A-002)
+
+- Scope audit: tracked source changes are the optional ordinary-training history-noise field/model path and its CPU test; plan/devlog edits document the failed LR gate and the owner's local-first steering. No product inference code, data manifests, checkpoints, or remote sources changed. Working tree matches T11/T12 evidence/training-preparation scope; the ADI shard-planning scratch remains ignored under local data and was not launched.
+- Tracker validates10/13; unresolved items remain usable candidate, ADI integration decision and final closeout. Push is deferred until the narrow implementation is reviewed against the focused tests and complete-local-data-first decision.
