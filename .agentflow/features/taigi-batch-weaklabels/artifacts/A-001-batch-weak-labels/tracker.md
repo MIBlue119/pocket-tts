@@ -38,7 +38,7 @@
 
 - [x] **T-6:** Execute a durable corpus-to-training job with grouped validation, train-only tokenizer, offline W&B and fixed generated diagnostics. Source: A-002 continuation of original training authorization. Paths: training/scripts/run_taigi_corpus_job.py and tests/test_taigi_corpus_job.py. Proof: r2 completed200updates with22606train/148valid rows, offline logs and12fixed generated/ASR diagnostics; validation.5278603→.5000720. Generation remains unsuitable,7/12caps and unrelated transcripts.
 
-- [ ] **T-7:** Use dedicated Nebius compute within the owner-updated USD100 total, preserve OCR, establish fixed stop deadline, verify model compatibility and backup outputs. Source: A-002 continuation and prior explicit cloud/budget authorization. Paths: corpus-cloud-operations.md, corpus-compute-plan.md, training/scripts/watch_taigi_cloud_job.py, tests/test_taigi_cloud_watch.py and ignored data/taigi-full-corpus/cloud/.
+- [ ] **T-7:** Use dedicated Nebius compute within the owner-updated USD150 total, preserve OCR, establish fixed stop deadline, verify model compatibility and backup outputs. Source: A-002 continuation and prior explicit cloud/budget authorization. Paths: corpus-cloud-operations.md, corpus-compute-plan.md, training/scripts/watch_taigi_cloud_job.py, tests/test_taigi_cloud_watch.py and ignored data/taigi-full-corpus/cloud/.
 
 - [x] **T-8:** Independently review full-corpus behavior and verify actual short/long video execution before production launch. Source: A-002 Astra preference and all-video scope. Paths: full-corpus-review.md and existing notebook/review records. Proof: source reviews, actual2/2whole-video trial with52.501-minute complete frame coverage, cloud5-update teacher tensor verification, persistent-unit and real SSH/rsync/SHA256 acceptance.
 
@@ -53,6 +53,9 @@
 - [x] **T-13:** Use pstack Investigation/how with independent recipe and language explorers and a fresh explainer to recommend non-English fine-tuning. Source: A-002 latest explicit pstack/subagent request for 台語、繁體中文、日文. Paths: docs/research/2026-10-26-nonenglish-*.md. Proof: primary-source citations, pinned local architecture evidence, worker reports and consolidated recommendation with uncertainties. Investigation changes no live training configuration. Completed: two independent explorer reports and fresh Astra synthesis saved, actual local config/embedding/evaluator and primary sources checked; recommendation report distinguishes evidence from unexecuted experiments.
 
 ## Accepted scope changes
+
+- Owner reauthenticated Nebius, authorized an H100 if useful, and raised the total budget to USD150. Source: A-002 latest owner messages on Oct26. Effect: H100 instance computeinstance-e00qm3e1gfftr7ey2y admitted with conservative total estimate USD91.557 and independent setup/final shutdown controls; old task VM verified STOPPED. Absolute22:00 deadline unchanged. T12 also includes source-aware semantic admission because actual short-clip ASR produced meaning errors.
+
 
 - Owner explicitly asks「還是要訓練久一點」onOct26. Source: A-002 latest owner input. Effect: T11 now includes a separate bounded exploratory continuation200→1000→3000→6000 using local RTX3090 while cloud API authentication is unavailable. Early pilot quality admission is superseded for this exploration; finite/divergence/time limits and honest quality reporting remain. No change toUSD100total or22:00cutoff.
 
@@ -72,7 +75,7 @@
 
 - **Next safe action:** Complete non-English research synthesis and the full eligible ADI source manifest. Arrange ADI ASR and adaptation at a completed training boundary without competing GPU trainers. Preserve the current tokenizer and checkpoint lineage unless a separately evidenced experiment justifies a change. No new paid resources or budget extension.
 
-- **Expected changed files:** training/scripts/prepare_adi_taigi.py, tests/test_taigi_adi_prepare.py, docs/research/2026-10-26-nonenglish-*.md, training/scripts/extend_taigi_training.py, tests/test_taigi_extend_training.py, continuation-longer-plan.md, extend-training-review.md, training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
+- **Expected changed files:** training/scripts/prepare_adi_taigi.py, tests/test_taigi_adi_prepare.py, docs/research/2026-10-26-nonenglish-*.md, docs/research/2026-10-26-adi-semantic-label-strategy.md, training/scripts/fork_taigi_adaptation.py, tests/test_taigi_adaptation.py, training/scripts/extend_taigi_training.py, tests/test_taigi_extend_training.py, continuation-longer-plan.md, extend-training-review.md, training/taigi/batch.py, training/taigi/merge.py, training/taigi/evaluate.py, training/train.py, training/tests/test_validation_rng.py, tests/test_taigi_evaluate.py, tests/test_taigi_batch.py, tests/test_taigi_merge.py, docs/taigi-batch-weak-labels.md, docs/plans/2026-10-25-batch-weak-label-results.md, .agentflow/, ag.json, .gitignore.
 
 ## Completion proof
 

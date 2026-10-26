@@ -1,6 +1,6 @@
 # 非英語 Pocket TTS 研究結論與台語下一步
 
-我們目前的交付目標是「一般繁體華語語意輸入，產生意思正確、自然的台語」，沿用私人 Hugging Face、總預算 US$100、今天 22:00 的限制。華語與日語只供配方比較，不增加訓練任務，也不要求使用者補台羅或逐段聽打。
+我們目前的交付目標是「一般繁體華語語意輸入，產生意思正確、自然的台語」，沿用私人 Hugging Face、總預算 US$150、今天 22:00 的限制。華語與日語只供配方比較，不增加訓練任務，也不要求使用者補台羅或逐段聽打。
 
 目前選用英文 24 層 teacher、重訓文字詞表並重置 embedding，是有官方依據的起點。Kyutai 的 [finetune_language.yaml](https://github.com/kyutai-labs/pocket-tts/blob/main/training/configs/finetune_language.yaml) 就採這條路。官方捷克語實驗用 976 小時資料，不能據此保證約 18 小時台語弱標註也能快速成功。新詞表尚未學會文字條件、配對品質、說話人混合與訓練量都仍是可能原因；現有證據不能判定 tokenizer 或 optimizer 的最佳方案。
 

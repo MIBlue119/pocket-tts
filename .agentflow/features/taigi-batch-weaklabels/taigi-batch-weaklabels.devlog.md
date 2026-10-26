@@ -90,6 +90,10 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 我先去跑步，交給你來優化了
 
++ i haved logged in nebius, if you need H100 to accelerate the training process, you could open vm to do the training
+
++ and training budget you could increase to 150
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
