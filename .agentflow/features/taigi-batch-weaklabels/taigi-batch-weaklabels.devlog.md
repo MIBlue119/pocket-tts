@@ -457,3 +457,19 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 - Scope audit: tracked source changes are the optional ordinary-training history-noise field/model path and its CPU test; plan/devlog edits document the failed LR gate and the owner's local-first steering. No product inference code, data manifests, checkpoints, or remote sources changed. Working tree matches T11/T12 evidence/training-preparation scope; the ADI shard-planning scratch remains ignored under local data and was not launched.
 - Tracker validates10/13; unresolved items remain usable candidate, ADI integration decision and final closeout. Push is deferred until the narrow implementation is reviewed against the focused tests and complete-local-data-first decision.
+
+## [RUN-037] Event — 2026-10-26 19:30:40 +0800 (A-002)
+
+- Owner now authorizes RTX cloud ASR acceleration and H100 training after complete ADI plus yesterday YouTube data arrive. One-hour start target is subordinate to complete inputs. Success target is a social-media Taiwanese Pocket TTS demo; US$150 cumulative and22:00 cutoff remain binding.
+- Original15924 ADI caches retained. Disjoint shards:1705 local,212 completed RTX prefix,2452 RTX and2452 H100. Both cloud devices are doing actual preprocessing/staging; no training has begun. Pinned source/model/batch4 identities and minute cloud mirrors remain intact.
+- Full ADI22745 audio hashes verify onRTX. YouTube frozen release22754 clips/17.99h covers288 successful videos;2 failed acquisitions explicitly excluded. Direct RTX-to-H100 transfer is underway.
+- Independent Astra review corrected raw/merged identity comparison and repeated large-audio hashing in Sol helpers. Actual288-parent content inventory reproduces22754 YouTube rows exactly. Final ADI admission verifies five manifest hashes and actual accepted+quarantine=22745.
+- Obvious repeated-label collapses and frozen control/demo collisions will be quarantined with provenance; semantic/pronunciation quality remains unverified. New data-only experiment preserves exact1000 optimizer/model/EMA andLR5e-5, clean history, first1200 endpoint. Eight demo prompts fixed before training; private experimental HF backup authorized, demo quality not yet achieved.
+
+## [WIP-015] Checkpoint — 2026-10-26 19:31:14 +0800 (A-002)
+
+- **Finished:** Source-preserving three-worker partition, RTX/H100 reactivation and exact-ID deadline controls; frozen YouTube identity proof; quality/leakage filters; independent helper review and fixes. All source stage hashes preserved.
+- **Running now:** Full ADI ASR onlocal3090/RTX/H100, minute cache mirrors, direct16.76GiB YouTube staging toH100. H100 will run parent1000 demo baseline after its ASR shard completes. No new training yet.
+- **Still to do:** Complete22745-row accounting, freeze combined corpus, cloud preflight, bounded full-data training and fixed-panel audio evaluation, private model/sample delivery, stop both cloud instances by22:00.
+- **Next work action:** Verify remaining data and transfer rates; preserve complete-input condition before training. Tracker recovery now reflects latest owner demo/full-data goal and three-way processing. Tracked changes are onlytracker/devlog; ignored operation artifacts stay withinT11/T12.
+- **Checks:** [x] tracker.md | [x] devlog RUN | [x] scope matches tracker
