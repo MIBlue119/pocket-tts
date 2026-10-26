@@ -201,3 +201,16 @@ identity file changes, and original budget/deadline remain in force.
 The actual baseline contains six explicitly recorded decoder-too-short failures, which intentionally have no audio or ASR measurement. Preserve the original reports; derive a labelled zero task-failure score only for this exact validated branch. Missing or contradictory diagnostics remain fail-closed. All finite-state, health, cap, repetition, deadline and improvement thresholds remain unchanged. Optional relative selection paths support fresh recovery subtrees while retaining verified-root containment and artifact hashes.
 
 Minimality check: changing raw ASR reports or weakening the gate would misrepresent evidence. The smallest correction is a derived score with source labels and focused tests; the selection option avoids moving historical candidates. Actual step200 subsequently showed7/12caps versus2baseline, so no v2 continuation is launched and the original selection remains the publication target. Source correction does not authorize ignoring this generation regression.
+
+
+## Owner-authorized longer adaptation — 2026-10-26
+
+Owner instruction:「還是要訓練久一點」. Continue the verified step200 model, optimizer and EMA through1000,3000and6000 in separate immutable run directories. Keep the exact tokenizer, data split, batch1/accumulation8, constant3e-5learning rate and all other training parameters. Use available local RTX3090 because Nebius API authentication expired and the previous instance received shutdown after verified488-file backup. No paid instance or budget clock is reset.
+
+The former early quality-improvement admission rule is not applied to this explicitly authorized exploration. Every endpoint still receives fixed-prompt evaluation and remains experimental; missing artifacts, nonfinite state or validation loss above1.5times the original baseline stop progression. Preserve absolute2026-10-26 22:00Taipei cutoff with1800seconds reserved for evaluation/export. No automatic training beyond6000. First1000 has a100-minute process bound and cgroup containment; actual resumed updates and memory use must be observed before claiming launch success.
+
+Minimality check: reuse fork_run, run_experiment, evaluator and raw export instead of changing the trainer or rebuilding data. A separate small controller is needed because the old200-step pilot controller intentionally rejects the new exploratory policy and waits on a cloud-only parent service. Parent outputs stay immutable. Optional later Nebius restart needs authentication, but does not block local progress.
+
+Invariants: INV-L1 preserves checkpoint/tokenizer/data hashes and optimizer/EMA restoration; any mismatch fails. INV-L2 preserves absolute time/budget and unrelated GPU processes; no additional paid compute is started. INV-L3 separates exploration from quality promotion; generated output and provenance remain truthful even when quality is poor.
+
+Acceptance: real local training resumes at201 with LR3e-5 and finite gradients; automatic stages terminate at6000 or an explicit failure/time bound; all completed evaluation/checkpoint artifacts remain reviewable and private delivery never claims usability without evidence.
