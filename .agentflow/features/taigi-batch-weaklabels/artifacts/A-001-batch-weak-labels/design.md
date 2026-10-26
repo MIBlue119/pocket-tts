@@ -214,3 +214,10 @@ Minimality check: reuse fork_run, run_experiment, evaluator and raw export inste
 Invariants: INV-L1 preserves checkpoint/tokenizer/data hashes and optimizer/EMA restoration; any mismatch fails. INV-L2 preserves absolute time/budget and unrelated GPU processes; no additional paid compute is started. INV-L3 separates exploration from quality promotion; generated output and provenance remain truthful even when quality is poor.
 
 Acceptance: real local training resumes at201 with LR3e-5 and finite gradients; automatic stages terminate at6000 or an explicit failure/time bound; all completed evaluation/checkpoint artifacts remain reviewable and private delivery never claims usability without evidence.
+
+
+## No-reference inference prefix correction
+
+The ongoing usable-model/private-delivery task authorizes correcting a reproduced inference-contract bug: generated inference.py builds an empty public state without the bos_before_voice prefix that training and the native evaluator use. Correct only the packaged no-reference branch, preserve optional-reference behavior and all sampling settings, and test actual prefix/state behavior. Existing published candidate bytes and the live training/evaluation code stay unchanged. The user's step1000「你好嗎？」sample came from the correctly prefixed native evaluator; this correction must not be represented as fixing that sample's poor speech.
+
+Minimality check: prefill the existing public flow helper with the BOS embedding when configured, instead of changing the model API, adding artificial reference audio or restarting training. Verify the generated script in a fresh local package copy onCPU and record its provenance; new candidates will carry the corrected inference script. Existing private200candidate remains historical.

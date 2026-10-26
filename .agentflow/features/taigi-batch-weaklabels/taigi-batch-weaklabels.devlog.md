@@ -72,6 +72,8 @@ Opened by the `agf` shell shortcut on 2026-10-25, not by an agent round. The mai
 
 + 這在rtx6000 或是 H100 會訓練的比較快嗎？ 另外可以用你已經訓練的版本跑個推論給我嗎？  模擬我輸入文字 `你好嗎？`
 
++ 為什麼會爛爛的
+
 ---
 
 ## [RUN-001] Event — 2026-10-25 18:48:02 +0800 (A-002)
